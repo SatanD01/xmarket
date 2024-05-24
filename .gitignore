@@ -26,3 +26,7 @@ dist-ssr
 .env
 
 .vscode
+
+yarn.lock
+
+package-lock.json
