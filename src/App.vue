@@ -1,6 +1,5 @@
 <template>
-  <CSideBar/>
+  <div>
+    <RouterView />
+  </div>
 </template>
-<script setup lang="ts">
-import CSideBar from "@/components/CSideBar.vue";
-</script>
