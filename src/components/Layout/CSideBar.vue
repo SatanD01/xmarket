@@ -17,7 +17,9 @@
     <el-menu-item index="1">
       <Box />
       <template #title>
-        <span class="ms-2 font-semibold"> Товары </span>
+        <router-link to="/">
+          <span class="ms-2 font-semibold"> ТОП Товары </span>
+        </router-link>
       </template>
     </el-menu-item>
     <el-menu-item index="2">
