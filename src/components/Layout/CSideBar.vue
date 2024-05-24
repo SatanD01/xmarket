@@ -3,6 +3,7 @@
     default-active="2"
     class="el-menu-vertical-demo"
     :collapse="isCollapse"
+    router
   >
     <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
       <el-radio-button :value="false">expand</el-radio-button>
@@ -14,51 +15,49 @@
     <router-link v-else to="/" class="block px-5 py-4">
       <X class="bg-black text-white rounded" />
     </router-link>
-    <el-menu-item index="1">
+    <el-menu-item index="1" route="/">
       <Box />
       <template #title>
-        <router-link to="/">
-          <span class="ms-2 font-semibold"> ТОП Товары </span>
-        </router-link>
+        <span class="ms-2 font-semibold"> ТОП Товары </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="2">
+    <el-menu-item index="2" route="/chart">
       <AreaChart />
       <template #title>
         <span class="ms-2 font-semibold"> График </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="3">
+    <el-menu-item index="3" route="/create-order">
       <ShoppingCart />
       <template #title>
         <span class="ms-2 font-semibold"> Создать заказ </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="4">
+    <el-menu-item index="4" route="/qr-scan">
       <QrCode />
       <template #title>
         <span class="ms-2 font-semibold"> Сканировать QR-Код </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="5">
+    <el-menu-item index="5" route="/create-goods">
       <PackageOpen />
       <template #title>
         <span class="ms-2 font-semibold"> Создать товар </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="6">
+    <el-menu-item index="6" route="/create-office">
       <Home />
       <template #title>
         <span class="ms-2 font-semibold"> Создать офис </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="7">
+    <el-menu-item index="7" route="/create-user">
       <UserRoundPlus />
       <template #title>
         <span class="ms-2 font-semibold"> Создать пользователя </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="8">
+    <el-menu-item index="8" route="/admin-settings">
       <Settings />
       <template #title>
         <span class="ms-2 font-semibold"> Админ настройки </span>

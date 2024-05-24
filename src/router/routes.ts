@@ -15,6 +15,16 @@ export default [
         name: 'PCart',
         component: () => import('@/pages/PCartView.vue'),
       },
+      {
+        path: '/create-office',
+        name: 'PCreateOffice',
+        component: () => import('@/pages/PCreateOffice.vue'),
+      },
+      {
+        path: '/chart',
+        name: 'PCharts',
+        component: () => import('@/pages/PChartsView.vue'),
+      },
     ],
   },
 ] as RouteRecordRaw[]
