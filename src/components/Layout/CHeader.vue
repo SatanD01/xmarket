@@ -7,7 +7,13 @@
         <div class="line line3"></div>
       </div>
     </div>
-    <el-dropdown>
+    <div class="flex items-center gap-5 cursor-pointer">
+      <el-badge :value="12" type="primary">
+        <div class="border group w-[40px] h-[40px] rounded flex items-center justify-center hover:transition-all transition-all hover:border-[#409eef] hover:text-[409eef]">
+          <ShoppingCart class="group-hover:text-[#409eef] group-hover:transition-all transition-all"/>
+        </div>
+      </el-badge>
+      <el-dropdown>
       <el-avatar shape="square" class="mb-0" src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png" />
       <template #dropdown>
         <el-dropdown-menu>
@@ -16,10 +22,11 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+    </div>
   </header>
 </template>
 <script setup lang="ts">
-import { Settings, LogOut } from 'lucide-vue-next';
+import { Settings, LogOut, ShoppingCart } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const isActive = ref(false);
