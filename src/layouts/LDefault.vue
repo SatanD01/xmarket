@@ -2,9 +2,7 @@
   <div class="grid grid-cols-[230px_1fr]">
     <CSideBar />
     <div>
-      <header class="bg-red-200 py-5 px-2 sticky top-0">
-        Header component comes here
-      </header>
+      <CHeader class="bg-red-200 py-5 px-2 sticky top-0" />
       <div class="p-5">
         <RouterView />
       </div>
@@ -12,5 +10,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import CSideBar from '@/components/CSideBar.vue'
+import CHeader from '@/components/Layout/CHeader.vue'
+import CSideBar from '@/components/Layout/CSideBar.vue'
 </script>
