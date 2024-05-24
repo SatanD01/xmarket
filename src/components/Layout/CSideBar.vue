@@ -8,12 +8,12 @@
       <el-radio-button :value="false">expand</el-radio-button>
       <el-radio-button :value="true">collapse</el-radio-button>
     </el-radio-group>
-    <a v-if="!isCollapse" href="/public" class="block px-5 py-4">
+    <router-link v-if="!isCollapse" to="/" class="block px-5 py-4">
       <img src="/logo_black.png" alt="logo" />
-    </a>
-    <a v-else href="/public" class="block px-5 py-4">
+    </router-link>
+    <router-link v-else to="/" class="block px-5 py-4">
       <X class="bg-black text-white rounded" />
-    </a>
+    </router-link>
     <el-menu-item index="1">
       <Box />
       <template #title>

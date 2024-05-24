@@ -10,6 +10,11 @@ export default [
         name: 'Dashboard',
         component: () => import('@/pages/PIndex.vue'),
       },
+      {
+        path: '/cart',
+        name: 'PCart',
+        component: () => import('@/pages/PCartView.vue'),
+      },
     ],
   },
 ] as RouteRecordRaw[]
