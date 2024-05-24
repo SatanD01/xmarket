@@ -5,7 +5,9 @@
       <header class="bg-red-200 py-5 px-2 sticky top-0">
         Header component comes here
       </header>
-      <RouterView />
+      <div class="p-5">
+        <RouterView />
+      </div>
     </div>
   </div>
 </template>
