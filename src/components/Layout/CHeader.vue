@@ -49,7 +49,7 @@ const toggleBurger = () => {
 
 .line {
   background-color: black;
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
