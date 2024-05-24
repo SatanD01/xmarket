@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white w-full flex justify-between items-center border-b p-1 sticky top-0">
+  <header class="bg-white w-full flex justify-between items-center border-b p-1 sticky top-0 z-[100]">
     <div class="burger-container" @click="toggleBurger">
       <div :class="['burger', { 'burger-active': isActive }]">
         <div class="line line1"></div>
