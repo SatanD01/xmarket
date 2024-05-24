@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 shadow border rounded">
+  <div class="grid grid-cols-1 shadow border rounded hover:shadow-lg transition-all hover:transition-all cursor-pointer">
     <CLazyImage
         default-img="/images/byd-default.webp"
         original-img="https://frankfurt.apollo.olxcdn.com/v1/files/tl85guso90o22-UZ/image;s=1000x750"
