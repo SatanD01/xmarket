@@ -4,7 +4,6 @@ import { fileURLToPath, URL } from "node:url"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://github.com/SatanD01/xmarket',
   plugins: [vue()],
   resolve: {
     alias: {
