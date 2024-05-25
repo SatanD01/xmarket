@@ -5,10 +5,6 @@
     :collapse="isCollapse"
     router
   >
-    <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
-      <el-radio-button :value="false">expand</el-radio-button>
-      <el-radio-button :value="true">collapse</el-radio-button>
-    </el-radio-group>
     <router-link v-if="!isCollapse" to="/" class="block px-5 py-4">
       <img src="/logo_black.png" alt="logo" />
     </router-link>
@@ -67,20 +63,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import {
-  QrCode,
-  X,
-  Box,
-  ShoppingCart,
   AreaChart,
-  Settings,
+  Box,
   Home,
   PackageOpen,
+  QrCode,
+  Settings,
+  ShoppingCart,
   UserRoundPlus,
+  X,
 } from 'lucide-vue-next'
 
-const isCollapse = ref(false)
+interface Props {
+  isCollapse?: boolean
+}
+defineProps<Props>()
 </script>
 
 <style>
@@ -88,7 +86,6 @@ const isCollapse = ref(false)
   width: 230px;
   min-height: 100vh;
 }
-
 .el-menu {
   min-height: 100vh;
 }
