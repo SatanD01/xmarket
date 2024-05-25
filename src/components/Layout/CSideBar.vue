@@ -66,18 +66,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import {
-  QrCode,
-  X,
-  Box,
-  ShoppingCart,
   AreaChart,
-  Settings,
+  Box,
   Home,
   PackageOpen,
+  QrCode,
+  Settings,
+  ShoppingCart,
   UserRoundPlus,
+  X,
 } from 'lucide-vue-next'
+import { ref } from 'vue'
 
 const isCollapse = ref(false)
 </script>
@@ -87,7 +87,6 @@ const isCollapse = ref(false)
   width: 230px;
   min-height: 100vh;
 }
-
 .el-menu {
   min-height: 100vh;
 }
