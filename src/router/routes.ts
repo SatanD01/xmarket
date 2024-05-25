@@ -25,6 +25,11 @@ export default [
         name: 'PCharts',
         component: () => import('@/pages/PChartsView.vue'),
       },
+      {
+        path: '/create-order',
+        name: 'PCreateOrder',
+        component: () => import('@/pages/PCreateOrder.vue'),
+      },
     ],
   },
 ] as RouteRecordRaw[]
