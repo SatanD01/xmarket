@@ -35,7 +35,7 @@
             @click="goods_count -= 1"
             >-</el-button
           >
-          <el-input class="!text-center" v-model="goods_count" />
+          <el-input class="!text-center min-w-[40px]" v-model="goods_count" />
           <el-button
             class="w-[39px] h-[32px] !border-[#409eef]"
             @click="goods_count += 1"
@@ -43,7 +43,7 @@
           >
         </div>
         <el-button v-if="card" class="w-full" type="danger" plain
-          ><Trash2 :offset-size="1" />
+          ><Trash2 :stroke-width="1" size="20" />
           <span class="ms-2">Удалить</span></el-button
         >
       </div>
