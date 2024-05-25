@@ -47,13 +47,19 @@
         <span class="ms-2 font-semibold"> Создать офис </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="7" route="/create-user">
+    <el-menu-item index="7" route="/office-list">
+      <Blinds />
+      <template #title>
+        <span class="ms-2 font-semibold"> Список Офисов </span>
+      </template>
+    </el-menu-item>
+    <el-menu-item index="8" route="/create-user">
       <UserRoundPlus />
       <template #title>
         <span class="ms-2 font-semibold"> Создать пользователя </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="8" route="/admin-settings">
+    <el-menu-item index="9" route="/admin-settings">
       <Settings />
       <template #title>
         <span class="ms-2 font-semibold"> Админ настройки </span>
@@ -73,6 +79,7 @@ import {
   ShoppingCart,
   UserRoundPlus,
   X,
+  Blinds
 } from 'lucide-vue-next'
 
 interface Props {

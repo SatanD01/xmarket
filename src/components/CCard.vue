@@ -3,7 +3,7 @@
     class="grid grid-cols-1 card shadow border rounded-lg hover:shadow-lg transition-all hover:transition-all cursor-pointer"
   >
     <CLazyImage
-      default-img="/images/byd-default.webp"
+      default-img="./images/byd-default.webp"
       original-img="https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg"
       alt="https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg"
       img-class="min-h-[236px] rounded-t-lg"
