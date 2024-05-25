@@ -9,7 +9,7 @@
       <el-input placeholder="Почтовый индекс"/>
       <el-input placeholder="Ссылка с карты яндекс"/>
       <el-button type="primary">Добавить</el-button>
-      <el-button type="primary">Все офисы</el-button>
+      <el-button type="primary" class="!ms-0">Все офисы</el-button>
     </div>
   </div>
 </template>
