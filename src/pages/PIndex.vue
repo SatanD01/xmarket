@@ -1,29 +1,16 @@
 <template>
+  <CSearch/>
   <div>
-    <h1>HOME PAGE</h1>
-    <button @click="store.count++">Increment {{ store.getCount }}</button>
-    <button @click="fetchData">Fetch data</button>
-    <pre v-if="todoData">{{ todoData }}</pre>
+    <h1 class="mb-4 font-bold text-[32px]">Топ товары</h1>
+    <div class="grid md:grid-cols-5 grid-cols-2 gap-3">
+        <CCard :card="false" v-for="item in 10" :key="item"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useMainStore } from "../store"
-import { useApi } from "../composables/useApi.ts"
-import { ref } from "vue"
+import CCard from "@/components/CCard.vue";
+import CSearch from "@/components/CSearch.vue";
 
-const store = useMainStore()
-const $api = useApi()
 
-const todoData = ref()
-
-async function fetchData() {
-  if (todoData.value) return
-  try {
-    const { data } = await $api.$get("/todos/1")
-    todoData.value = data
-  } catch {
-    alert("Error")
-  }
-}
 </script>
