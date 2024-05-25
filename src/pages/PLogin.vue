@@ -17,13 +17,17 @@
         <div class="grid grid-cols-1 gap-3 pl-3">
           <h4 class="h4 font-bold roboto-bold text-center">Войти в систему</h4>
           <el-form label-position="top" label-width="auto">
-            <el-form-item label="Логин" required>
-              <el-input v-model="login" />
+            <el-form-item label="Логин" :error="v$.username.$error" required>
+              <el-input v-model="login.username" />
             </el-form-item>
-            <el-form-item label="Пароль" required>
-              <el-input v-model="password" />
+            <el-form-item label="Пароль" :error="v$.password.$error" required>
+              <el-input
+                v-model="login.password"
+                type="password"
+                show-password
+              />
             </el-form-item>
-            <el-button type="primary">Войти</el-button>
+            <el-button @click="loginBtn" type="primary">Войти</el-button>
           </el-form>
         </div>
       </div>
@@ -31,9 +35,32 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import { reactive } from 'vue'
 
-const login = ref('')
-const password = ref('')
+import router from '@/router'
+
+interface ILogin {
+  username: string
+  password: string
+}
+const rules = {
+  username: { required },
+  password: { required },
+}
+const login = reactive<ILogin>({
+  username: '',
+  password: '',
+})
+const v$ = useVuelidate(rules, login)
+
+const loginBtn = () => {
+  v$.value.$touch()
+  if (v$.value.$invalid) return
+  if (login.username === 'admin' && login.password === 'admin') {
+    router.push('/')
+  }
+}
 </script>
 <style scoped></style>

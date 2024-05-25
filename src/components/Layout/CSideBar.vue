@@ -5,10 +5,6 @@
     :collapse="isCollapse"
     router
   >
-    <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
-      <el-radio-button :value="false">expand</el-radio-button>
-      <el-radio-button :value="true">collapse</el-radio-button>
-    </el-radio-group>
     <router-link v-if="!isCollapse" to="/" class="block px-5 py-4">
       <img src="/logo_black.png" alt="logo" />
     </router-link>
@@ -51,13 +47,19 @@
         <span class="ms-2 font-semibold"> Создать офис </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="7" route="/create-user">
+    <el-menu-item index="7" route="/office-list">
+      <Blinds />
+      <template #title>
+        <span class="ms-2 font-semibold"> Список Офисов </span>
+      </template>
+    </el-menu-item>
+    <el-menu-item index="8" route="/create-user">
       <UserRoundPlus />
       <template #title>
         <span class="ms-2 font-semibold"> Создать пользователя </span>
       </template>
     </el-menu-item>
-    <el-menu-item index="8" route="/admin-settings">
+    <el-menu-item index="9" route="/admin-settings">
       <Settings />
       <template #title>
         <span class="ms-2 font-semibold"> Админ настройки </span>
@@ -67,20 +69,23 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import {
-  QrCode,
-  X,
-  Box,
-  ShoppingCart,
   AreaChart,
-  Settings,
+  Box,
   Home,
   PackageOpen,
+  QrCode,
+  Settings,
+  ShoppingCart,
   UserRoundPlus,
+  X,
+  Blinds
 } from 'lucide-vue-next'
 
-const isCollapse = ref(false)
+interface Props {
+  isCollapse?: boolean
+}
+defineProps<Props>()
 </script>
 
 <style>
@@ -88,7 +93,6 @@ const isCollapse = ref(false)
   width: 230px;
   min-height: 100vh;
 }
-
 .el-menu {
   min-height: 100vh;
 }
