@@ -30,6 +30,21 @@ export default [
         name: 'PCreateOrder',
         component: () => import('@/pages/PCreateOrder.vue'),
       },
+      {
+        path: '/create-goods',
+        name: 'PCreateGoods',
+        component: () => import('@/pages/PCreateGoods.vue'),
+      },
+      {
+        path: '/office-list',
+        name: 'POfficesView',
+        component: () => import('@/pages/POfficesView.vue'),
+      },
     ],
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/pages/PLogin.vue'),
   },
 ] as RouteRecordRaw[]
