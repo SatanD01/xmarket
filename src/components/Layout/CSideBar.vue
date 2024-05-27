@@ -30,37 +30,31 @@
           <span class="ms-2 font-semibold"> Создать заказ </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="4" route="/qr-scan">
-        <QrCode />
-        <template #title>
-          <span class="ms-2 font-semibold"> Сканировать QR-Код </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="5" route="/create-goods">
+      <el-menu-item index="4" route="/create-goods">
         <PackageOpen />
         <template #title>
           <span class="ms-2 font-semibold"> Создать товар </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="6" route="/create-office">
+      <el-menu-item index="5" route="/create-office">
         <Home />
         <template #title>
           <span class="ms-2 font-semibold"> Создать офис </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="7" route="/office-list">
+      <el-menu-item index="6" route="/office-list">
         <Blinds />
         <template #title>
           <span class="ms-2 font-semibold"> Список Офисов </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="8" route="/create-user">
+      <el-menu-item index="7" route="/create-user">
         <UserRoundPlus />
         <template #title>
           <span class="ms-2 font-semibold"> Создать пользователя </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="9" route="/admin-settings">
+      <el-menu-item index="8" route="/admin-settings">
         <Settings />
         <template #title>
           <span class="ms-2 font-semibold"> Админ настройки </span>

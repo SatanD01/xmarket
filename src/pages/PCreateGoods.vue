@@ -7,7 +7,6 @@
         <el-upload
             class="photo-uploader"
             action="#"
-            :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
         >
@@ -47,9 +46,9 @@
           </el-select>
           <el-input type="text" placeholder="Разер товара"></el-input>
           <el-input type="text" placeholder="Категория товара"></el-input>
-          <el-input type="text" placeholder="Вес товара"></el-input>
           <el-button type="primary">Создать</el-button>
           <el-button type="primary" class="!ms-0">Сохрать шаблон</el-button>
+          <el-button type="primary" class="!ms-0">Сканировать QR-Код</el-button>
         </div>
       </div>
     </div>
