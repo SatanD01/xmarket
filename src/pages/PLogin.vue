@@ -73,7 +73,7 @@ const loginBtn = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
   if (login.username === 'admin' && login.password === 'admin') {
-    await router.push({ name: 'Dashboard' })
+    await router.push({ path: '/' })
     ElNotification({
       title: 'Success',
       message: 'Login successfully',
