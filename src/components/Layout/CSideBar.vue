@@ -57,7 +57,7 @@
       <el-menu-item index="8" route="/admin-settings">
         <Settings />
         <template #title>
-          <span class="ms-2 font-semibold"> Админ настройки </span>
+          <span class="ms-2 font-semibold"> Настройки профиля </span>
         </template>
       </el-menu-item>
     </el-menu>

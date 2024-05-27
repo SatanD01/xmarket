@@ -45,6 +45,11 @@ export default [
         name: 'PCreateUser',
         component: () => import('@/pages/PCreateUser.vue'),
       },
+      {
+        path: '/admin-settings',
+        name: 'PSettingsView',
+        component: () => import('@/pages/PSettingsView.vue'),
+      },
     ],
   },
   {

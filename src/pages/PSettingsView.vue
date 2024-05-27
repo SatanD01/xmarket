@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white p-3 shadow rounded-lg">
-    <h3 class="text-[24px] font-bold mb-3">Создать пользователя</h3>
+  <div class="bg-white rounded-lg p-3 shadow">
+    <h2 class="text-[24px] font-bold mb-3">Настройки</h2>
     <div class="grid md:grid-cols-4 grid-cols-1 gap-3">
       <el-input placeholder="Ф.И.О"/>
       <el-input placeholder="Серия и номер паспорта"/>
@@ -13,15 +13,8 @@
       />
       <el-input placeholder="Email"/>
       <el-input placeholder="Офис работы"/>
-      <el-select v-model="role" placeholder="Роль">
-        <el-option
-            v-for="item in roles"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-        />
-      </el-select>
-      <el-button type="primary">Добавить</el-button>
+      <el-button type="primary">Изменить</el-button>
+
     </div>
   </div>
 </template>
@@ -29,18 +22,6 @@
 import {ref} from "vue";
 
 const birthday = ref('')
-const role = ref('')
-
-const roles = [
-  {
-    value: 'manager',
-    label: 'Менеджер',
-  },
-  {
-    value: 'admin',
-    label: 'Админ',
-  },
-]
 </script>
 <style scoped>
 

@@ -31,9 +31,11 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>
-              <Settings />
-              <span class="ms-2">Настройки профиля</span></el-dropdown-item
-            >
+              <router-link class="flex" to="/admin-settings">
+                <Settings />
+                <span class="ms-2">Настройки профиля</span>
+              </router-link>
+            </el-dropdown-item>
             <el-dropdown-item @click="$router.push('/login')">
               <LogOut /> <span class="ms-2">Выйти</span></el-dropdown-item
             >
