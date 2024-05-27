@@ -12,7 +12,7 @@
       <p class="text-[12px] text-gray-500"><b>Тел:</b> <el-link class="!text-[12px] text-gray-500" href="tel:998999999999">+998(99)-999-99-99</el-link></p>
       <p class="text-[12px] text-gray-500"><b>Индекс:</b> 100197 </p>
       <div class="grid grid-cols-2 gap-3 mt-2">
-        <el-button class="w-full" type="success" plain
+        <el-button class="w-full" type="success" plain @click="dialogVisible = true"
         ><Pencil  :offset-size="1"/>
           <span class="ms-2">Изменить</span></el-button
         >
@@ -22,12 +22,46 @@
         >
       </div>
     </div>
+    <el-dialog
+        v-model="dialogVisible"
+        title="Изменить офис"
+        width="800"
+        :fullscreen="fullscreen"
+    >
+      <div class="grid md:grid-cols-3 grid-cols-1 gap-3">
+        <el-input placeholder="Название офиса"/>
+        <el-input placeholder="Расположение"/>
+        <el-input placeholder="Управляющий"/>
+        <el-input placeholder="Телеофн номер"/>
+        <el-input placeholder="Индекс"/>
+        <el-input placeholder="Ссылка на карту"/>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false">Отменить</el-button>
+          <el-button type="primary" @click="dialogVisible = false">
+            Сохранить
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
 import { Trash2, Pencil } from 'lucide-vue-next'
+import {onMounted, ref} from "vue";
+import {useWindowSize} from "@vueuse/core";
 
+const dialogVisible = ref(false)
+const fullscreen = ref(false)
+const { width } = useWindowSize()
+
+onMounted(() => {
+  fullscreen.value = width.value <= 768
+})
 </script>
 <style>
-
+.el-input__inner {
+  text-align: left !important;
+}
 </style>
