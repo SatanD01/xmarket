@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { ElNotification } from 'element-plus'
 import { reactive } from 'vue'
 
 import router from '@/router'
@@ -68,11 +69,24 @@ const login = reactive<ILogin>({
 })
 const v$ = useVuelidate(rules, login)
 
-const loginBtn = () => {
+const loginBtn = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
   if (login.username === 'admin' && login.password === 'admin') {
-    router.push('/')
+    await router.push({ name: 'Dashboard' })
+    ElNotification({
+      title: 'Success',
+      message: 'Login successfully',
+      type: 'success',
+      duration: 1200,
+    })
+  } else {
+    ElNotification({
+      title: 'Error',
+      message: 'Username or password is incorrect',
+      type: 'error',
+      duration: 1200,
+    })
   }
 }
 </script>
