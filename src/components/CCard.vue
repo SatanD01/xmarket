@@ -13,7 +13,7 @@
       <p class="font-bold text-[14px]">Монитор для салона BYD SONG PLUS</p>
       <p class="text-[12px] text-gray-500"><b>Категория:</b> Салон</p>
       <p class="text-[12px] text-gray-500"><b>Количество:</b> 10 шт.</p>
-      <el-button v-if="!card" class="w-full" type="primary"
+      <el-button class="w-full" type="primary"
         ><b class="me-2">Цена:</b> 200$</el-button
       >
       <div class="mt-2">
