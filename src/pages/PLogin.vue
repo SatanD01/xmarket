@@ -7,7 +7,7 @@
         <div
           class="h-full flex flex-col gap-3 items-center justify-center border-r border-dashed"
         >
-          <img class="w-[200px]" src="/logo_white.png" alt="logo" />
+          <img class="w-[200px]" src="/logo_black.png" alt="logo" />
           <div>
             <p class="text-center font-bold text-gray-500 border-b-2">BYD</p>
             <p class="roboto-light text-gray-500">Build your dream</p>
@@ -16,19 +16,32 @@
 
         <div class="grid grid-cols-1 gap-3 pl-3">
           <h4 class="h4 font-bold roboto-bold text-center">Войти в систему</h4>
-          <el-form label-position="top" label-width="auto">
-            <el-form-item label="Логин" :error="v$.username.$error" required>
-              <el-input v-model="login.username" />
-            </el-form-item>
-            <el-form-item label="Пароль" :error="v$.password.$error" required>
+          <form class="flex flex-col items-end">
+            <div class="mb-2 w-full">
+              <label class="text-[14px]" for="username">Username</label>
+              <el-input
+                :class="v$.username.$error ? 'error' : ''"
+                id="username"
+                v-model="login.username"
+              />
+            </div>
+            <div class="mb-3 text-[14px] w-full">
+              <label for="password">Password</label>
               <el-input
                 v-model="login.password"
+                :class="v$.password.$error ? 'error' : ''"
+                id="password"
                 type="password"
                 show-password
               />
-            </el-form-item>
-            <el-button @click="loginBtn" type="primary">Войти</el-button>
-          </el-form>
+            </div>
+            <el-button
+              @click="loginBtn"
+              type="primary"
+              class="!flex !justify-center !items-center"
+              >Войти</el-button
+            >
+          </form>
         </div>
       </div>
     </div>
@@ -37,6 +50,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { ElNotification } from 'element-plus'
 import { reactive } from 'vue'
 
 import router from '@/router'
@@ -55,12 +69,25 @@ const login = reactive<ILogin>({
 })
 const v$ = useVuelidate(rules, login)
 
-const loginBtn = () => {
+const loginBtn = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
   if (login.username === 'admin' && login.password === 'admin') {
-    router.push('/')
+    await router.push({ name: 'Dashboard' })
+    ElNotification({
+      title: 'Success',
+      message: 'Login successfully',
+      type: 'success',
+      duration: 1200,
+    })
+  } else {
+    ElNotification({
+      title: 'Error',
+      message: 'Username or password is incorrect',
+      type: 'error',
+      duration: 1200,
+    })
   }
 }
 </script>
-<style scoped></style>
+<style scoped lang="scss"></style>
