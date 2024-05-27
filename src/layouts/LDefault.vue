@@ -16,10 +16,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useWindowSize } from '@vueuse/core'
+import { onMounted, ref } from 'vue'
 
 import CHeader from '@/components/Layout/CHeader.vue'
 import CSideBar from '@/components/Layout/CSideBar.vue'
 
+const { width } = useWindowSize()
 const isSidebarOpen = ref(false)
+
+onMounted(() => {
+  isSidebarOpen.value = width.value <= 768
+})
 </script>
