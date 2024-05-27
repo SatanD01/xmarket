@@ -12,7 +12,7 @@
             :before-upload="beforeAvatarUpload"
         >
           <img v-if="imageUrl" :src="imageUrl" class="photo" />
-          <Image class="icon" size="40px"/>
+          <Image class="icon" :size="40"/>
         </el-upload>
       </div>
       <div class="col-span-1 md:col-span-9">
@@ -87,7 +87,6 @@ const templates = [
   }
 ]
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
-    response,
     uploadFile
 ) => {
   imageUrl.value = URL.createObjectURL(uploadFile.raw!)
