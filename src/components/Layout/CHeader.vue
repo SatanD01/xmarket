@@ -34,7 +34,7 @@
               <Settings />
               <span class="ms-2">Настройки профиля</span></el-dropdown-item
             >
-            <el-dropdown-item>
+            <el-dropdown-item @click="$router.push('/login')">
               <LogOut /> <span class="ms-2">Выйти</span></el-dropdown-item
             >
           </el-dropdown-menu>
