@@ -1,12 +1,12 @@
 <template>
   <div class="grid grid-cols-12 gap-3">
-    <div class="md:col-span-8 col-span-12 gap-3 grid md:grid-cols-3">
+    <div class="md:col-span-8 col-span-12 gap-3 grid" :class="store.basketItems == [] ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'">
       <CCard
-        card
-        v-for="(item, index) in list"
-        :data="item"
-        :key="index"
-        @on-delete="onDelete(item.id)"
+          card
+          v-for="(item, index) in list"
+          :data="item"
+          :key="index"
+          @on-delete="onDelete(item.id)"
       />
     </div>
     <div class="md:col-span-4 col-span-12">
