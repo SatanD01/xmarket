@@ -9,7 +9,7 @@
         <el-table-column prop="outcome" label="Расход" />
         <el-table-column prop="profit" label="Прибль" />
       </el-table>
-      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="10" :total="10" />
+      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="table_col" :total="table_col" />
       <el-button type="primary" class="w-full !ms-0"><ClipboardMinus /> <span class="ms-2 text-wrap !leading-4">Экспортровать дневную прибль</span></el-button>
     </div>
     <div>
@@ -21,7 +21,7 @@
         <el-table-column prop="outcome" label="Расход" />
         <el-table-column prop="profit" label="Прибль" />
       </el-table>
-      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="10" :total="10" />
+      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="table_col" :total="table_col" />
       <el-button type="primary" class="w-full !ms-0"><ClipboardMinus /> <span class="ms-2 text-wrap !leading-4">Экспортровать недельную прибль</span></el-button>
     </div>
     <div>
@@ -33,7 +33,7 @@
         <el-table-column prop="outcome" label="Расход" />
         <el-table-column prop="profit" label="Прибль" />
       </el-table>
-      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="10" :total="10" />
+      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="table_col" :total="table_col" />
       <el-button type="primary" class="w-full !ms-0"><ClipboardMinus /> <span class="ms-2 text-wrap !leading-4">Экспортровать месячную прибль</span></el-button>
     </div>
     <div>
@@ -45,13 +45,23 @@
         <el-table-column prop="outcome" label="Расход" />
         <el-table-column prop="profit" label="Прибль" />
       </el-table>
-      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="10" :total="10" />
+      <el-pagination class="mb-3 p-2 bg-white rounded-lg shadow flex items-center justify-center" background layout="prev, pager, next" :page-count="table_col" :total="table_col" />
       <el-button type="primary" class="w-full !ms-0"><ClipboardMinus /> <span class="ms-2 text-wrap !leading-4">Экспортровать общую прибль</span></el-button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import {ClipboardMinus} from 'lucide-vue-next'
+import {useWindowSize} from "@vueuse/core";
+import {onMounted, ref} from "vue";
+
+const { width } = useWindowSize()
+const table_col = ref(0);
+
+onMounted(() => {
+  table_col.value = width.value <= 768 ? 5 : 10
+})
+
 const tableData = [
   {
     id: '1',

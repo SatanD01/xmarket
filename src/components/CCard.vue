@@ -94,7 +94,9 @@ watch(
   },
 )
 onMounted(() => {
-  goods_count.value = props.data.count
+  if (props.data.count) {
+    goods_count.value = props.data.count
+  }
 })
 </script>
 <style>

@@ -18,7 +18,7 @@
           <h4 class="h4 font-bold roboto-bold text-center">Войти в систему</h4>
           <form class="flex flex-col items-end">
             <div class="mb-2 w-full">
-              <label class="text-[14px]" for="username">Username</label>
+              <label class="text-[14px]" for="username">Логин</label>
               <el-input
                 :class="v$.username.$error ? 'error' : ''"
                 id="username"
@@ -26,7 +26,7 @@
               />
             </div>
             <div class="mb-3 text-[14px] w-full">
-              <label for="password">Password</label>
+              <label for="password">Пароль</label>
               <el-input
                 v-model="login.password"
                 :class="v$.password.$error ? 'error' : ''"
@@ -75,15 +75,15 @@ const loginBtn = async () => {
   if (login.username === 'admin' && login.password === 'admin') {
     await router.push({ path: '/' })
     ElNotification({
-      title: 'Success',
-      message: 'Login successfully',
+      title: 'Успешно',
+      message: 'Выход прошел успешно',
       type: 'success',
       duration: 1200,
     })
   } else {
     ElNotification({
-      title: 'Error',
-      message: 'Username or password is incorrect',
+      title: 'Ошибка',
+      message: 'Логин или пароль не верный',
       type: 'error',
       duration: 1200,
     })

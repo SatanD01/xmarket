@@ -40,6 +40,16 @@ export default [
         name: 'POfficesView',
         component: () => import('@/pages/POfficesView.vue'),
       },
+      {
+        path: '/create-user',
+        name: 'PCreateUser',
+        component: () => import('@/pages/PCreateUser.vue'),
+      },
+      {
+        path: '/admin-settings',
+        name: 'PSettingsView',
+        component: () => import('@/pages/PSettingsView.vue'),
+      },
     ],
   },
   {
