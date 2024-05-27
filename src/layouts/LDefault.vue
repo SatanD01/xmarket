@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid transition duration-700 ease-in-out"
+    class="grid transition duration-700 ease"
     :class="isSidebarOpen ? 'grid-cols-[63px_1fr]' : 'grid-cols-[230px_1fr]'"
   >
     <CSideBar :is-collapse="isSidebarOpen" />

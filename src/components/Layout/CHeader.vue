@@ -11,7 +11,7 @@
     </div>
     <div class="flex items-center gap-5 cursor-pointer">
       <router-link to="/cart">
-        <el-badge :value="12" type="primary">
+        <el-badge :value="store.basketItems.length" type="primary">
           <div
             class="border group w-[40px] h-[40px] rounded flex items-center justify-center hover:transition-all transition-all hover:border-[#409eef] hover:text-[409eef]"
           >
@@ -46,6 +46,8 @@
 <script setup lang="ts">
 import { LogOut, Settings, ShoppingCart } from 'lucide-vue-next'
 
+import { useBasketStore } from '@/store/basket.ts'
+
 interface Props {
   isSidebarOpen: boolean
 }
@@ -53,6 +55,7 @@ defineProps<Props>()
 const $emit = defineEmits<{
   (e: 'on-toggle'): void
 }>()
+const store = useBasketStore()
 </script>
 <style scoped>
 .burger-container {
