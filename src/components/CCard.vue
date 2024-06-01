@@ -1,5 +1,71 @@
 <template>
-  <div
+
+<!--  <el-image
+      style="width: 50px; height: 50px; z-index: 1"
+      :src="scope.row.img"
+      :zoom-rate="1.2"
+      :max-scale="7"
+      :min-scale="0.2"
+      :initial-index="4"
+      :preview-src-list="scope.row.img_list"
+      fit="cover"
+  />-->
+
+  <el-table :data="data" style="width: 100%" max-height="450">
+    <el-table-column prop="id" label="ID" width="150" />
+    <el-table-column prop="img" label="Фото" width="120">
+<!--      Бу клик буганда тепадиги el-image босилиши кере. Бумасам таблицани оркасида коб кетвотти расим-->
+      <template #default="scope">
+        <img :src="scope.row.img" :alt="scope.row.img" class="w-[50] h-[50] object-cover">
+      </template>
+    </el-table-column>
+    <el-table-column prop="name" label="Название товара" />
+    <el-table-column prop="category" label="Категория" />
+    <el-table-column prop="col" label="Количество" />
+    <el-table-column label="Цена">
+      <template #default="scope">
+        <span>{{scope.row.price}} {{ scope.row.currency }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="Действие" width="220">
+      <template #default="scope">
+        <el-button
+            type="primary"
+            size="small"
+            @click="cardBtn"
+            v-if="!card && !inCard"
+        >
+          Добавить
+        </el-button>
+        <el-button
+            type="danger"
+            size="small"
+            @click.prevent="onDelete(scope.row.id)"
+            v-if="!card && !inCard"
+        >
+          <Trash2 :stroke-width="1" size="20" /> Удлаить
+        </el-button>
+        <div class="flex gap-1" v-if="inCard || card">
+          <el-button
+              class="w-[39px] h-[32px]"
+              :class="
+              goods_count <= 0 ? '!border-[#409eef30]' : '!border-[#409eef]'
+            "
+              :disabled="goods_count <= 0"
+              @click="goods_count -= 1"
+          >-</el-button
+          >
+          <el-input class="!text-center min-w-[40px]" v-model="goods_count" />
+          <el-button
+              class="w-[39px] h-[32px] !border-[#409eef]"
+              @click="goods_count += 1"
+          >+</el-button
+          >
+        </div>
+      </template>
+    </el-table-column>
+  </el-table>
+<!--  <div
     class="grid grid-cols-1 card shadow border rounded-lg hover:shadow-lg transition-all hover:transition-all cursor-pointer"
   >
     <CLazyImage
@@ -53,7 +119,7 @@
         >
       </div>
     </div>
-  </div>
+  </div>-->
 </template>
 <script setup lang="ts">
 import { Trash2 } from 'lucide-vue-next'
@@ -85,6 +151,15 @@ const cardBtn = () => {
     inCard.value = false
   }
 }
+
+const onDelete = (index: number) => {
+  console.log('index:', index)
+  store.basketItems.splice(
+      store.basketItems.findIndex((el) => el.id === index),
+      1,
+  )
+}
+
 watch(
   () => goods_count.value,
   () => {
@@ -102,5 +177,16 @@ onMounted(() => {
 <style>
 .card .el-input__inner {
   text-align: center;
+}
+
+.image-slot {
+  font-size: 30px;
+}
+.image-slot .el-icon {
+  font-size: 30px;
+}
+.el-image {
+  width: 100%;
+  height: 200px;
 }
 </style>

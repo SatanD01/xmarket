@@ -3,14 +3,11 @@
     <div class="col-span-12">
       <el-empty v-if="store.basketItems.length === 0" class="m-auto w-full" description="Ваша корзинка пуста"/>
     </div>
-    <div class="md:col-span-8 col-span-12 gap-3 grid" :class="store.basketItems.length === 0 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'">
+    <div class="md:col-span-8 col-span-12 gap-3 grid grid-cols-1">
       <template v-if="store.basketItems.length !== 0">
         <CCard
             card
-            v-for="(item, index) in list"
-            :data="item"
-            :key="index"
-            @on-delete="onDelete(item.id)"
+            :data="list"
         />
       </template>
     </div>

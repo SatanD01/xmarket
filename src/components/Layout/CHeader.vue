@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-white w-full flex justify-between items-center border-b p-1 sticky top-0 z-[100]"
+    class="bg-white w-full flex justify-between items-center border-b p-1 sticky top-0 z-[1]"
   >
     <div class="burger-container" @click="$emit('on-toggle')">
       <div :class="['burger', { 'burger-active': isSidebarOpen }]">
