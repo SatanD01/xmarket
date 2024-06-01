@@ -12,14 +12,14 @@
   />-->
 
   <el-table :data="data" style="width: 100%" max-height="450">
-    <el-table-column prop="id" label="ID" width="150" />
+    <el-table-column prop="id" label="ID" />
     <el-table-column prop="img" label="Фото" width="120">
 <!--      Бу клик буганда тепадиги el-image босилиши кере. Бумасам таблицани оркасида коб кетвотти расим-->
       <template #default="scope">
         <img :src="scope.row.img" :alt="scope.row.img" class="w-[50] h-[50] object-cover">
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="Название товара" />
+    <el-table-column prop="name" label="Название товара"  width="300px"/>
     <el-table-column prop="category" label="Категория" />
     <el-table-column prop="col" label="Количество" />
     <el-table-column label="Цена">
