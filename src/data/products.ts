@@ -9,9 +9,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-4.jpg',
+    ],
   },
   {
     id: 2,
@@ -23,9 +23,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 3,
@@ -37,9 +37,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 4,
@@ -51,9 +51,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 5,
@@ -65,9 +65,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 6,
@@ -79,9 +79,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 7,
@@ -93,9 +93,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 8,
@@ -107,9 +107,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 9,
@@ -121,9 +121,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 10,
@@ -135,9 +135,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 11,
@@ -149,9 +149,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 12,
@@ -163,9 +163,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 13,
@@ -177,9 +177,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 14,
@@ -191,9 +191,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 15,
@@ -205,9 +205,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 16,
@@ -219,9 +219,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 17,
@@ -233,9 +233,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 18,
@@ -247,9 +247,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 19,
@@ -261,9 +261,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 20,
@@ -275,9 +275,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 21,
@@ -289,9 +289,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 22,
@@ -303,9 +303,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 23,
@@ -317,9 +317,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 24,
@@ -331,9 +331,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 25,
@@ -345,9 +345,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 26,
@@ -359,9 +359,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 27,
@@ -373,9 +373,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 28,
@@ -387,9 +387,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 29,
@@ -401,9 +401,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 30,
@@ -415,9 +415,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 31,
@@ -429,9 +429,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 32,
@@ -443,9 +443,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 33,
@@ -457,9 +457,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 34,
@@ -471,9 +471,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 35,
@@ -485,9 +485,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 36,
@@ -499,9 +499,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 37,
@@ -513,9 +513,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 38,
@@ -527,9 +527,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 39,
@@ -541,9 +541,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 40,
@@ -555,9 +555,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 41,
@@ -569,9 +569,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 42,
@@ -583,9 +583,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 43,
@@ -597,9 +597,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 44,
@@ -611,9 +611,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 45,
@@ -625,9 +625,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 46,
@@ -639,9 +639,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 47,
@@ -653,9 +653,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 48,
@@ -667,9 +667,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 49,
@@ -681,9 +681,9 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
   {
     id: 50,
@@ -695,8 +695,8 @@ export const products = [
     currency: '$',
     img: 'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
     img_list: [
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
-        'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg'
-    ]
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+      'https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg',
+    ],
   },
 ]
