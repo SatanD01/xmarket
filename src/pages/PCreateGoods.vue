@@ -32,7 +32,11 @@
               :value="item.value"
             />
           </el-select>
-          <el-input type="text" placeholder="Название товара"></el-input>
+          <el-input
+            v-model="barCode"
+            type="text"
+            placeholder="Название товара"
+          ></el-input>
           <el-input type="text" placeholder="В каком офисе товар"></el-input>
           <el-input type="text" placeholder="количество"></el-input>
           <el-input type="text" placeholder="Своя цена"></el-input>
@@ -49,10 +53,18 @@
           <el-input type="text" placeholder="Категория товара"></el-input>
           <el-button type="primary">Создать</el-button>
           <el-button type="primary" class="!ms-0">Сохрать шаблон</el-button>
-          <el-button type="primary" class="!ms-0">Сканировать QR-Код</el-button>
+          <el-button @click="scanDialog = true" type="primary" class="!ms-0"
+            >Сканировать QR-Код</el-button
+          >
         </div>
       </div>
     </div>
+    <el-dialog v-model="scanDialog" title="Tips" width="500">
+      <div>
+        <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        {{ onDecode }}
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -60,11 +72,12 @@ import type { UploadProps } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { Image } from 'lucide-vue-next'
 import { ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 
 const imageUrl = ref('')
 const providers = ref('')
 const template = ref('')
-
+const scanDialog = ref(false)
 const providers_list = [
   {
     value: 'BYD',
@@ -85,6 +98,14 @@ const templates = [
     label: 'Шаблон2',
   },
 ]
+const barCode = ref(null)
+const onDecode = (result: any) => {
+  barCode.value = result
+  if (barCode.value) scanDialog.value = false
+}
+const onLoaded = (error: any) => {
+  console.log(error)
+}
 const handleAvatarSuccess = (response) => {
   imageUrl.value = URL.createObjectURL(response.raw)
 }
