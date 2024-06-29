@@ -2,11 +2,29 @@
   <div class="md:p-3 md:bg-white md:shadow md:rounded-lg">
     <h3 class="text-[24px] font-bold mb-3">Офисы</h3>
     <div class="grid md:grid-cols-5 grid-cols-1 gap-3">
-      <COfficeCard card />
+      <COfficeCard v-for="(elem, i) in offices" :key="i" :office="elem" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
+import { useApi } from '@/composables/useApi.ts'
 import COfficeCard from '@/modules/Offices/components/COfficeCard.vue'
+import { IOffice } from '@/modules/Offices/types.ts'
+
+const offices = ref<IOffice[] | undefined>()
+
+onMounted(async () => {
+  await useApi()
+    .$get('/locations/getLocations')
+    .then((res) => {
+      console.log(res)
+      offices.value = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
 </script>
 <style scoped></style>
