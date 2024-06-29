@@ -53,6 +53,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
 import { useApi } from '@/composables/useApi.ts'
 import { useAuthStore } from '@/modules/Auth/store.ts'
@@ -77,14 +78,16 @@ const v$ = useVuelidate(rules, login)
 
 const loginBtn = async () => {
   v$.value.$touch()
-  loading.value = true
   if (v$.value.$invalid) return
   try {
     const response = await useApi().$post<ILogin>('/users/authenticate', login)
     localStorage.setItem('token', response.data.token)
     await router.push({ name: 'Dashboard' })
+    toast.success('Login successfully')
+    loading.value = true
   } catch (err) {
     console.log(err)
+    toast.error('Username or password incorrect')
   } finally {
     loading.value = false
   }
