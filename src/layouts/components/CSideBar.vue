@@ -2,7 +2,7 @@
   <div>
     <el-menu
       default-active="2"
-      class="el-menu-vertical-demo !fixed top-0 left-0"
+      class="el-menu-vertical-demo !absolute md:!fixed top-0 left-0"
       :collapse="isCollapse"
       router
     >
@@ -37,7 +37,19 @@
       <el-menu-item index="4" route="/create-goods">
         <PackageOpen />
         <template #title>
-          <span class="ms-2 font-semibold"> Создать товар </span>
+          <span class="ms-2 font-semibold"> Пополнение склада </span>
+        </template>
+      </el-menu-item>
+      <el-menu-item index="5" route="/suppliers-list">
+        <UserRoundCog />
+        <template #title>
+          <span class="ms-2 font-semibold"> Поставщики </span>
+        </template>
+      </el-menu-item>
+      <el-menu-item index="6" route="/client-list">
+        <Users />
+        <template #title>
+          <span class="ms-2 font-semibold"> Клиенты </span>
         </template>
       </el-menu-item>
       <!--      <el-menu-item index="5" route="/create-office">
@@ -46,19 +58,19 @@
           <span class="ms-2 font-semibold"> Создать офис </span>
         </template>
       </el-menu-item>-->
-      <el-menu-item index="6" route="/offices">
+      <el-menu-item index="7" route="/offices">
         <Blinds />
         <template #title>
           <span class="ms-2 font-semibold"> Список Офисов </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="7" route="/create-user">
+      <el-menu-item index="8" route="/create-user">
         <UserRoundPlus />
         <template #title>
           <span class="ms-2 font-semibold"> Создать пользователя </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="8" route="/admin-settings">
+      <el-menu-item index="9" route="/admin-settings">
         <Settings />
         <template #title>
           <span class="ms-2 font-semibold"> Настройки профиля </span>
@@ -76,7 +88,9 @@ import {
   PackageOpen,
   Settings,
   ShoppingCart,
+  UserRoundCog,
   UserRoundPlus,
+  Users,
   X,
 } from 'lucide-vue-next'
 
