@@ -20,9 +20,9 @@
             <div class="mb-2 w-full">
               <label class="text-[14px]" for="username">Логин</label>
               <el-input
-                :class="v$.username.$error ? 'error' : ''"
+                :class="v$.login.$error ? 'error' : ''"
                 id="username"
-                v-model="login.username"
+                v-model="login.login"
               />
             </div>
             <div class="mb-3 text-[14px] w-full">
@@ -53,18 +53,19 @@ import { required } from '@vuelidate/validators'
 import { ElNotification } from 'element-plus'
 import { reactive } from 'vue'
 
+import { useApi } from '@/composables/useApi.ts'
 import router from '@/router'
 
 interface ILogin {
-  username: string
+  login: string
   password: string
 }
 const rules = {
-  username: { required },
+  login: { required },
   password: { required },
 }
 const login = reactive<ILogin>({
-  username: '',
+  login: '',
   password: '',
 })
 const v$ = useVuelidate(rules, login)
@@ -72,22 +73,27 @@ const v$ = useVuelidate(rules, login)
 const loginBtn = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
-  if (login.username === 'admin' && login.password === 'admin') {
-    await router.push({ path: '/' })
-    ElNotification({
-      title: 'Успешно',
-      message: 'Выход прошел успешно',
-      type: 'success',
-      duration: 1200,
+  useApi()
+    .$post('/Users/Authenticate', login)
+    .then((res) => {
+      console.log(res)
+      router.push('/')
+      ElNotification({
+        title: 'Успешно',
+        message: 'Выход прошел успешно',
+        type: 'success',
+        duration: 1200,
+      })
     })
-  } else {
-    ElNotification({
-      title: 'Ошибка',
-      message: 'Логин или пароль не верный',
-      type: 'error',
-      duration: 1200,
+    .catch((err) => {
+      console.log(err)
+      ElNotification({
+        title: 'Ошибка',
+        message: 'Логин или пароль не верный',
+        type: 'error',
+        duration: 1200,
+      })
     })
-  }
 }
 </script>
 <style scoped lang="scss"></style>

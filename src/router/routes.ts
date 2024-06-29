@@ -55,6 +55,6 @@ export default [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/pages/PLogin.vue'),
+    component: () => import('@/modules/Auth/pages/PLogin.vue'),
   },
 ] as RouteRecordRaw[]
