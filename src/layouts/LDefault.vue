@@ -3,7 +3,6 @@
     class="grid transition duration-700 ease"
   >
     <CSideBar
-      :class="!layoutStore.isSidebarOpen &&  width < 768 ? '!fixed !top-0 !left-0 z-30 h-full w-full bg-[#00000030]' : ''"
       @click.prevent="layoutStore.isSidebarOpen = true"
     />
     <div class="w-full">
