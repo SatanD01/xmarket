@@ -21,6 +21,7 @@ export async function checkRouteIsExist(to) {
         return { name: 'Dashboard' }
       }
     } catch (e) {
+      localStorage.removeItem('token')
       return { name: 'Login' }
     }
   } else {
