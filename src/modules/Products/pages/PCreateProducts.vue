@@ -1,6 +1,6 @@
 <template>
   <div class="p-3 shadow rounded-lg bg-white">
-    <h3 class="text-[24px] font-bold mb-3">Создать товар</h3>
+    <h3 class="text-[24px] font-bold mb-3">Пополнение склада</h3>
     <div class="gap-3 grid grid-cols-1 md:grid-cols-12">
       <div class="col-span-1 md:col-span-3">
         <p class="text-[18px] mb-2">Фотография товара (.jpeg)</p>

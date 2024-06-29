@@ -11,7 +11,6 @@
         allowfullscreen="false"
       ></iframe>
     </div>
-
     <div class="p-2 flex flex-col gap-1 bg-white rounded-b-lg">
       <p class="font-bold text-[14px]">{{ office.name }}</p>
       <p class="text-[12px] text-gray-500">{{ office.address }}</p>
