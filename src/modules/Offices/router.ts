@@ -9,6 +9,14 @@ const routes: Readonly<RouteRecordRaw[]> = [
       layout: 'empty',
     },
   },
+  {
+    path: '/create-office',
+    name: 'CreateOffice',
+    component: () => import('@/modules/Offices/pages/PCreateOffice.vue'),
+    meta: {
+      layout: 'empty',
+    },
+  },
 ]
 
 export default routes
