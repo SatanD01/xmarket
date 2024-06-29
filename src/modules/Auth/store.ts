@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('authStore', {
     fetchUser() {
       return new Promise((resolve, reject) => {
         useApi()
-          .$get<IUser>('/users/getuser')
+          .$get<IUser>('/users/getUser')
           .then((res) => {
             console.log(res)
             this.user = res?.data

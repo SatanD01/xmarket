@@ -20,14 +20,10 @@
         }}</el-link>
       </p>
       <p class="text-[12px] text-gray-500">{{ office.type }}</p>
-      <div class="grid grid-cols-2 gap-3 mt-2">
+      <div class="grid grid-cols-1 gap-3 mt-2">
         <el-button class="w-full" type="success" plain @click="editBtn"
           ><Pencil :offset-size="1" />
           <span class="ms-2">Изменить</span></el-button
-        >
-        <el-button class="w-full !ms-0" type="danger" plain
-          ><Trash2 :offset-size="1" />
-          <span class="ms-2">Удалить</span></el-button
         >
       </div>
     </div>
@@ -65,7 +61,7 @@
 </template>
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { Pencil, Trash2 } from 'lucide-vue-next'
+import { Pencil } from 'lucide-vue-next'
 import { onMounted, reactive, ref } from 'vue'
 
 import { useApi } from '@/composables/useApi.ts'
