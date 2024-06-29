@@ -4,14 +4,13 @@
   >
     <div class="w-full h-full">
       <iframe
-        src="https://yandex.uz/map-widget/v1/?ll=69.287811%2C41.336934&mode=whatshere&whatshere%5Bpoint%5D=69.285493%2C41.337279&whatshere%5Bzoom%5D=17&z=17.4"
+        src="https://yandex.com/map-widget/v1/?ll=69.283814%2C41.301488&mode=whatshere&whatshere%5Bpoint%5D=69.283814%2C41.301488&whatshere%5Bzoom%5D=17&z=17"
         width="100%"
         height="200"
         frameborder="1"
         allowfullscreen="false"
       ></iframe>
     </div>
-
     <div class="p-2 flex flex-col gap-1 bg-white rounded-b-lg">
       <p class="font-bold text-[14px]">Ташкент, Амир Темур 24 (Главный офис)</p>
       <p class="text-[12px] text-gray-500"><b>Управляющий:</b> Ахматов Ахмат</p>

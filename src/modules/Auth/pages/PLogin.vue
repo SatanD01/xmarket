@@ -9,7 +9,9 @@
         >
           <img class="w-[200px]" src="/logo_black.png" alt="logo" />
           <div>
-            <p class="text-center font-bold text-orange-600 border-b-2">ENERGY</p>
+            <p class="text-center font-bold text-orange-600 border-b-2">
+              ENERGY
+            </p>
             <p class="roboto-light text-gray-500">AUTO PARTS</p>
           </div>
         </div>

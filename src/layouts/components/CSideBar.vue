@@ -15,13 +15,14 @@
       <router-link v-else to="/" class="block px-5 py-4">
         <X class="bg-black text-white rounded" />
       </router-link>
-      <el-menu-item index="1" route="/">
+
+      <el-menu-item index="2" route="/">
         <Box />
         <template #title>
-          <span class="ms-2 font-semibold"> ТОП Товары </span>
+          <span class="ms-2 font-semibold"> Товары </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="2" route="/chart">
+      <el-menu-item index="1" route="/chart">
         <AreaChart />
         <template #title>
           <span class="ms-2 font-semibold"> График </span>
@@ -39,12 +40,12 @@
           <span class="ms-2 font-semibold"> Создать товар </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="5" route="/create-office">
+      <!--      <el-menu-item index="5" route="/create-office">
         <Home />
         <template #title>
           <span class="ms-2 font-semibold"> Создать офис </span>
         </template>
-      </el-menu-item>
+      </el-menu-item>-->
       <el-menu-item index="6" route="/offices">
         <Blinds />
         <template #title>
@@ -72,9 +73,7 @@ import {
   AreaChart,
   Blinds,
   Box,
-  Home,
   PackageOpen,
-  QrCode,
   Settings,
   ShoppingCart,
   UserRoundPlus,
