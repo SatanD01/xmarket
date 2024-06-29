@@ -8,6 +8,9 @@
     >
       <router-link v-if="!isCollapse" to="/" class="block px-5 py-4">
         <img src="/logo_black.png" alt="logo" />
+        <span class="text-center block font-bold"
+          ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
+        >
       </router-link>
       <router-link v-else to="/" class="block px-5 py-4">
         <X class="bg-black text-white rounded" />
