@@ -36,7 +36,7 @@
                 <span class="ms-2">Настройки профиля</span>
               </router-link>
             </el-dropdown-item>
-            <el-dropdown-item @click="$router.push('/login')">
+            <el-dropdown-item @click="logout">
               <LogOut /> <span class="ms-2">Выйти</span></el-dropdown-item
             >
           </el-dropdown-menu>
@@ -58,6 +58,10 @@ const $emit = defineEmits<{
   (e: 'on-toggle'): void
 }>()
 const store = useBasketStore()
+const logout = () => {
+  localStorage.removeItem('token')
+  window.location.replace('/login')
+}
 </script>
 <style scoped>
 .burger-container {

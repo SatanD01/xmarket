@@ -1,17 +1,21 @@
 <template>
   <div class="grid grid-cols-12 gap-3">
     <div class="col-span-12">
-      <el-empty v-if="store.basketItems.length === 0" class="m-auto w-full" description="Ваша корзинка пуста"/>
+      <el-empty
+        v-if="store.basketItems.length === 0"
+        class="m-auto w-full"
+        description="Ваша корзинка пуста"
+      />
     </div>
     <div class="md:col-span-8 col-span-12 gap-3 grid grid-cols-1">
       <template v-if="store.basketItems.length !== 0">
-        <CCard
-            card
-            :data="list"
-        />
+        <CCard card :data="list" />
       </template>
     </div>
-    <div class="md:col-span-4 col-span-12" v-if="store.basketItems.length !== 0">
+    <div
+      class="md:col-span-4 col-span-12"
+      v-if="store.basketItems.length !== 0"
+    >
       <CBuyDetailCard />
     </div>
   </div>

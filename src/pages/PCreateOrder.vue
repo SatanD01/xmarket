@@ -1,16 +1,13 @@
 <template>
   <h3 class="text-[24px] font-bold mb-3">Создать заказ</h3>
-  <CSearch/>
+  <CSearch />
   <div class="grid grid-cols-1 gap-3">
-    <CCard :card="false" :data="products"/>
+    <CCard :card="false" :data="products" />
   </div>
 </template>
 <script setup lang="ts">
-
-import CSearch from "@/components/CSearch.vue";
-import CCard from "@/components/CCard.vue";
-import {products} from "@/data/products.ts";
+import CCard from '@/components/CCard.vue'
+import CSearch from '@/components/CSearch.vue'
+import { products } from '@/data/products.ts'
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>
