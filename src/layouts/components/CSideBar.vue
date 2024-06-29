@@ -42,7 +42,7 @@
           <span class="ms-2 font-semibold"> Создать офис </span>
         </template>
       </el-menu-item>
-      <el-menu-item index="6" route="/office-list">
+      <el-menu-item index="6" route="/offices">
         <Blinds />
         <template #title>
           <span class="ms-2 font-semibold"> Список Офисов </span>

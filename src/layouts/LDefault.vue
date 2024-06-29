@@ -19,8 +19,8 @@
 import { useWindowSize } from '@vueuse/core'
 import { onMounted, ref } from 'vue'
 
-import CHeader from '@/components/Layout/CHeader.vue'
-import CSideBar from '@/components/Layout/CSideBar.vue'
+import CHeader from '@/layouts/components/CHeader.vue'
+import CSideBar from '@/layouts/components/CSideBar.vue'
 
 const { width } = useWindowSize()
 const isSidebarOpen = ref(false)
