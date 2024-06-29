@@ -38,6 +38,7 @@
             <el-button
               @click="loginBtn"
               type="primary"
+              :loading="loading"
               class="!flex !justify-center !items-center"
               >Войти</el-button
             >
@@ -50,16 +51,20 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
-import { ElNotification } from 'element-plus'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { useApi } from '@/composables/useApi.ts'
-import router from '@/router'
+import { useAuthStore } from '@/modules/Auth/store.ts'
 
 interface ILogin {
   login: string
   password: string
 }
+const authStore = useAuthStore()
+const router = useRouter()
+
+const loading = ref(false)
 const rules = {
   login: { required },
   password: { required },
@@ -72,28 +77,17 @@ const v$ = useVuelidate(rules, login)
 
 const loginBtn = async () => {
   v$.value.$touch()
+  loading.value = true
   if (v$.value.$invalid) return
-  useApi()
-    .$post('/Users/Authenticate', login)
-    .then((res) => {
-      console.log(res)
-      router.push('/')
-      ElNotification({
-        title: 'Успешно',
-        message: 'Выход прошел успешно',
-        type: 'success',
-        duration: 1200,
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-      ElNotification({
-        title: 'Ошибка',
-        message: 'Логин или пароль не верный',
-        type: 'error',
-        duration: 1200,
-      })
-    })
+  try {
+    const response = await useApi().$post<ILogin>('/users/authenticate', login)
+    localStorage.setItem('token', response.data.token)
+    await router.push({ name: 'Dashboard' })
+  } catch (err) {
+    console.log(err)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 <style scoped lang="scss"></style>

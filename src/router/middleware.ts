@@ -7,16 +7,24 @@ export async function checkRouteIsExist(to) {
   const token = localStorage.getItem('token')
   const authStore = useAuthStore()
   // const layoutStore = useLayoutStore()
+  const authRoutes = ['Login']
   const loggedIn = computed(() => authStore.loggedIn)
   if (['404', '403', '500'].includes((to.name || '').toString())) {
     return true
   }
-  try {
-    if (token && !loggedIn.value) {
-      await authStore.fetchUser().catch((e) => console.log(e))
+  if (!authRoutes.includes(to.name) && !token) {
+    return { name: 'Login' }
+  } else if (token && !loggedIn.value) {
+    try {
+      await authStore.fetchUser()
+      if (loggedIn.value && authRoutes.includes(to.name)) {
+        return { name: 'Dashboard' }
+      }
+    } catch (e) {
+      return { name: 'Login' }
     }
-  } catch (e) {
-    console.log(e)
+  } else {
+    return true
   }
 
   return true

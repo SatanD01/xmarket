@@ -3,7 +3,7 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
   CreateAxiosDefaults,
-} from "axios"
+} from 'axios'
 
 export const useApi = (apiUrl?: string) => {
   const baseURL = apiUrl || import.meta.env.VITE_APP_SERVER_URL
@@ -11,6 +11,7 @@ export const useApi = (apiUrl?: string) => {
   const $service = (config?: CreateAxiosDefaults): AxiosInstance => {
     const headers = {
       ...config?.headers,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
       // Default headers
     }
     const _axios = axios.create({
