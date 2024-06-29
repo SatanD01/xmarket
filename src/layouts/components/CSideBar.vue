@@ -1,82 +1,62 @@
 <template>
   <div>
-    <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo !absolute md:!fixed top-0 left-0"
-      :collapse="isCollapse"
-      router
+    <el-drawer
+      v-model="layoutStore.isSidebarOpen"
+      :collapse="layoutStore.isSidebarOpen"
+      direction="ltr"
+      :size="width < 768 ? '100%' : '15%'"
     >
-      <router-link v-if="!isCollapse" to="/" class="block px-5 py-4">
-        <img src="/logo_black.png" alt="logo" />
-        <span class="text-center block font-bold"
+      <template #title>
+        <router-link to="/" class="block px-5 py-4">
+          <img src="/logo_black.png" alt="logo" />
+          <span class="text-center block font-bold"
           ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
-        >
-      </router-link>
-      <router-link v-else to="/" class="block px-5 py-4">
-        <X class="bg-black text-white rounded" />
-      </router-link>
-
-      <el-menu-item index="2" route="/">
+          >
+        </router-link>
+      </template>
+      <router-link class="flex gap-3 items-center"  to="/">
         <Box />
-        <template #title>
           <span class="ms-2 font-semibold"> Товары </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="1" route="/chart">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/chart">
         <AreaChart />
-        <template #title>
           <span class="ms-2 font-semibold"> График </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="3" route="/create-order">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/create-order">
         <ShoppingCart />
-        <template #title>
           <span class="ms-2 font-semibold"> Создать заказ </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="4" route="/create-goods">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/create-goods">
         <PackageOpen />
-        <template #title>
           <span class="ms-2 font-semibold"> Пополнение склада </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="5" route="/suppliers-list">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/suppliers-list">
         <UserRoundCog />
-        <template #title>
           <span class="ms-2 font-semibold"> Поставщики </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="6" route="/client-list">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/client-list">
         <Users />
-        <template #title>
           <span class="ms-2 font-semibold"> Клиенты </span>
-        </template>
-      </el-menu-item>
+      </router-link>
       <!--      <el-menu-item index="5" route="/create-office">
         <Home />
-        <template #title>
-          <span class="ms-2 font-semibold"> Создать офис </span>
-        </template>
+
+         <span class="ms-2 font-semibold"> Создать офис </span>
+
       </el-menu-item>-->
-      <el-menu-item index="7" route="/offices">
+      <router-link class="flex gap-3 items-center"  to="/offices">
         <Blinds />
-        <template #title>
           <span class="ms-2 font-semibold"> Список Офисов </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="8" route="/create-user">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/create-user">
         <UserRoundPlus />
-        <template #title>
           <span class="ms-2 font-semibold"> Создать пользователя </span>
-        </template>
-      </el-menu-item>
-      <el-menu-item index="9" route="/admin-settings">
+      </router-link>
+      <router-link class="flex gap-3 items-center"  to="/admin-settings">
         <Settings />
-        <template #title>
           <span class="ms-2 font-semibold"> Настройки профиля </span>
-        </template>
-      </el-menu-item>
-    </el-menu>
+      </router-link>
+    </el-drawer>
   </div>
 </template>
 
@@ -93,11 +73,11 @@ import {
   Users,
   X,
 } from 'lucide-vue-next'
+import { useWindowSize } from '@vueuse/core'
+import { useLayoutStore } from '@/layouts/store.ts'
 
-interface Props {
-  isCollapse?: boolean
-}
-defineProps<Props>()
+const layoutStore = useLayoutStore()
+const {width} = useWindowSize()
 </script>
 
 <style>

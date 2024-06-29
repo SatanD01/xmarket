@@ -1,13 +1,14 @@
 <template>
   <div
     class="grid transition duration-700 ease"
-    :class="isSidebarOpen ? 'grid-cols-[63px_1fr]' : 'grid-cols-[230px_1fr]'"
   >
-    <CSideBar :is-collapse="isSidebarOpen" />
-    <div>
+    <CSideBar
+      :class="!layoutStore.isSidebarOpen &&  width < 768 ? '!fixed !top-0 !left-0 z-30 h-full w-full bg-[#00000030]' : ''"
+      @click.prevent="layoutStore.isSidebarOpen = true"
+    />
+    <div class="w-full">
       <CHeader
-        :is-sidebar-open="isSidebarOpen"
-        @on-toggle="isSidebarOpen = !isSidebarOpen"
+        @on-toggle="layoutStore.isSidebarOpen = !layoutStore.isSidebarOpen"
       />
       <div class="p-5">
         <RouterView />
@@ -16,16 +17,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
-import { onMounted, ref } from 'vue'
 
 import CHeader from '@/layouts/components/CHeader.vue'
 import CSideBar from '@/layouts/components/CSideBar.vue'
+import { useLayoutStore } from '@/layouts/store.ts'
+import { useWindowSize } from '@vueuse/core'
 
-const { width } = useWindowSize()
-const isSidebarOpen = ref(false)
-
-onMounted(() => {
-  isSidebarOpen.value = width.value <= 768
-})
+const {width} = useWindowSize()
+const layoutStore = useLayoutStore()
 </script>
