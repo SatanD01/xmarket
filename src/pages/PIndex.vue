@@ -3,10 +3,7 @@
   <div>
     <h1 class="mb-4 font-bold text-[32px]">Топ товары</h1>
     <div class="grid grid-cols-1 gap-3">
-      <CCard
-        :card="false"
-        :data="products"
-      />
+      <CCard :card="false" :data="products" />
     </div>
   </div>
 </template>

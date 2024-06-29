@@ -18,15 +18,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 
 interface Props {
-  originalImg: string;
-  defaultImg: string;
-  alt: string;
-  imgClass?: string;
+  originalImg: string
+  defaultImg: string
+  alt: string
+  imgClass?: string
 }
-defineProps<Props>();
+defineProps<Props>()
 
-const loading = ref(true);
+const loading = ref(true)
 </script>
