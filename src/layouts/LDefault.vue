@@ -1,12 +1,17 @@
 <template>
-  <div
-    class="grid transition duration-700 ease"
-  >
+  <div class="relative">
     <CSideBar
-      @click.prevent="layoutStore.isSidebarOpen = true"
+      class="!fixed !top-0 !left-0 z-[44]"
     />
-    <div class="w-full">
+    <div
+      :class="{
+        'pl-[250px]': layoutStore.isSidebarOpen,
+        '!pl-[0]': width < 768,
+      }"
+      class="w-full relative"
+    >
       <CHeader
+        class="z-30"
         @on-toggle="layoutStore.isSidebarOpen = !layoutStore.isSidebarOpen"
       />
       <div class="p-5">
@@ -16,12 +21,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
 
 import CHeader from '@/layouts/components/CHeader.vue'
 import CSideBar from '@/layouts/components/CSideBar.vue'
 import { useLayoutStore } from '@/layouts/store.ts'
-import { useWindowSize } from '@vueuse/core'
 
-const {width} = useWindowSize()
+const { width } = useWindowSize()
 const layoutStore = useLayoutStore()
 </script>

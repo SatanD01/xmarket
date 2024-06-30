@@ -83,7 +83,7 @@ const loginBtn = async () => {
   if (v$.value.$invalid) return
   try {
     const response = await useApi().$post<ILogin>('/users/authenticate', login)
-    localStorage.setItem('token', response.data.token)
+    authStore.setToken(response.data.token)
     await router.push({ name: 'Dashboard' })
     toast.success('Login successfully')
     loading.value = true

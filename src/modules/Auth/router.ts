@@ -7,6 +7,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
     component: () => import('@/modules/Auth/pages/PLogin.vue'),
     meta: {
       layout: 'empty',
+      roles: ['Admin', 'Manager', 'Salesman'],
     },
   },
 ]

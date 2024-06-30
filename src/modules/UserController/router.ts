@@ -7,6 +7,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
     component: () => import('@/modules/UserController/pages/PCreateUser.vue'),
     meta: {
       layout: 'empty',
+      roles: ['Admin', 'Manager', 'Salesman'],
     },
   },
   {
@@ -15,6 +16,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
     component: () => import('@/modules/UserController/pages/PSettingsView.vue'),
     meta: {
       layout: 'empty',
+      roles: ['Admin', 'Manager', 'Salesman'],
     },
   },
 ]
