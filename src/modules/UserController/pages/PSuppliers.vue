@@ -14,7 +14,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table'
 import { getSuppliers } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
 
-const suppliers = ref<ISuppliers[] | undefined>()
+let suppliers: Ref<ISuppliers> = ref()
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
   { text: 'Тип', value: 'type' },
@@ -23,7 +23,6 @@ const headers: Header[] = [
   { text: 'Телефон', value: 'phone', sortable: true },
   { text: 'Создан', value: 'createdAt', sortable: true }
 ]
-
 onMounted(async () => {
   suppliers.value = await getSuppliers()
 })

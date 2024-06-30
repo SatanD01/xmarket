@@ -120,25 +120,12 @@ const product = reactive<IProduct>({
 const onFileChange = (e) => {
   const file = e.target.files[0]
   console.log(e.target.files[0])
-
-  // Compress the image
-  new Compressor(file, {
-    quality: 0.6, // Set the compression quality, adjust this value as needed
-    maxWidth: 1024, // Set a max width, optional
-    maxHeight: 1024, // Set a max height, optional
-    success: (compressedResult) => {
-      const reader = new FileReader()
-
-      reader.onload = (e) => {
-        this.good.photoBase64 = e.target.files.split(',')[0] // Get the Base64 string without the prefix
-      }
-
-      reader.readAsDataURL(compressedResult)
-    },
-    error(err) {
-      console.error(err.message)
-    },
+  const reader = new FileReader()
+  reader.addEventListener('load', () => {
+    console.log(reader.result)
   })
+
+  reader.readAsDataURL(file)
 }
 
 const barCode = ref(null)
