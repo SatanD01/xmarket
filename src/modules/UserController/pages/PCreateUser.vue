@@ -52,11 +52,13 @@
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 
 import { useApi } from '@/composables/useApi.ts'
 import { roles } from '@/data/user.ts'
 
+const router = useRouter()
 const form = ref({
   login: '',
   password: '',
@@ -82,6 +84,7 @@ const onSubmit = async () => {
   try {
     const res = await useApi().$post('/Users/RegisterUser', form.value)
     toast.success('User was created successfully!')
+    await router.push({ name: 'Users' })
     console.log(res)
   } catch (err) {
     console.log(err)

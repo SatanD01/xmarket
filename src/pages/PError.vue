@@ -5,7 +5,7 @@
         Страница не найдена <br />
         Или ошибка на сервере
       </h2>
-      <el-button @click="$router.push('/products')" size="large">
+      <el-button @click="$router.push('/index')" size="large">
         На главную
       </el-button>
     </div>

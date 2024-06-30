@@ -8,6 +8,6 @@ export interface IProduct {
   group: string
   partNumber: string
   manualCode: string
-  weight: number
+  weight: number | string
   imageString: string
 }
