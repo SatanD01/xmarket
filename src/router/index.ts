@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AuthRoutes from '@/modules/Auth/router'
-import Charts from '@/modules/Charts/router'
+import ChartRoutes from '@/modules/Charts/router'
 import OfficeRoutes from '@/modules/Offices/router'
-import Products from '@/modules/Products/router'
+import ProductsRoutes from '@/modules/Products/router'
 import UserController from '@/modules/UserController/router'
 import { checkRouteIsExist } from '@/router/middleware'
 
@@ -12,12 +12,18 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      redirect: '/products',
       name: 'Dashboard',
       component: () => import('@/layouts/LDefault.vue'),
       meta: {
         layout: 'default',
       },
-      children: [...OfficeRoutes, ...UserController, ...Products, ...Charts],
+      children: [
+        ...OfficeRoutes,
+        ...UserController,
+        ...ProductsRoutes,
+        ...ChartRoutes,
+      ],
     },
     ...AuthRoutes,
     {

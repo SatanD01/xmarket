@@ -4,6 +4,8 @@
     <div class="gap-3 grid grid-cols-1 md:grid-cols-12">
       <div class="col-span-1 md:col-span-3">
         <p class="text-[18px] mb-2">Фотография товара (.jpeg)</p>
+        <input type="file" @change="onFileChange" />
+
         <el-upload
           class="photo-uploader"
           action="#"
@@ -20,18 +22,19 @@
           />
           <Image v-else class="icon" :size="40" />
         </el-upload>
+        {{ imageUrl }}
       </div>
       <div class="col-span-1 md:col-span-9">
         <p class="text-[18px] mb-2">Информационные поля</p>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <el-select v-model="template" placeholder="Шаблоны">
-            <el-option
-              v-for="item in templates"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+          <!--          <el-select v-model="template" placeholder="Шаблоны">-->
+          <!--            <el-option-->
+          <!--              v-for="item in templates"-->
+          <!--              :key="item.value"-->
+          <!--              :label="item.label"-->
+          <!--              :value="item.value"-->
+          <!--            />-->
+          <!--          </el-select>-->
           <el-input
             v-model="barCode"
             type="text"
@@ -68,15 +71,18 @@
   </div>
 </template>
 <script setup lang="ts">
+import Compressor from 'compressorjs'
 import type { UploadProps } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { Image } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
+
+import { IProduct } from '@/modules/Products/types.ts'
 
 const imageUrl = ref('')
 const providers = ref('')
-const template = ref('')
+// const template = ref('')
 const scanDialog = ref(false)
 const providers_list = [
   {
@@ -88,16 +94,40 @@ const providers_list = [
     label: 'CHAZOR',
   },
 ]
-const templates = [
-  {
-    value: 'Шаблон1',
-    label: 'Шаблон1',
-  },
-  {
-    value: 'Шаблон2',
-    label: 'Шаблон2',
-  },
-]
+// const templates = [
+//   {
+//     value: 'Шаблон1',
+//     label: 'Шаблон1',
+//   },
+//   {
+//     value: 'Шаблон2',
+//     label: 'Шаблон2',
+//   },
+// ]
+const product = reactive<IProduct>({
+  name: '',
+  description: '',
+  manufacturer: '',
+  origin: '',
+  carModel: '',
+  carYear: '',
+  group: '',
+  partNumber: '',
+  manualCode: '',
+  weight: 0,
+  imageString: '',
+})
+const onFileChange = (e) => {
+  const file = e.target.files[0]
+  console.log(e.target.files[0])
+  const reader = new FileReader()
+  reader.addEventListener('load', () => {
+    console.log(reader.result)
+  })
+
+  reader.readAsDataURL(file)
+}
+
 const barCode = ref(null)
 const onDecode = (result: any) => {
   barCode.value = result

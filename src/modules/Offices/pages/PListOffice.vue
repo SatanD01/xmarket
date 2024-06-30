@@ -14,22 +14,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-import { useApi } from '@/composables/useApi.ts'
 import COfficeCard from '@/modules/Offices/components/COfficeCard.vue'
+import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
 
 const offices = ref<IOffice[] | undefined>()
 
 onMounted(async () => {
-  await useApi()
-    .$get('/locations/getLocations')
-    .then((res) => {
-      console.log(res)
-      offices.value = res.data
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  offices.value = await getOffices()
 })
 </script>
 <style scoped></style>
