@@ -12,6 +12,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      redirect: '/products',
       name: 'Dashboard',
       component: () => import('@/layouts/LDefault.vue'),
       meta: {

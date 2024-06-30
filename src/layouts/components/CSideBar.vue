@@ -10,7 +10,7 @@
           >
             <ArrowLeft />
           </div>
-          <router-link to="/" class="block p-4" :class="width < 768 ? 'w-[80%]' : ''">
+          <router-link to="/products" class="block p-4" :class="width < 768 ? 'w-[80%]' : ''">
             <img src="/logo_black.png" alt="logo" />
             <span class="text-center block font-bold"
               ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
@@ -24,7 +24,7 @@
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in mb-4 flex gap-3 items-center"
-                to="/"
+                to="/products"
               >
                 <Box />
                 <span class="ms-2 font-semibold"> Товары </span>
