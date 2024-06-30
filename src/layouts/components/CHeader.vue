@@ -48,9 +48,8 @@
 <script setup lang="ts">
 import { LogOut, Settings, ShoppingCart } from 'lucide-vue-next'
 
-import { useBasketStore } from '@/store/basket.ts'
 import { useLayoutStore } from '@/layouts/store.ts'
-
+import { useBasketStore } from '@/store/basket.ts'
 
 const layoutStore = useLayoutStore()
 const $emit = defineEmits<{
