@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router'
 
 const routes: Readonly<RouteRecordRaw[]> = [
   {
-    path: '/products',
+    path: '/index',
     name: 'Products',
     component: () => import('@/modules/Products/pages/PProducts.vue'),
     meta: {
