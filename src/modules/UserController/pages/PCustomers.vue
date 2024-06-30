@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-white p-3 shadow rounded-lg" v-if="suppliers">
-    <h3 class="text-[24px] font-bold mb-3">Поставщики</h3>
+  <div class="bg-white p-3 shadow rounded-lg" v-if="customer">
+    <h3 class="text-[24px] font-bold mb-3">Клиенты</h3>
     <div>
       <div class="flex gap-3 justify-between items-center mb-3">
         <div>
           <el-button type="primary" @click="createDialog = true"
-            >Доабвить поставщика</el-button
+            >Доабвить клиента</el-button
           >
         </div>
         <el-input
@@ -17,12 +17,12 @@
       <Vue3EasyDataTable
         class="w-full"
         :headers="headers"
-        :items="suppliers"
+        :items="customer"
         :search-field="['name', 'phone']"
         :search-value="searchValue"
       >
         <template #item-type="data">
-          <span>{{ data.type === 'Supplier' ? 'Поставщик' : data.type }}</span>
+          <span>{{ data.type === 'Customer' ? 'Клиент' : data.type }}</span>
         </template>
         <template #item-createdAt="data">
           <span>{{ dayjs(data.createdAt).format('DD.MM.YYYY') }}</span>
@@ -50,7 +50,7 @@
     <el-dialog
       v-model="dialog"
       width="30%"
-      :title="`Изменить ${supplierName}`"
+      :title="`Изменить ${customerName}`"
       :fullscreen="width < 768"
     >
       <div class="grid gap-3 grid-cols-1 md:grid-cols-2">
@@ -69,7 +69,7 @@
           placeholder="Телефон: 998998787676"
           v-model="state.phone"
         />
-        <el-button type="primary" @click="updateSupplier">Обновить</el-button>
+        <el-button type="primary" @click="updateCustomer">Обновить</el-button>
       </div>
     </el-dialog>
     <el-dialog
@@ -94,7 +94,7 @@
           placeholder="Телефон: 998990897867"
           v-model="createState.phone"
         />
-        <el-button type="primary" @click="createSupplier">Создать</el-button>
+        <el-button type="primary" @click="createCustomer">Создать</el-button>
       </div>
     </el-dialog>
   </div>
@@ -110,18 +110,18 @@ import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
 import {
-  createSuppliers,
-  getSuppliers,
-  updateSuppliers,
+  createCustomers,
+  getCustomers,
+  updateCustomers,
 } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
 
-let suppliers: Ref<ISuppliers> = ref()
+let customer: Ref<ISuppliers> = ref()
 const { width } = useWindowSize()
 const searchValue = ref('')
 const dialog = ref(false)
 const createDialog = ref(false)
-const supplierName = ref('')
+const customerName = ref('')
 const state = reactive<ISuppliers>({
   id: 0,
   name: '',
@@ -142,7 +142,7 @@ const rules = {
 const v$ = useVuelidate(rules, state)
 const v2$ = useVuelidate(rules, createState)
 const openDialog = (data) => {
-  supplierName.value = data.name
+  customerName.value = data.name
   state.id = data.id
   state.name = data.name
   state.description = data.description
@@ -152,7 +152,7 @@ const openDialog = (data) => {
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
   { text: 'Тип', value: 'type' },
-  { text: 'Поставщик', value: 'name', sortable: true },
+  { text: 'Клиент', value: 'name', sortable: true },
   { text: 'Описание', value: 'description', sortable: true },
   { text: 'Телефон', value: 'phone', sortable: true },
   { text: 'Создан', value: 'createdAt', sortable: true },
@@ -160,23 +160,26 @@ const headers: Header[] = [
   { text: 'Управление', value: 'buttons' },
 ]
 
-const updateSupplier = async () => {
+const updateCustomer = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
-  await updateSuppliers(state)
-  suppliers.value = await getSuppliers()
+  await updateCustomers(state)
+  customer.value = await getCustomers()
   dialog.value = false
 }
 
-const createSupplier = async () => {
+const createCustomer = async () => {
   v2$.value.$touch()
   if (v2$.value.$invalid) return
-  await createSuppliers(createState)
-  suppliers.value = await getSuppliers()
+  await createCustomers(createState)
+  customer.value = await getCustomers()
+  createState.phone = ''
+  createState.name = ''
+  createState.description = ''
   createDialog.value = false
 }
 onMounted(async () => {
-  suppliers.value = await getSuppliers()
+  customer.value = await getCustomers()
 })
 </script>
 <style scoped></style>
