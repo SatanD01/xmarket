@@ -103,7 +103,7 @@
                 to="/create-user"
               >
                 <UserRoundPlus />
-                <span class="ms-2 font-semibold"> Создать пользователя </span>
+                <span class="ms-2 font-semibold"> Пользователи </span>
               </router-link>
             </li>
             <li>
