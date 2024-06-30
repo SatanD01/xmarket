@@ -38,3 +38,43 @@ export const createSuppliers = (state) => {
       })
   })
 }
+
+
+export const getCustomers = () => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$get('/Partners/GetCustomers')
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const updateCustomers = (state) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('/Partners/UpdateCustomer', state)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const createCustomers = (state) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('/Partners/AddCustomer', state)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
