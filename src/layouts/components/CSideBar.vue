@@ -10,33 +10,33 @@
         <router-link to="/" class="block px-5 py-4">
           <img src="/logo_black.png" alt="logo" />
           <span class="text-center block font-bold"
-          ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
+            ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
           >
         </router-link>
       </template>
-      <router-link class="flex gap-3 items-center"  to="/">
+      <router-link class="flex gap-3 items-center" to="/products">
         <Box />
-          <span class="ms-2 font-semibold"> Товары </span>
+        <span class="ms-2 font-semibold"> Товары </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/chart">
+      <router-link class="flex gap-3 items-center" to="/chart">
         <AreaChart />
-          <span class="ms-2 font-semibold"> График </span>
+        <span class="ms-2 font-semibold"> График </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/create-order">
+      <router-link class="flex gap-3 items-center" to="/create-order">
         <ShoppingCart />
-          <span class="ms-2 font-semibold"> Создать заказ </span>
+        <span class="ms-2 font-semibold"> Создать заказ </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/create-goods">
+      <router-link class="flex gap-3 items-center" to="/create-goods">
         <PackageOpen />
-          <span class="ms-2 font-semibold"> Пополнение склада </span>
+        <span class="ms-2 font-semibold"> Пополнение склада </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/suppliers-list">
+      <router-link class="flex gap-3 items-center" to="/suppliers-list">
         <UserRoundCog />
-          <span class="ms-2 font-semibold"> Поставщики </span>
+        <span class="ms-2 font-semibold"> Поставщики </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/client-list">
+      <router-link class="flex gap-3 items-center" to="/client-list">
         <Users />
-          <span class="ms-2 font-semibold"> Клиенты </span>
+        <span class="ms-2 font-semibold"> Клиенты </span>
       </router-link>
       <!--      <el-menu-item index="5" route="/create-office">
         <Home />
@@ -44,23 +44,25 @@
          <span class="ms-2 font-semibold"> Создать офис </span>
 
       </el-menu-item>-->
-      <router-link class="flex gap-3 items-center"  to="/offices">
+
+      <router-link class="flex gap-3 items-center" to="/offices">
         <Blinds />
-          <span class="ms-2 font-semibold"> Список Офисов </span>
+        <span class="ms-2 font-semibold"> Список Офисов </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/create-user">
+      <router-link class="flex gap-3 items-center" to="/create-user">
         <UserRoundPlus />
-          <span class="ms-2 font-semibold"> Создать пользователя </span>
+        <span class="ms-2 font-semibold"> Создать пользователя </span>
       </router-link>
-      <router-link class="flex gap-3 items-center"  to="/admin-settings">
+      <router-link class="flex gap-3 items-center" to="/admin-settings">
         <Settings />
-          <span class="ms-2 font-semibold"> Настройки профиля </span>
+        <span class="ms-2 font-semibold"> Настройки профиля </span>
       </router-link>
     </el-drawer>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useWindowSize } from '@vueuse/core'
 import {
   AreaChart,
   Blinds,
@@ -73,11 +75,11 @@ import {
   Users,
   X,
 } from 'lucide-vue-next'
-import { useWindowSize } from '@vueuse/core'
+
 import { useLayoutStore } from '@/layouts/store.ts'
 
 const layoutStore = useLayoutStore()
-const {width} = useWindowSize()
+const { width } = useWindowSize()
 </script>
 
 <style>

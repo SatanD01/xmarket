@@ -2,17 +2,17 @@ import { RouteRecordRaw } from 'vue-router'
 
 const routes: Readonly<RouteRecordRaw[]> = [
   {
-    path: '/create-goods',
+    path: '/products',
     name: 'Products',
-    component: () => import('@/modules/Products/pages/PCreateProducts.vue'),
+    component: () => import('@/modules/Products/pages/PProducts.vue'),
     meta: {
       layout: 'empty',
     },
   },
   {
-    path: '/create-order',
-    name: 'CreateOrder',
-    component: () => import('@/modules/Products/pages/PCreateOrder.vue'),
+    path: '/create-product',
+    name: 'CreateProduct',
+    component: () => import('@/modules/Products/pages/PCreateProducts.vue'),
     meta: {
       layout: 'empty',
     },
