@@ -1,7 +1,7 @@
 <template>
   <div>
     <Transition>
-      <div v-if="layoutStore.isSidebarOpen" class="sidebar">
+      <div v-if="width > 768 ? layoutStore.isSidebarOpen : !layoutStore.isSidebarOpen" class="sidebar">
         <div class="flex gap-3">
           <div
             v-if="width < 768"

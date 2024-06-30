@@ -3,7 +3,7 @@
     class="bg-white w-full flex justify-between items-center border-b p-1 sticky top-0 z-[1]"
   >
     <div class="burger-container" @click="$emit('on-toggle')">
-      <div :class="['burger', { 'burger-active': layoutStore.isSidebarOpen }]">
+      <div :class="['burger', { 'burger-active': width > 768 ? layoutStore.isSidebarOpen : !layoutStore.isSidebarOpen }]">
         <div class="line line1"></div>
         <div class="line line2"></div>
         <div class="line line3"></div>
@@ -50,7 +50,9 @@ import { LogOut, Settings, ShoppingCart } from 'lucide-vue-next'
 
 import { useLayoutStore } from '@/layouts/store.ts'
 import { useBasketStore } from '@/store/basket.ts'
+import { useWindowSize } from "@vueuse/core"
 
+const { width } = useWindowSize()
 const layoutStore = useLayoutStore()
 const $emit = defineEmits<{
   (e: 'on-toggle'): void
