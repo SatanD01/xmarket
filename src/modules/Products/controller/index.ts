@@ -13,3 +13,16 @@ export const createProduct = (data: IProduct) => {
       })
   })
 }
+
+export const getProducts = () => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$get('products/getProducts')
+      .then((res) => {
+        resolve(res)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}

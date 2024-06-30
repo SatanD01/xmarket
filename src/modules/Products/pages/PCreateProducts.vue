@@ -9,24 +9,6 @@
           :class="v$.imageString.$error ? 'error' : ''"
           @change="onFileChange"
         />
-
-        <!--        <el-upload-->
-        <!--          class="photo-uploader"-->
-        <!--          action="#"-->
-        <!--          :show-file-list="false"-->
-        <!--          :auto-upload="false"-->
-        <!--          :on-change="handleAvatarSuccess"-->
-        <!--          :before-upload="beforeAvatarUpload"-->
-        <!--        >-->
-        <!--          <img-->
-        <!--            v-if="imageUrl"-->
-        <!--            :src="imageUrl"-->
-        <!--            class="photo !object-cover !w-full"-->
-        <!--            alt="uploaded_image"-->
-        <!--          />-->
-        <!--          <Image v-else class="icon" :size="40" />-->
-        <!--        </el-upload>-->
-        <!--        {{ imageUrl }}-->
       </div>
       <div class="col-span-1 md:col-span-9">
         <p class="text-[18px] mb-2">Информационные поля</p>

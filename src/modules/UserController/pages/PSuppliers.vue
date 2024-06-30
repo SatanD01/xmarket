@@ -105,7 +105,7 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { Pencil } from 'lucide-vue-next'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, Ref, ref } from 'vue'
 import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
@@ -116,7 +116,7 @@ import {
 } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
 
-let suppliers: Ref<ISuppliers> = ref()
+let suppliers: Ref<ISuppliers[] | undefined> = ref()
 const { width } = useWindowSize()
 const searchValue = ref('')
 const dialog = ref(false)
