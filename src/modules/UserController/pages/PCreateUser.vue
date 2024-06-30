@@ -28,18 +28,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { roles } from '@/data/user.ts'
+
 const birthday = ref('')
 const role = ref('')
-
-const roles = [
-  {
-    value: 'manager',
-    label: 'Менеджер',
-  },
-  {
-    value: 'admin',
-    label: 'Админ',
-  },
-]
 </script>
 <style scoped></style>
