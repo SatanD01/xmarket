@@ -109,10 +109,10 @@
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
-                to="/create-user"
+                to="/users"
               >
                 <UserRoundPlus />
-                <span class="ms-2 font-semibold"> Создать пользователя </span>
+                <span class="ms-2 font-semibold"> Пользователи </span>
               </router-link>
             </li>
             <li>

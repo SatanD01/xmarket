@@ -41,6 +41,22 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>
+              <div>
+                <p>Имя: {{ auth.user.name }}</p>
+                <p>Телефон: {{ auth.user.phone }}</p>
+                <p>
+                  Роль:
+                  {{
+                    auth.user.role === 'Admin'
+                      ? 'Админ'
+                      : auth.user.role === 'Manager'
+                        ? 'Менеджер'
+                        : 'Продавец'
+                  }}
+                </p>
+              </div>
+            </el-dropdown-item>
+            <el-dropdown-item>
               <router-link class="flex" to="/admin-settings">
                 <Settings />
                 <span class="ms-2">Настройки профиля</span>
@@ -60,6 +76,7 @@ import { useWindowSize } from '@vueuse/core'
 import { LogOut, Settings, ShoppingCart } from 'lucide-vue-next'
 
 import { useLayoutStore } from '@/layouts/store.ts'
+import { useAuthStore } from '@/modules/Auth/store.ts'
 import { useBasketStore } from '@/store/basket.ts'
 
 const { width } = useWindowSize()
@@ -68,6 +85,7 @@ const $emit = defineEmits<{
   (e: 'on-toggle'): void
 }>()
 const store = useBasketStore()
+const auth = useAuthStore()
 const logout = () => {
   localStorage.removeItem('token')
   window.location.replace('/login')

@@ -7,35 +7,112 @@
       </RouterLink>
     </div>
     <div class="bg-white rounded-lg p-4 w-full mt-6">
-      <el-table :data="tableData" stripe style="width: 100%">
-        <el-table-column prop="date" label="Date" width="180" />
-        <el-table-column prop="name" label="Name" width="180" />
-        <el-table-column prop="address" label="Address" />
-      </el-table>
+      <Vue3EasyDataTable :headers="headers" :items="users">
+        <template #item-createdAt="data">
+          {{ dayjs(data?.createdAt).format('DD-MM-YYYY') }}
+        </template>
+        <template #item-updatedAt="data">
+          {{
+            data?.updatedAt ? dayjs(data?.updatedAt).format('DD-MM-YYYY') : '-'
+          }}
+        </template>
+        <template #item-passwordSalt="data">
+          <div class="flex items-center gap-4">
+            <RouterLink
+              :to="{ name: 'UsersEdit', params: { id: data?.id } }"
+              class="py-2"
+            >
+              <FilePenIcon />
+            </RouterLink>
+            <div
+              @click="openDelete(data?.id)"
+              class="p-2 rounded-md bg-gray-200 cursor-pointer group hover:bg-red-400 transition-200"
+            >
+              <Trash
+                :size="16"
+                class="text-red-500 group-hover:text-white transition-200"
+              />
+            </div>
+          </div>
+        </template>
+      </Vue3EasyDataTable>
     </div>
+    <el-dialog v-model="dialog" class="!w-[300px]">
+      <div>
+        <p class="mb-10 text-lg text-center">
+          Are you sure? <br />
+          Do you really want to delete this user?
+        </p>
+        <div class="flex items-center gap-2">
+          <el-button type="danger" @click="cancel" class="w-full"
+            >Cancel</el-button
+          >
+          <el-button
+            type="primary"
+            @click="deleteUser"
+            :loading="loading"
+            class="w-full"
+            >Yes</el-button
+          >
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
+import dayjs from 'dayjs'
+import { FilePenIcon, Trash } from 'lucide-vue-next'
+import { Ref, ref } from 'vue'
+import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
+import { toast } from 'vue3-toastify'
+
+import { useApi } from '@/composables/useApi.ts'
+import { IUsers } from '@/modules/UserController/types.ts'
+
+const users: Ref<IUsers[]> = ref([])
+const headers: Header[] = [
+  { text: 'Имя', value: 'name', sortable: true },
+  { text: 'Role', value: 'role', sortable: true },
+  { text: 'Id', value: 'id' },
+  { text: 'Login', value: 'login' },
+  { text: 'Телефон', value: 'phone', sortable: true },
+  { text: 'Создан', value: 'createdAt', sortable: true },
+  { text: 'Updated', value: 'updatedAt', sortable: true },
+  { text: 'Edit', value: 'passwordSalt' },
 ]
+const dialog = ref(false)
+const loading = ref(false)
+const deleteId = ref('')
+const getUsers = async () => {
+  try {
+    const res = await useApi().$get<IUsers[]>('/Users/GetUsers')
+    users.value = res.data
+  } catch (err) {
+    console.log(err)
+  }
+}
+const openDelete = (id: string) => {
+  deleteId.value = id
+  dialog.value = true
+}
+const cancel = () => {
+  deleteId.value = ''
+  dialog.value = false
+}
+const deleteUser = async () => {
+  loading.value = true
+  try {
+    await useApi().$post('/Users/DeleteUser', {
+      id: deleteId.value,
+    })
+    await getUsers()
+    toast.success('User successfully deleted!')
+    dialog.value = false
+  } catch (err) {
+    console.log(err)
+  } finally {
+    loading.value = false
+  }
+}
+getUsers()
 </script>

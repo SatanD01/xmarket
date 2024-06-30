@@ -12,14 +12,15 @@
       ></iframe>
     </div>
     <div class="p-2 flex flex-col gap-1 bg-white rounded-b-lg">
-      <p class="font-bold text-[14px]">{{ office.name }}</p>
-      <p class="text-[12px] text-gray-500">{{ office.address }}</p>
+      <p class="font-bold text-[14px]">Название: {{ office.name }}</p>
+      <p class="text-[12px] text-gray-500">Адрес: {{ office.address }}</p>
       <p class="text-[12px] text-gray-500">
-        <el-link class="!text-[12px] text-gray-500" href="tel:998999999999">{{
-          office.description
-        }}</el-link>
+        Описание:
+        {{ office.description }}
       </p>
-      <p class="text-[12px] text-gray-500">{{ office.type }}</p>
+      <p class="text-[12px] text-gray-500">
+        Тип: {{ office.type === 'Warehouse' ? 'Офис' : 'Склад' }}
+      </p>
       <div class="grid grid-cols-1 gap-3 mt-2">
         <el-button class="w-full" type="success" plain @click="editBtn"
           ><Pencil :offset-size="1" />
@@ -39,30 +40,30 @@
           :class="v$.name.$error ? 'error' : ''"
           size="large"
           v-model="officeData.name"
-          placeholder="Name"
+          placeholder="Название"
         />
         <el-input
           size="large"
           :class="v$.description.$error ? 'error' : ''"
           v-model="officeData.description"
-          placeholder="Description"
+          placeholder="Описание"
         />
         <el-input
           size="large"
           v-model="officeData.address"
-          placeholder="Address"
+          placeholder="Адрес"
           :class="v$.address.$error ? 'error' : ''"
         />
         <el-select
           :class="v$.type.$error ? 'error' : ''"
           size="large"
           v-model="officeData.type"
-          placeholder="Type"
+          placeholder="Тип"
         >
           <el-option
             v-for="item in officeTypes"
             :key="item"
-            :label="item"
+            :label="officeTypes == 'Warehouse' ? 'Офис' : 'Склад'"
             :value="item"
           />
         </el-select>
@@ -79,7 +80,7 @@
           size="large"
           v-model="officeData.addressUrl"
           :class="v$.addressUrl.$error ? 'error' : ''"
-          placeholder="Link"
+          placeholder="Ссылка на Яндекс карты"
           class="mt-3"
         />
       </div>
