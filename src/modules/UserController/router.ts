@@ -20,8 +20,8 @@ const routes: Readonly<RouteRecordRaw[]> = [
     },
   },
   {
-    path: '/admin-settings',
-    name: 'PSettings',
+    path: '/users-edit/:id',
+    name: 'UsersEdit',
     component: () => import('@/modules/UserController/pages/PSettingsView.vue'),
     meta: {
       layout: 'empty',

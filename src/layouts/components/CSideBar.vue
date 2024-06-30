@@ -1,7 +1,12 @@
 <template>
   <div>
     <Transition>
-      <div v-if="width > 768 ? layoutStore.isSidebarOpen : !layoutStore.isSidebarOpen" class="sidebar">
+      <div
+        v-if="
+          width > 768 ? layoutStore.isSidebarOpen : !layoutStore.isSidebarOpen
+        "
+        class="sidebar"
+      >
         <div class="flex gap-3">
           <div
             v-if="width < 768"
@@ -10,7 +15,11 @@
           >
             <ArrowLeft />
           </div>
-          <router-link to="/products" class="block p-4" :class="width < 768 ? 'w-[80%]' : ''">
+          <router-link
+            to="/products"
+            class="block p-4"
+            :class="width < 768 ? 'w-[80%]' : ''"
+          >
             <img src="/logo_black.png" alt="logo" />
             <span class="text-center block font-bold"
               ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
@@ -100,10 +109,12 @@
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
-                to="/create-user"
+                to="/users"
               >
                 <UserRoundPlus />
-                <span class="ms-2 font-semibold"> Создать пользователя </span>
+                <span class="ms-2 font-semibold capitalize">
+                  пользователя
+                </span>
               </router-link>
             </li>
             <li>
@@ -127,6 +138,7 @@
 import { useWindowSize } from '@vueuse/core'
 import {
   AreaChart,
+  ArrowLeft,
   Blinds,
   Box,
   PackageOpen,
@@ -135,7 +147,6 @@ import {
   UserRoundCog,
   UserRoundPlus,
   Users,
-  ArrowLeft,
 } from 'lucide-vue-next'
 
 import { useLayoutStore } from '@/layouts/store.ts'

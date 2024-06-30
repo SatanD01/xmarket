@@ -6,3 +6,14 @@ export interface ISuppliers {
   phone: string | undefined
   createdAt: string | undefined
 }
+export interface IUsers {
+  id: number
+  login: string
+  passwordHash: string
+  passwordSalt: string
+  role: string
+  name: string
+  phone: string
+  createdAt: string
+  updatedAt: null | string
+}
