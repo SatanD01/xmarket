@@ -1,15 +1,4 @@
 <template>
-  <!--  <el-image
-      style="width: 50px; height: 50px; z-index: 1"
-      :src="scope.row.img"
-      :zoom-rate="1.2"
-      :max-scale="7"
-      :min-scale="0.2"
-      :initial-index="4"
-      :preview-src-list="scope.row.img_list"
-      fit="cover"
-  />-->
-
   <Vue3EasyDataTable :headers="headers" :items="items">
     <template #item-img="item">
       <div class="w-[100px] py-3">
@@ -23,124 +12,10 @@
           :initial-index="4"
           fit="cover"
         />
-        <!--        <img :src="header.img" alt="" />-->
       </div>
     </template>
   </Vue3EasyDataTable>
   <pre>{{ data }}</pre>
-  <!--  <el-table :data="data" style="width: 100%" max-height="450">-->
-  <!--    <el-table-column prop="id" label="ID" />-->
-  <!--    <el-table-column prop="img" label="Фото" width="120">-->
-  <!--      &lt;!&ndash;      Бу клик буганда тепадиги el-image босилиши кере. Бумасам таблицани оркасида коб кетвотти расим&ndash;&gt;-->
-  <!--      <template #default="scope">-->
-  <!--        <img-->
-  <!--          :src="scope.row.img"-->
-  <!--          :alt="scope.row.img"-->
-  <!--          class="w-[50] h-[50] object-cover"-->
-  <!--        />-->
-  <!--      </template>-->
-  <!--    </el-table-column>-->
-  <!--    <el-table-column prop="name" label="Название товара" width="300px" />-->
-  <!--    <el-table-column prop="category" label="Категория" />-->
-  <!--    <el-table-column prop="col" label="Количество" />-->
-  <!--    <el-table-column label="Цена">-->
-  <!--      <template #default="scope">-->
-  <!--        <span>{{ scope.row.price }} {{ scope.row.currency }}</span>-->
-  <!--      </template>-->
-  <!--    </el-table-column>-->
-  <!--    <el-table-column label="Действие" width="220">-->
-  <!--      <template #default="scope">-->
-  <!--        <el-button-->
-  <!--          type="primary"-->
-  <!--          size="small"-->
-  <!--          @click="cardBtn"-->
-  <!--          v-if="!card && !inCard"-->
-  <!--        >-->
-  <!--          Добавить-->
-  <!--        </el-button>-->
-  <!--        <el-button-->
-  <!--          type="danger"-->
-  <!--          size="small"-->
-  <!--          @click.prevent="onDelete(scope.row.id)"-->
-  <!--          v-if="!card && !inCard"-->
-  <!--        >-->
-  <!--          <Trash2 :stroke-width="1" size="20" /> Удалить-->
-  <!--        </el-button>-->
-  <!--        <div class="flex gap-1" v-if="inCard || card">-->
-  <!--          <el-button-->
-  <!--            class="w-[39px] h-[32px]"-->
-  <!--            :class="-->
-  <!--              goods_count <= 0 ? '!border-[#409eef30]' : '!border-[#409eef]'-->
-  <!--            "-->
-  <!--            :disabled="goods_count <= 0"-->
-  <!--            @click="goods_count -= 1"-->
-  <!--            >-</el-button-->
-  <!--          >-->
-  <!--          <el-input class="!text-center min-w-[40px]" v-model="goods_count" />-->
-  <!--          <el-button-->
-  <!--            class="w-[39px] h-[32px] !border-[#409eef]"-->
-  <!--            @click="goods_count += 1"-->
-  <!--            >+</el-button-->
-  <!--          >-->
-  <!--        </div>-->
-  <!--      </template>-->
-  <!--    </el-table-column>-->
-  <!--  </el-table>-->
-  <!--  <div
-    class="grid grid-cols-1 card shadow border rounded-lg hover:shadow-lg transition-all hover:transition-all cursor-pointer"
-  >
-    <CLazyImage
-      default-img="./images/byd-default.webp"
-      original-img="https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg"
-      alt="https://www.topgear.com/sites/default/files/2023/03/12-BYD-Atto-3.jpg"
-      img-class="min-h-[236px] rounded-t-lg"
-    />
-
-    <div class="p-2 flex flex-col gap-1 bg-white rounded-b-lg">
-      <p class="font-bold text-[14px]">Монитор для салона BYD SONG PLUS</p>
-      <p class="text-[12px] text-gray-500"><b>Категория:</b> Салон</p>
-      <p class="text-[12px] text-gray-500"><b>Количество:</b> 10 шт.</p>
-      <el-button class="w-full" type="primary"
-        ><b class="me-2">Цена:</b> 200$</el-button
-      >
-      <div class="mt-2">
-        <el-button
-          @click="cardBtn"
-          v-if="!card && !inCard"
-          class="w-full !ms-0"
-          type="primary"
-          plain
-          >В корзину</el-button
-        >
-        <div class="flex gap-1" v-if="inCard || card">
-          <el-button
-            class="w-[39px] h-[32px]"
-            :class="
-              goods_count <= 0 ? '!border-[#409eef30]' : '!border-[#409eef]'
-            "
-            :disabled="goods_count <= 0"
-            @click="goods_count -= 1"
-            >-</el-button
-          >
-          <el-input class="!text-center min-w-[40px]" v-model="goods_count" />
-          <el-button
-            class="w-[39px] h-[32px] !border-[#409eef]"
-            @click="goods_count += 1"
-            >+</el-button
-          >
-        </div>
-        <el-button
-          v-if="card"
-          class="w-full mt-2"
-          type="danger"
-          plain
-          @click="$emit('on-delete')"
-          ><Trash2 :stroke-width="1" size="20" />
-          <span class="ms-2">Удалить</span></el-button
-        >
-      </div>
-    </div>
-  </div>-->
 </template>
 <script setup lang="ts">
 import 'vue3-easy-data-table/dist/style.css'

@@ -34,12 +34,31 @@
       width="800"
       :fullscreen="fullscreen"
     >
-      <div class="grid md:grid-cols-3 grid-cols-1 gap-3">
-        <el-input v-model="officeData.name" placeholder="Name" />
-        <el-input v-model="officeData.description" placeholder="Description" />
-        <el-input v-model="officeData.address" placeholder="Address" />
-        <el-input v-model="officeData.addressUrl" placeholder="Link" />
-        <el-select v-model="officeData.type" placeholder="Type">
+      <div class="grid md:grid-cols-2 grid-cols-1 gap-3">
+        <el-input
+          :class="v$.name.$error ? 'error' : ''"
+          size="large"
+          v-model="officeData.name"
+          placeholder="Name"
+        />
+        <el-input
+          size="large"
+          :class="v$.description.$error ? 'error' : ''"
+          v-model="officeData.description"
+          placeholder="Description"
+        />
+        <el-input
+          size="large"
+          v-model="officeData.address"
+          placeholder="Address"
+          :class="v$.address.$error ? 'error' : ''"
+        />
+        <el-select
+          :class="v$.type.$error ? 'error' : ''"
+          size="large"
+          v-model="officeData.type"
+          placeholder="Type"
+        >
           <el-option
             v-for="item in officeTypes"
             :key="item"
@@ -47,6 +66,22 @@
             :value="item"
           />
         </el-select>
+      </div>
+      <div class="w-full mt-3">
+        <iframe
+          :src="office.addressUrl"
+          width="100%"
+          height="200"
+          frameborder="1"
+          allowfullscreen="false"
+        ></iframe>
+        <el-input
+          size="large"
+          v-model="officeData.addressUrl"
+          :class="v$.addressUrl.$error ? 'error' : ''"
+          placeholder="Link"
+          class="mt-3"
+        />
       </div>
       <template #footer>
         <div class="dialog-footer">
@@ -60,6 +95,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import { Pencil } from 'lucide-vue-next'
 import { onMounted, reactive, ref } from 'vue'
@@ -82,7 +119,15 @@ const officeData = reactive<IOffice>({
   type: '',
   id: '',
 })
+const rules = {
+  address: { required },
+  addressUrl: { required },
+  description: { required },
+  name: { required },
+  type: { required },
+}
 const officeTypes = ref(['Warehouse'])
+const v$ = useVuelidate(rules, officeData)
 const editBtn = () => {
   dialogVisible.value = true
   officeData.name = props.office.name
@@ -93,6 +138,8 @@ const editBtn = () => {
   officeData.id = props.office.id
 }
 const updateOffice = async () => {
+  v$.value.$touch()
+  if (v$.value.$invalid) return
   await useApi()
     .$post('/locations/updateLocation', officeData)
     .then((res) => {
