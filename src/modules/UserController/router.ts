@@ -19,6 +19,15 @@ const routes: Readonly<RouteRecordRaw[]> = [
       roles: ['Admin', 'Manager', 'Salesman'],
     },
   },
+  {
+    path: '/suppliers-list',
+    name: 'PSuppliers',
+    component: () => import('@/modules/UserController/pages/PSuppliers.vue'),
+    meta: {
+      layout: 'empty',
+      roles: ['Admin', 'Manager'],
+    },
+  },
 ]
 
 export default routes
