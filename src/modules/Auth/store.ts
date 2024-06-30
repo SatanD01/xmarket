@@ -11,28 +11,30 @@ export const useAuthStore = defineStore('authStore', {
   }),
   actions: {
     getTokens() {
-      return localStorage.getItem('token')
+      return localStorage.getItem('access_token')
+    },
+    setToken(token: string) {
+      localStorage.setItem('access_token', token)
+    },
+    removeToken() {
+      localStorage.removeItem('access_token')
     },
     fetchUser() {
       return new Promise((resolve, reject) => {
         useApi()
           .$get<IUser>('/users/getUser')
           .then((res) => {
-            console.log(res)
             this.user = res?.data
-            this.loggedIn = true
-            resolve(res)
+            resolve(res.data)
           })
           .catch((err) => {
-            console.log(err)
             reject(err)
           })
       })
     },
     async logout() {
-      localStorage.removeItem('token')
+      this.removeToken()
       this.user = null
-      this.loggedIn = false
     },
   },
 })
