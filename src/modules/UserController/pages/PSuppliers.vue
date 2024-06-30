@@ -2,33 +2,30 @@
   <div class="bg-white p-3 shadow rounded-lg">
     <h3 class="text-[24px] font-bold mb-3">Поставщики</h3>
     <div class="grid md:grid-cols-4 grid-cols-1 gap-3">
-      <Vue3EasyDataTable :headers="headers" :items="items"> </Vue3EasyDataTable>
+      {{ suppliers }}
+      <Vue3EasyDataTable :headers="headers" :items="items" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { Header, Item } from 'vue3-easy-data-table'
-import Vue3EasyDataTable from 'vue3-easy-data-table'
-import { useApi } from "@/composables/useApi.ts"
+import 'vue3-easy-data-table/dist/style.css'
 
-const suppliers = ref(null)
+import { computed, onMounted, ref } from 'vue'
+import type { Header } from 'vue3-easy-data-table'
+import Vue3EasyDataTable from 'vue3-easy-data-table'
+
+import { getSuppliers } from '@/modules/UserController/controller'
+import { ISuppliers } from '@/modules/UserController/types'
+
+const suppliers = ref<ISuppliers[] | undefined>()
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
   { text: 'Тип', value: 'type' },
   { text: 'Имя', value: 'name', sortable: true },
   { text: 'Описание', value: 'description', sortable: true },
   { text: 'Телефон', value: 'phone', sortable: true },
-  { text: 'Создан', value: 'createdAt', sortable: true },
+  { text: 'Создан', value: 'createdAt' }
 ]
-
-const getSuppliers = async () => {
-  await useApi()
-    .$get('/Partners/GetSuppliers')
-    .then((res) => {
-      suppliers.value = res.data
-    })
-}
 
 const items = computed(
   ():
@@ -41,19 +38,13 @@ const items = computed(
         createdAt: string | undefined
       }[]
     | undefined => {
-    return suppliers.value?.map((item) => {
-      return {
-        id: item.id,
-        type: item?.type,
-        name: item?.name,
-        description: item?.description,
-        phone: item?.phone,
-        createdAt: item?.createdAt,
-      }
-    })
+    return suppliers.value
   },
 )
-console.log(suppliers.value)
-getSuppliers()
+onMounted(async () => {
+  console.log(123)
+  suppliers.value = await getSuppliers()
+  console.log(suppliers.value)
+})
 </script>
 <style scoped></style>
