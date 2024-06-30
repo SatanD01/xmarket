@@ -1,16 +1,16 @@
 <template>
   <div v-if="products">
-    <CSearch />
     <div>
-      <div class="flex items-center justify-between">
-        <h1 class="mb-4 font-bold text-[32px]">Топ товары</h1>
+      <div class="bg-white gap-3 shadow rounded-lg mb-3 p-3 flex items-center justify-between">
+        <h1 class="font-bold text-[32px]">Товары</h1>
         <el-button
           type="primary"
           @click="$router.push({ name: 'CreateProduct' })"
-          >Create product</el-button
+          >Создать товар</el-button
         >
       </div>
-      <div>
+      <div class="bg-white p-3 rounded-lg shadow">
+        <CSearch />
         <Vue3EasyDataTable :headers="headers" :items="products">
           <template #item-img="item">
             <div class="w-[100px] py-3">
