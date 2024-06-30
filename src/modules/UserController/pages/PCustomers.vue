@@ -1,13 +1,15 @@
 <template>
-  <div class="bg-white p-3 shadow rounded-lg" v-if="customer">
-    <h3 class="text-[24px] font-bold mb-3">Клиенты</h3>
-    <div>
+  <div v-if="customer">
+    <div
+      class="flex items-center justify-between bg-white gap-3 p-3 mb-3 shadow rounded-lg"
+    >
+      <h3 class="text-[24px] font-bold">Клиенты</h3>
+      <el-button type="primary" @click="createDialog = true"
+        >Доабвить клиента</el-button
+      >
+    </div>
+    <div class="bg-white p-3 shadow rounded-lg">
       <div class="flex gap-3 justify-between items-center mb-3">
-        <div>
-          <el-button type="primary" @click="createDialog = true"
-            >Доабвить клиента</el-button
-          >
-        </div>
         <el-input
           v-model="searchValue"
           placeholder="Поиск"
