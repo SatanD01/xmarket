@@ -1,7 +1,9 @@
 <template>
   <div v-if="products">
     <div>
-      <div class="bg-white gap-3 shadow rounded-lg mb-3 p-3 flex items-center justify-between">
+      <div
+        class="bg-white gap-3 shadow rounded-lg mb-3 p-3 flex items-center justify-between"
+      >
         <h1 class="font-bold text-[32px]">Товары</h1>
         <el-button
           type="primary"
@@ -45,16 +47,16 @@ const products: Ref<IProduct[] | undefined> = ref()
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
   { text: 'Фото', value: 'imageString' },
-  { text: 'Name', value: 'name', sortable: true },
-  { text: 'Description', value: 'description', sortable: true },
-  { text: 'Manufacturer', value: 'manufacturer', sortable: true },
-  { text: 'Origin', value: 'origin', sortable: true },
-  { text: 'Model', value: 'carModel', sortable: true },
-  { text: 'Year', value: 'carYear', sortable: true },
-  { text: 'Group', value: 'group', sortable: true },
-  { text: 'Part number', value: 'partNumber', sortable: true },
-  { text: 'Code', value: 'manualCode', sortable: true },
-  { text: 'Weight', value: 'weight', sortable: true },
+  { text: 'Название', value: 'name', sortable: true },
+  { text: 'Описание', value: 'description', sortable: true },
+  { text: 'Поставщик', value: 'manufacturer', sortable: true },
+  { text: 'Тип', value: 'origin', sortable: true },
+  { text: 'Модель', value: 'carModel', sortable: true },
+  { text: 'Год выпуска', value: 'carYear', sortable: true },
+  { text: 'Группа', value: 'group', sortable: true },
+  { text: 'Баркод', value: 'partNumber', sortable: true },
+  { text: 'Код', value: 'manualCode', sortable: true },
+  { text: 'Вес', value: 'weight', sortable: true },
 ]
 
 onMounted(async () => {
