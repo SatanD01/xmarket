@@ -16,7 +16,7 @@
             <div class="w-[100px] py-3">
               <el-image
                 style="width: 100px; height: 100px"
-                :src="item.img"
+                :src="item.imgString"
                 :zoom-rate="1.0"
                 :max-scale="6"
                 :min-scale="0.2"
