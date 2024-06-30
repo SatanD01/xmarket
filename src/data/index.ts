@@ -1,4 +1,18 @@
-export const products = [
+export const isOriginal = ['Original', 'Duplicate']
+export const groupTypes = [
+  'Chassis',
+  'ElectricAppliance',
+  'Interior',
+  'Exterior',
+  'BodyAndAttachments',
+  'Engine',
+  'PowerBattery',
+  'AuxiliaryMaterial',
+  'Transmission',
+  'Other',
+]
+
+export const index = [
   {
     id: 1,
     count: 0,

@@ -37,6 +37,15 @@ const routes: Readonly<RouteRecordRaw[]> = [
       roles: ['Admin', 'Manager'],
     },
   },
+  {
+    path: '/customers-list',
+    name: 'PCustomers',
+    component: () => import('@/modules/UserController/pages/PCustomers.vue'),
+    meta: {
+      layout: 'empty',
+      roles: ['Admin', 'Manager', 'Salesman'],
+    },
+  },
 ]
 
 export default routes

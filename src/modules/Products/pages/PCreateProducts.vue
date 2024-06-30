@@ -4,60 +4,134 @@
     <div class="gap-3 grid grid-cols-1 md:grid-cols-12">
       <div class="col-span-1 md:col-span-3">
         <p class="text-[18px] mb-2">Фотография товара (.jpeg)</p>
-        <input type="file" @change="onFileChange" />
+        <input
+          type="file"
+          :class="v$.imageString.$error ? 'error' : ''"
+          @change="onFileChange"
+        />
 
-        <el-upload
-          class="photo-uploader"
-          action="#"
-          :show-file-list="false"
-          :auto-upload="false"
-          :on-change="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img
-            v-if="imageUrl"
-            :src="imageUrl"
-            class="photo !object-cover !w-full"
-            alt="uploaded_image"
-          />
-          <Image v-else class="icon" :size="40" />
-        </el-upload>
-        {{ imageUrl }}
+        <!--        <el-upload-->
+        <!--          class="photo-uploader"-->
+        <!--          action="#"-->
+        <!--          :show-file-list="false"-->
+        <!--          :auto-upload="false"-->
+        <!--          :on-change="handleAvatarSuccess"-->
+        <!--          :before-upload="beforeAvatarUpload"-->
+        <!--        >-->
+        <!--          <img-->
+        <!--            v-if="imageUrl"-->
+        <!--            :src="imageUrl"-->
+        <!--            class="photo !object-cover !w-full"-->
+        <!--            alt="uploaded_image"-->
+        <!--          />-->
+        <!--          <Image v-else class="icon" :size="40" />-->
+        <!--        </el-upload>-->
+        <!--        {{ imageUrl }}-->
       </div>
       <div class="col-span-1 md:col-span-9">
         <p class="text-[18px] mb-2">Информационные поля</p>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-          <!--          <el-select v-model="template" placeholder="Шаблоны">-->
-          <!--            <el-option-->
-          <!--              v-for="item in templates"-->
-          <!--              :key="item.value"-->
-          <!--              :label="item.label"-->
-          <!--              :value="item.value"-->
-          <!--            />-->
-          <!--          </el-select>-->
           <el-input
-            v-model="barCode"
+            v-model="product.name"
+            size="large"
             type="text"
-            placeholder="Название товара"
+            placeholder="Name"
+            :class="v$.name.$error ? 'error' : ''"
           ></el-input>
-          <el-input type="text" placeholder="В каком офисе товар"></el-input>
-          <el-input type="text" placeholder="количество"></el-input>
-          <el-input type="text" placeholder="Своя цена"></el-input>
-          <el-input type="text" placeholder="Цена с наценкой"></el-input>
-          <el-select v-model="providers" placeholder="Поставщик">
+          <el-input
+            size="large"
+            v-model="product.description"
+            type="text"
+            placeholder="Description"
+            :class="v$.description.$error ? 'error' : ''"
+          ></el-input>
+          <el-input
+            size="large"
+            v-model="product.carModel"
+            type="text"
+            placeholder="Car model"
+            :class="v$.carModel.$error ? 'error' : ''"
+          ></el-input>
+          <el-input
+            size="large"
+            v-model="product.carYear"
+            type="text"
+            placeholder="Car year"
+            :class="v$.carYear.$error ? 'error' : ''"
+          ></el-input>
+          <el-select
+            size="large"
+            v-model="product.origin"
+            type="text"
+            placeholder="Group"
+            :class="v$.origin.$error ? 'error' : ''"
+          >
             <el-option
-              v-for="item in providers_list"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in isOriginal"
+              :key="item"
+              :label="item"
+              :value="item"
             />
           </el-select>
-          <el-input type="text" placeholder="Разер товара"></el-input>
-          <el-input type="text" placeholder="Категория товара"></el-input>
-          <el-button type="primary">Создать</el-button>
-          <el-button type="primary" class="!ms-0">Сохрать шаблон</el-button>
-          <el-button @click="scanDialog = true" type="primary" class="!ms-0"
+          <el-select
+            size="large"
+            v-model="product.manufacturer"
+            placeholder="Поставщик"
+            :class="v$.manufacturer.$error ? 'error' : ''"
+          >
+            <el-option
+              v-for="item in providersList"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+          <el-input
+            size="large"
+            v-model="product.manualCode"
+            type="text"
+            placeholder="Product Code"
+            :class="v$.manualCode.$error ? 'error' : ''"
+          ></el-input>
+          <el-select
+            size="large"
+            v-model="product.group"
+            type="text"
+            placeholder="Origin"
+            :class="v$.group.$error ? 'error' : ''"
+          >
+            <el-option
+              v-for="item in groupTypes"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+          <el-input
+            size="large"
+            v-model="product.partNumber"
+            type="text"
+            placeholder="Part number"
+            :class="v$.partNumber.$error ? 'error' : ''"
+          ></el-input>
+          <el-input
+            size="large"
+            v-model="product.weight"
+            type="number"
+            placeholder="Weight"
+            :class="v$.weight.$error ? 'error' : ''"
+          ></el-input>
+
+          <!--          <el-button type="primary" class="!ms-0">Сохрать шаблон</el-button>-->
+          <el-button
+            size="large"
+            @click="scanDialog = true"
+            type="primary"
+            class="!ms-0"
             >Сканировать QR-Код</el-button
+          >
+          <el-button size="large" @click="createProductBtn" type="primary"
+            >Создать</el-button
           >
         </div>
       </div>
@@ -71,39 +145,20 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import Compressor from 'compressorjs'
-import type { UploadProps } from 'element-plus'
-import { ElMessage } from 'element-plus'
-import { Image } from 'lucide-vue-next'
 import { reactive, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
+import { useRouter } from 'vue-router'
 
+import { groupTypes, isOriginal } from '@/data'
+import { createProduct } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
 
-const imageUrl = ref('')
-const providers = ref('')
-// const template = ref('')
+const router = useRouter()
 const scanDialog = ref(false)
-const providers_list = [
-  {
-    value: 'BYD',
-    label: 'BYD',
-  },
-  {
-    value: 'CHAZOR',
-    label: 'CHAZOR',
-  },
-]
-// const templates = [
-//   {
-//     value: 'Шаблон1',
-//     label: 'Шаблон1',
-//   },
-//   {
-//     value: 'Шаблон2',
-//     label: 'Шаблон2',
-//   },
-// ]
+const providersList = ['BYD']
 const product = reactive<IProduct>({
   name: '',
   description: '',
@@ -114,39 +169,73 @@ const product = reactive<IProduct>({
   group: '',
   partNumber: '',
   manualCode: '',
-  weight: 0,
+  weight: '',
   imageString: '',
 })
+const rules = {
+  name: { required },
+  description: { required },
+  manufacturer: { required },
+  origin: { required },
+  carModel: { required },
+  carYear: { required },
+  group: { required },
+  partNumber: { required },
+  manualCode: { required },
+  weight: { required },
+  imageString: { required },
+}
 const onFileChange = (e) => {
   const file = e.target.files[0]
   console.log(e.target.files[0])
-  const reader = new FileReader()
-  reader.addEventListener('load', () => {
-    console.log(reader.result)
-  })
 
-  reader.readAsDataURL(file)
+  new Compressor(file, {
+    quality: 0.6,
+
+    success: (compressedFile) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        product.imageString = e.target.result
+      }
+      reader.readAsDataURL(compressedFile)
+    },
+    error: (error) => {
+      console.log(error)
+    },
+  })
+}
+const v$ = useVuelidate(rules, product)
+const createProductBtn = async () => {
+  try {
+    v$.value.$touch()
+    if (v$.value.$invalid) return
+    product.imageString = product.imageString.split(',')[1]
+    const res = await createProduct(product)
+    await router.push({ name: 'Products' })
+    console.log(res)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-const barCode = ref(null)
 const onDecode = (result: any) => {
-  barCode.value = result
-  if (barCode.value) scanDialog.value = false
+  product.partNumber = result
+  if (product.partNumber) scanDialog.value = false
 }
 const onLoaded = (error: any) => {
   console.log(error)
 }
-const handleAvatarSuccess = (response) => {
-  imageUrl.value = URL.createObjectURL(response.raw)
-}
-
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  if (['image/jpeg', 'png', 'jpg', 'webp', 'jpg'].includes(rawFile.type)) {
-    ElMessage.error('Картинка должан быть jpeg формата')
-    return false
-  }
-  return true
-}
+// const handleAvatarSuccess = (response) => {
+//   imageUrl.value = URL.createObjectURL(response.raw)
+// }
+//
+// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+//   if (['image/jpeg', 'png', 'jpg', 'webp', 'jpg'].includes(rawFile.type)) {
+//     ElMessage.error('Картинка должан быть jpeg формата')
+//     return false
+//   }
+//   return true
+// }
 </script>
 <style scoped>
 .photo-uploader .photo {

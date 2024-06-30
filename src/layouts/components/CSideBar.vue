@@ -16,7 +16,7 @@
             <ArrowLeft />
           </div>
           <router-link
-            to="/products"
+            to="/index"
             class="block p-4"
             :class="width < 768 ? 'w-[80%]' : ''"
           >
@@ -33,7 +33,7 @@
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in mb-4 flex gap-3 items-center"
-                to="/products"
+                to="/index"
               >
                 <Box />
                 <span class="ms-2 font-semibold"> Товары </span>
@@ -83,7 +83,7 @@
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
-                to="/client-list"
+                to="/customers-list"
               >
                 <Users />
                 <span class="ms-2 font-semibold"> Клиенты </span>
