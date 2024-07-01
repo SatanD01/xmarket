@@ -1,18 +1,20 @@
 <template>
   <div v-if="products">
-    <CSearch />
     <div>
-      <div class="flex items-center justify-between">
-        <h1 class="mb-4 font-bold text-[32px]">Топ товары</h1>
+      <div
+        class="bg-white gap-3 shadow rounded-lg mb-3 p-3 flex items-center justify-between"
+      >
+        <h1 class="font-bold text-[32px]">Товары</h1>
         <el-button
           type="primary"
           @click="$router.push({ name: 'CreateProduct' })"
-          >Create product</el-button
+          >Создать товар</el-button
         >
       </div>
-      <div>
-        <Vue3EasyDataTable :headers="headers" :items="items">
-          <template #item-image="data">
+      <div class="bg-white p-3 rounded-lg shadow">
+        <CSearch />
+        <Vue3EasyDataTable :headers="headers" :items="products">
+          <template #item-img="item">
             <div class="w-[100px] py-3">
               {{ data.image }}
               <!--              <img-->
@@ -51,16 +53,16 @@ const products: Ref<IProduct[] | undefined> = ref()
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
   { text: 'Фото', value: 'imageString' },
-  { text: 'Name', value: 'name', sortable: true },
-  { text: 'Description', value: 'description', sortable: true },
-  { text: 'Manufacturer', value: 'manufacturer', sortable: true },
-  { text: 'Origin', value: 'origin', sortable: true },
-  { text: 'Model', value: 'carModel', sortable: true },
-  { text: 'Year', value: 'carYear', sortable: true },
-  { text: 'Group', value: 'group', sortable: true },
-  { text: 'Part number', value: 'partNumber', sortable: true },
-  { text: 'Code', value: 'manualCode', sortable: true },
-  { text: 'Weight', value: 'weight', sortable: true },
+  { text: 'Название', value: 'name', sortable: true },
+  { text: 'Описание', value: 'description', sortable: true },
+  { text: 'Поставщик', value: 'manufacturer', sortable: true },
+  { text: 'Тип', value: 'origin', sortable: true },
+  { text: 'Модель', value: 'carModel', sortable: true },
+  { text: 'Год выпуска', value: 'carYear', sortable: true },
+  { text: 'Группа', value: 'group', sortable: true },
+  { text: 'Баркод', value: 'partNumber', sortable: true },
+  { text: 'Код', value: 'manualCode', sortable: true },
+  { text: 'Вес', value: 'weight', sortable: true },
 ]
 
 const items = computed((): Item[] | undefined => {

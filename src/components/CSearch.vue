@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow search p-3 border rounded bg-white flex gap-3 mb-3">
+  <div class="search flex gap-3 mb-3">
     <el-autocomplete
       v-model="search"
       class="h-[30px]"
