@@ -10,4 +10,5 @@ export interface IProduct {
   manualCode: string
   weight: number | string
   imageString: string
+  image?: string
 }

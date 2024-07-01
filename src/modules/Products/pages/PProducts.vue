@@ -11,19 +11,25 @@
         >
       </div>
       <div>
-        <Vue3EasyDataTable :headers="headers" :items="products">
-          <template #item-img="item">
+        <Vue3EasyDataTable :headers="headers" :items="items">
+          <template #item-image="data">
             <div class="w-[100px] py-3">
-              <el-image
-                style="width: 100px; height: 100px"
-                :src="item.imgString"
-                :zoom-rate="1.0"
-                :max-scale="6"
-                :min-scale="0.2"
-                :preview-src-list="item.img_list"
-                :initial-index="4"
-                fit="cover"
-              />
+              {{ data.image }}
+              <!--              <img-->
+              <!--                class="w-[100px]"-->
+              <!--                :src="`data:image/jpeg;base64,${data.image}`"-->
+              <!--                alt=""-->
+              <!--              />-->
+              <!--              <el-image-->
+              <!--                style="width: 100px; height: 100px"-->
+              <!--                :src="`data:image/jpeg;base64,${item.imgString}`"-->
+              <!--                :zoom-rate="1.0"-->
+              <!--                :max-scale="6"-->
+              <!--                :min-scale="0.2"-->
+              <!--                :preview-src-list="`data:image/jpeg;base64,${item.imgString}`"-->
+              <!--                :initial-index="4"-->
+              <!--                fit="cover"-->
+              <!--              />-->
             </div>
           </template>
         </Vue3EasyDataTable>
@@ -33,8 +39,8 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, Ref, ref } from 'vue'
-import type { Header } from 'vue3-easy-data-table'
+import { computed, onMounted, Ref, ref } from 'vue'
+import type { Header, Item } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
 import CSearch from '@/components/CSearch.vue'
@@ -56,6 +62,10 @@ const headers: Header[] = [
   { text: 'Code', value: 'manualCode', sortable: true },
   { text: 'Weight', value: 'weight', sortable: true },
 ]
+
+const items = computed((): Item[] | undefined => {
+  return products.value
+})
 
 onMounted(async () => {
   products.value = await getProducts()
