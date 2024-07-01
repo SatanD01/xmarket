@@ -87,7 +87,7 @@ const $emit = defineEmits<{
 const store = useBasketStore()
 const auth = useAuthStore()
 const logout = () => {
-  localStorage.removeItem('token')
+  auth.logout()
   window.location.replace('/login')
 }
 </script>

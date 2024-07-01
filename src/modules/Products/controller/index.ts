@@ -26,3 +26,29 @@ export const getProducts = () => {
       })
   })
 }
+
+export const updateProduct = (data: IProduct) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('products/updateProduct', data)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const deleteProduct = (id: number) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('products/deleteProduct', { id: id })
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}

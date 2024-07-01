@@ -1,4 +1,5 @@
 export interface IProduct {
+  id?: number | null
   name: string
   description: string
   manufacturer: string

@@ -13,14 +13,15 @@
         <el-input
           v-model="searchValue"
           placeholder="Поиск"
-          class="!w-[200px]"
+          class="!w-[300px]"
+          size="large"
         />
       </div>
       <Vue3EasyDataTable
         class="w-full"
         :headers="headers"
         :items="customer"
-        :search-field="['name', 'phone']"
+        :search-field="['id', 'name', 'phone']"
         :search-value="searchValue"
       >
         <template #item-type="data">
@@ -107,7 +108,7 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { Pencil } from 'lucide-vue-next'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, Ref, ref } from 'vue'
 import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
@@ -118,7 +119,7 @@ import {
 } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
 
-let customer: Ref<ISuppliers> = ref()
+let customer: Ref<ISuppliers | undefined> = ref()
 const { width } = useWindowSize()
 const searchValue = ref('')
 const dialog = ref(false)
