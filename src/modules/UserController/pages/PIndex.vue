@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="bg-white rounded-lg p-4 w-full flex justify-between">
-      <h1 class="text-2xl font-semibold capitalize">пользователя</h1>
+      <h1 class="text-2xl font-semibold capitalize">Пользователи</h1>
       <RouterLink :to="{ name: 'CreateUser' }">
         <el-button type="primary"> Создать пользователя </el-button>
       </RouterLink>
@@ -40,19 +40,18 @@
     <el-dialog v-model="dialog" class="!w-[300px]">
       <div>
         <p class="mb-10 text-lg text-center">
-          Are you sure? <br />
-          Do you really want to delete this user?
+          Вы уверены, что хотите удалить пользователя ?
         </p>
         <div class="flex items-center gap-2">
           <el-button type="danger" @click="cancel" class="w-full"
-            >Cancel</el-button
+            >Нет</el-button
           >
           <el-button
             type="primary"
             @click="deleteUser"
             :loading="loading"
             class="w-full"
-            >Yes</el-button
+            >Да</el-button
           >
         </div>
       </div>
@@ -72,13 +71,13 @@ import { IUsers } from '@/modules/UserController/types.ts'
 const users: Ref<IUsers[]> = ref([])
 const headers: Header[] = [
   { text: 'Имя', value: 'name', sortable: true },
-  { text: 'Role', value: 'role', sortable: true },
+  { text: 'Роль', value: 'role', sortable: true },
   { text: 'Id', value: 'id' },
-  { text: 'Login', value: 'login' },
+  { text: 'Логин', value: 'login' },
   { text: 'Телефон', value: 'phone', sortable: true },
   { text: 'Создан', value: 'createdAt', sortable: true },
-  { text: 'Updated', value: 'updatedAt', sortable: true },
-  { text: 'Edit', value: 'passwordSalt' },
+  { text: 'Дата обнавдения', value: 'updatedAt', sortable: true },
+  { text: 'Управление', value: 'passwordSalt' },
 ]
 const dialog = ref(false)
 const loading = ref(false)
@@ -106,7 +105,7 @@ const deleteUser = async () => {
       id: deleteId.value,
     })
     await getUsers()
-    toast.success('User successfully deleted!')
+    toast.success('Пользователь успешно удален!')
     dialog.value = false
   } catch (err) {
     console.log(err)

@@ -1,4 +1,5 @@
 export interface IProduct {
+  id?: number | null
   name: string
   description: string
   manufacturer: string
@@ -10,4 +11,5 @@ export interface IProduct {
   manualCode: string
   weight: number | string
   imageString: string
+  image?: string
 }

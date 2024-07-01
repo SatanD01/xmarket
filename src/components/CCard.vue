@@ -21,22 +21,14 @@
 import 'vue3-easy-data-table/dist/style.css'
 
 import { computed, onMounted, ref, watch } from 'vue'
-import type { Header, Item } from 'vue3-easy-data-table'
+import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
+import { IProduct } from '@/modules/Products/types.ts'
 import { useBasketStore } from '@/store/basket'
 
 interface Props {
-  card: boolean
-  data: {
-    id: number
-    count: number
-    name: string
-    category: string
-    price: string | number
-    img: string
-    img_list: string[]
-  }
+  data: IProduct
 }
 
 const props = defineProps<Props>()
@@ -48,53 +40,42 @@ const headers: Header[] = [
   { text: 'Количество', value: 'count', sortable: true },
   { text: 'Цена', value: 'price', sortable: true },
 ]
-const items = computed(
-  ():
-    | {
-        id: number | undefined
-        img: string | undefined
-        name: string | undefined
-        price: number | string
-        count: number | string
-        category: string | null | undefined
-      }[]
-    | undefined => {
-    return props.data?.map((item) => {
-      return {
-        id: item.id,
-        img: item?.img,
-        img_list: item?.img_list,
-        name: item?.name,
-        category: item.category,
-        count: item?.count,
-        price: item?.price,
-      }
-    })
-  },
-)
+const items = computed((): IProduct[] | undefined => {
+  return props.data?.map((item) => {
+    return {
+      id: item.id,
+      img: item?.img,
+      img_list: item?.img_list,
+      name: item?.name,
+      category: item.category,
+      count: item?.count,
+      price: item?.price,
+    }
+  })
+})
 const $emit = defineEmits<{
   (e: 'on-delete'): void
 }>()
 const store = useBasketStore()
 
 let goods_count = ref(0)
-const inCard = ref(false)
+// const inCard = ref(false)
 
-const cardBtn = () => {
-  inCard.value = true
-  goods_count.value += 1
-  if (goods_count.value === 0) {
-    inCard.value = false
-  }
-}
+// const cardBtn = () => {
+//   inCard.value = true
+//   goods_count.value += 1
+//   if (goods_count.value === 0) {
+//     inCard.value = false
+//   }
+// }
 
-const onDelete = (index: number) => {
-  console.log('index:', index)
-  store.basketItems.splice(
-    store.basketItems.findIndex((el) => el.id === index),
-    1,
-  )
-}
+// const onDelete = (index: number) => {
+//   console.log('index:', index)
+//   store.basketItems.splice(
+//     store.basketItems.findIndex((el) => el.id === index),
+//     1,
+//   )
+// }
 
 watch(
   () => goods_count.value,

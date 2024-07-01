@@ -6,31 +6,31 @@
         size="large"
         :class="v$.name.$error ? 'error' : ''"
         v-model="officeData.name"
-        placeholder="Name"
+        placeholder="Название"
       />
       <el-input
         size="large"
         v-model="officeData.description"
-        placeholder="Description"
+        placeholder="Описание"
         :class="v$.description.$error ? 'error' : ''"
       />
       <el-input
         size="large"
         v-model="officeData.address"
-        placeholder="Address"
+        placeholder="Адрес"
         :class="v$.address.$error ? 'error' : ''"
       />
       <el-input
         size="large"
         v-model="officeData.addressUrl"
-        placeholder="Link"
+        placeholder="Ссылка на яндекс карты"
         :class="v$.addressUrl.$error ? 'error' : ''"
       />
       <el-select
         size="large"
         v-model="officeData.type"
         :class="v$.type.$error ? 'error' : ''"
-        placeholder="Type"
+        placeholder="Тип"
       >
         <el-option
           v-for="item in officeTypes"

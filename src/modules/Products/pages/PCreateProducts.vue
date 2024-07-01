@@ -3,30 +3,17 @@
     <h3 class="text-[24px] font-bold mb-3">Пополнение склада</h3>
     <div class="gap-3 grid grid-cols-1 md:grid-cols-12">
       <div class="col-span-1 md:col-span-3">
-        <p class="text-[18px] mb-2">Фотография товара (.jpeg)</p>
+        <p class="text-[14px] mb-2">
+          Фотография товара (.jpeg, .png, .jpg, .webp)
+        </p>
         <input
           type="file"
           :class="v$.imageString.$error ? 'error' : ''"
           @change="onFileChange"
         />
-
-        <!--        <el-upload-->
-        <!--          class="photo-uploader"-->
-        <!--          action="#"-->
-        <!--          :show-file-list="false"-->
-        <!--          :auto-upload="false"-->
-        <!--          :on-change="handleAvatarSuccess"-->
-        <!--          :before-upload="beforeAvatarUpload"-->
-        <!--        >-->
-        <!--          <img-->
-        <!--            v-if="imageUrl"-->
-        <!--            :src="imageUrl"-->
-        <!--            class="photo !object-cover !w-full"-->
-        <!--            alt="uploaded_image"-->
-        <!--          />-->
-        <!--          <Image v-else class="icon" :size="40" />-->
-        <!--        </el-upload>-->
-        <!--        {{ imageUrl }}-->
+        <p v-if="file">
+          Size: {{ (file?.size / (1024 * 1024)).toFixed(2) }} Mb
+        </p>
       </div>
       <div class="col-span-1 md:col-span-9">
         <p class="text-[18px] mb-2">Информационные поля</p>
@@ -80,10 +67,10 @@
             :class="v$.manufacturer.$error ? 'error' : ''"
           >
             <el-option
-              v-for="item in providersList"
-              :key="item"
-              :label="item"
-              :value="item"
+              v-for="item in suppliers"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
             />
           </el-select>
           <el-input
@@ -148,17 +135,19 @@
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import Compressor from 'compressorjs'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, Ref, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
 import { useRouter } from 'vue-router'
 
 import { groupTypes, isOriginal } from '@/data'
 import { createProduct } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
+import { getSuppliers } from '@/modules/UserController/controller'
+import { ISuppliers } from '@/modules/UserController/types.ts'
 
 const router = useRouter()
 const scanDialog = ref(false)
-const providersList = ['BYD']
+const suppliers: Ref<ISuppliers[] | undefined> = ref()
 const product = reactive<IProduct>({
   name: '',
   description: '',
@@ -185,11 +174,12 @@ const rules = {
   weight: { required },
   imageString: { required },
 }
+const file = ref('')
 const onFileChange = (e) => {
-  const file = e.target.files[0]
+  file.value = e.target.files[0]
   console.log(e.target.files[0])
 
-  new Compressor(file, {
+  new Compressor(file.value, {
     quality: 0.6,
 
     success: (compressedFile) => {
@@ -225,17 +215,9 @@ const onDecode = (result: any) => {
 const onLoaded = (error: any) => {
   console.log(error)
 }
-// const handleAvatarSuccess = (response) => {
-//   imageUrl.value = URL.createObjectURL(response.raw)
-// }
-//
-// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-//   if (['image/jpeg', 'png', 'jpg', 'webp', 'jpg'].includes(rawFile.type)) {
-//     ElMessage.error('Картинка должан быть jpeg формата')
-//     return false
-//   }
-//   return true
-// }
+onMounted(async () => {
+  suppliers.value = await getSuppliers()
+})
 </script>
 <style scoped>
 .photo-uploader .photo {

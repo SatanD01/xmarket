@@ -20,7 +20,7 @@
         :class="{ error: v$.phone.$error }"
       />
       <el-input
-        placeholder="Name"
+        placeholder="Имя"
         v-model="form.name"
         :class="{ error: v$.name.$error }"
       />
@@ -32,7 +32,13 @@
         <el-option
           v-for="item in roles"
           :key="item.value"
-          :label="item.label"
+          :label="
+            item.label === 'Admin'
+              ? 'Админ'
+              : item.label === 'Manager'
+                ? 'Менеджер'
+                : 'Продавец'
+          "
           :value="item.value"
         />
       </el-select>

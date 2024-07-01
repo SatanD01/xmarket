@@ -1,13 +1,13 @@
 <template>
-  <div class="bg-white p-3 shadow rounded-lg" v-if="suppliers">
-    <h3 class="text-[24px] font-bold mb-3">Поставщики</h3>
-    <div>
+  <div v-if="suppliers">
+    <div class="flex items-center justify-between gap-3 bg-white p-3 shadow rounded-lg mb-3">
+      <h3 class="text-[24px] font-bold">Поставщики</h3>
+      <el-button type="primary" @click="createDialog = true"
+        >Доабвить поставщика</el-button
+      >
+    </div>
+    <div class="bg-white p-3 shadow rounded-lg">
       <div class="flex gap-3 justify-between items-center mb-3">
-        <div>
-          <el-button type="primary" @click="createDialog = true"
-            >Доабвить поставщика</el-button
-          >
-        </div>
         <el-input
           v-model="searchValue"
           placeholder="Поиск"
@@ -105,7 +105,7 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { Pencil } from 'lucide-vue-next'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, Ref, ref } from 'vue'
 import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
@@ -116,7 +116,7 @@ import {
 } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
 
-let suppliers: Ref<ISuppliers> = ref()
+let suppliers: Ref<ISuppliers[] | undefined> = ref()
 const { width } = useWindowSize()
 const searchValue = ref('')
 const dialog = ref(false)
