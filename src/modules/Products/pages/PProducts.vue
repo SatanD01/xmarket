@@ -55,24 +55,26 @@
             v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
             #item-opera="data"
           >
-            <el-button
-              @click="openDialog(data)"
-              size="small"
-              class="!p-2"
-              type="primary"
-              plain
-            >
-              <Pencil class="w-[15px] h-[15px]" />
-            </el-button>
-            <el-button
-              @click="deleteBtn(data.id)"
-              size="small"
-              class="!p-2"
-              type="danger"
-              plain
-            >
-              <Trash class="w-[15px] h-[15px]" />
-            </el-button>
+            <div class="flex items-center">
+              <el-button
+                @click="openDialog(data)"
+                size="small"
+                class="!py-2 !px-1"
+                type="primary"
+                plain
+              >
+                <Pencil class="w-[15px] h-[15px]" />
+              </el-button>
+              <el-button
+                @click="deleteBtn(data.id)"
+                size="small"
+                class="!py-2 !px-1 !ml-[8px]"
+                type="danger"
+                plain
+              >
+                <Trash class="w-[15px] h-[15px]" />
+              </el-button>
+            </div>
           </template>
         </Vue3EasyDataTable>
       </div>

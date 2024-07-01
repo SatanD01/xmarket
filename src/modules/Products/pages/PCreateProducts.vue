@@ -11,6 +11,9 @@
           :class="v$.imageString.$error ? 'error' : ''"
           @change="onFileChange"
         />
+        <p v-if="file">
+          Size: {{ (file?.size / (1024 * 1024)).toFixed(2) }} Mb
+        </p>
       </div>
       <div class="col-span-1 md:col-span-9">
         <p class="text-[18px] mb-2">Информационные поля</p>
@@ -169,11 +172,12 @@ const rules = {
   weight: { required },
   imageString: { required },
 }
+const file = ref('')
 const onFileChange = (e) => {
-  const file = e.target.files[0]
+  file.value = e.target.files[0]
   console.log(e.target.files[0])
 
-  new Compressor(file, {
+  new Compressor(file.value, {
     quality: 0.6,
 
     success: (compressedFile) => {
