@@ -18,12 +18,19 @@
           <router-link
             to="/index"
             class="block p-4"
-            :class="width < 768 ? 'w-[80%]' : ''"
+            :class="width < 768 ? 'w-[80%]' : 'w-full'"
           >
-            <img src="/logo_black.png" alt="logo" />
-            <span class="text-center block font-bold"
-              ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
-            >
+            <div class="flex items-center justify-center flex-col md:mt-2">
+              <img
+                class="!w-[140px] text-center"
+                src="/logo_black.png"
+                alt="logo"
+              />
+              <span class="text-center block font-bold"
+                ><span class="text-orange-600 text-sm">ENERGY</span> AUTO
+                PARTS</span
+              >
+            </div>
           </router-link>
         </div>
         <hr />

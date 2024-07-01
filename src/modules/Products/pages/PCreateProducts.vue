@@ -67,10 +67,10 @@
             :class="v$.manufacturer.$error ? 'error' : ''"
           >
             <el-option
-              v-for="item in providersList"
-              :key="item"
-              :label="item"
-              :value="item"
+              v-for="item in suppliers"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
             />
           </el-select>
           <el-input
@@ -135,17 +135,19 @@
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import Compressor from 'compressorjs'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, Ref, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
 import { useRouter } from 'vue-router'
 
 import { groupTypes, isOriginal } from '@/data'
 import { createProduct } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
+import { getSuppliers } from '@/modules/UserController/controller'
+import { ISuppliers } from '@/modules/UserController/types.ts'
 
 const router = useRouter()
 const scanDialog = ref(false)
-const providersList = ['BYD']
+const suppliers: Ref<ISuppliers[] | undefined> = ref()
 const product = reactive<IProduct>({
   name: '',
   description: '',
@@ -213,17 +215,9 @@ const onDecode = (result: any) => {
 const onLoaded = (error: any) => {
   console.log(error)
 }
-// const handleAvatarSuccess = (response) => {
-//   imageUrl.value = URL.createObjectURL(response.raw)
-// }
-//
-// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-//   if (['image/jpeg', 'png', 'jpg', 'webp', 'jpg'].includes(rawFile.type)) {
-//     ElMessage.error('Картинка должан быть jpeg формата')
-//     return false
-//   }
-//   return true
-// }
+onMounted(async () => {
+  suppliers.value = await getSuppliers()
+})
 </script>
 <style scoped>
 .photo-uploader .photo {
