@@ -19,7 +19,7 @@
         <template #item-passwordSalt="data">
           <div class="flex items-center gap-4">
             <RouterLink
-              :to="{ name: 'UsersEdit', params: { id: data?.id } }"
+              :to="{ name: 'UsersEdit', params: { id: data?.login } }"
               class="py-2"
             >
               <FilePenIcon />
