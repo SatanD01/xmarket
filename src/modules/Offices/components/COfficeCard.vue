@@ -19,7 +19,7 @@
         {{ office.description }}
       </p>
       <p class="text-[12px] text-gray-500">
-        Тип: {{ office.type === 'Warehouse' ? 'Офис' : 'Склад' }}
+        Тип: {{ office.type === 'Warehouse' ? 'Склад' : 'Офис' }}
       </p>
       <div class="grid grid-cols-1 gap-3 mt-2">
         <el-button class="w-full" type="success" plain @click="editBtn"
@@ -63,7 +63,7 @@
           <el-option
             v-for="item in officeTypes"
             :key="item"
-            :label="officeTypes == 'Warehouse' ? 'Офис' : 'Склад'"
+            :label="officeTypes == 'Warehouse' ? 'Склад' : 'Офис'"
             :value="item"
           />
         </el-select>
