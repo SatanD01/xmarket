@@ -12,6 +12,37 @@ export const groupTypes = [
   'Other',
 ]
 
+export const paymentType = [
+  {
+    value: 'Cash',
+    label: 'Наличные',
+  },
+  {
+    value: 'Card',
+    label: 'Карта',
+  },
+  {
+    value: 'BankTransfer',
+    label: 'Перечисление',
+  },
+  {
+    value: 'Click',
+    label: 'Click',
+  },
+  {
+    value: 'Payme',
+    label: 'Payme',
+  },
+  {
+    value: 'Uzum',
+    label: 'Uzum',
+  },
+  {
+    value: 'Other',
+    label: 'Другое',
+  },
+]
+
 export const index = [
   {
     id: 1,

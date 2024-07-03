@@ -22,69 +22,35 @@
             v-model="product.name"
             size="large"
             type="text"
-            placeholder="Name"
+            placeholder="Название товара"
             :class="v$.name.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.description"
             type="text"
-            placeholder="Description"
+            placeholder="Описание"
             :class="v$.description.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.carModel"
             type="text"
-            placeholder="Car model"
+            placeholder="Модель машины"
             :class="v$.carModel.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.carYear"
             type="text"
-            placeholder="Car year"
+            placeholder="Год машины"
             :class="v$.carYear.$error ? 'error' : ''"
-          ></el-input>
-          <el-select
-            size="large"
-            v-model="product.origin"
-            type="text"
-            placeholder="Group"
-            :class="v$.origin.$error ? 'error' : ''"
-          >
-            <el-option
-              v-for="item in isOriginal"
-              :key="item"
-              :label="item"
-              :value="item"
-            />
-          </el-select>
-          <el-select
-            size="large"
-            v-model="product.manufacturer"
-            placeholder="Поставщик"
-            :class="v$.manufacturer.$error ? 'error' : ''"
-          >
-            <el-option
-              v-for="item in suppliers"
-              :key="item.name"
-              :label="item.name"
-              :value="item.name"
-            />
-          </el-select>
-          <el-input
-            size="large"
-            v-model="product.manualCode"
-            type="text"
-            placeholder="Product Code"
-            :class="v$.manualCode.$error ? 'error' : ''"
           ></el-input>
           <el-select
             size="large"
             v-model="product.group"
             type="text"
-            placeholder="Origin"
+            placeholder="Категория"
             :class="v$.group.$error ? 'error' : ''"
           >
             <el-option
@@ -96,16 +62,43 @@
           </el-select>
           <el-input
             size="large"
+            v-model="product.manufacturer"
+            placeholder="Поставщик"
+            :class="v$.manufacturer.$error ? 'error' : ''"
+          />
+          <el-input
+            size="large"
+            v-model="product.manualCode"
+            type="text"
+            placeholder="Номер продукта"
+            :class="v$.manualCode.$error ? 'error' : ''"
+          ></el-input>
+          <el-select
+            size="large"
+            v-model="product.origin"
+            type="text"
+            placeholder="Тип товара"
+            :class="v$.origin.$error ? 'error' : ''"
+          >
+            <el-option
+              v-for="item in isOriginal"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+          <el-input
+            size="large"
             v-model="product.partNumber"
             type="text"
-            placeholder="Part number"
+            placeholder="Баркод"
             :class="v$.partNumber.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.weight"
             type="number"
-            placeholder="Weight"
+            placeholder="Вес"
             :class="v$.weight.$error ? 'error' : ''"
           ></el-input>
 
@@ -117,16 +110,24 @@
             class="!ms-0"
             >Сканировать QR-Код</el-button
           >
-          <el-button size="large" @click="createProductBtn" type="primary"
+          <el-button
+            size="large"
+            @click="createProductBtn"
+            class="!ms-0"
+            type="primary"
             >Создать</el-button
           >
         </div>
       </div>
     </div>
-    <el-dialog v-model="scanDialog" title="Tips" width="500">
+    <el-dialog
+      v-model="scanDialog"
+      title="Сканер бар кода"
+      width="500"
+      :fullscreen="width < 768"
+    >
       <div>
         <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
-        {{ onDecode }}
       </div>
     </el-dialog>
   </div>
@@ -134,6 +135,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useWindowSize } from '@vueuse/core'
 import Compressor from 'compressorjs'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
@@ -145,6 +147,7 @@ import { IProduct } from '@/modules/Products/types.ts'
 import { getSuppliers } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types.ts'
 
+const { width } = useWindowSize()
 const router = useRouter()
 const scanDialog = ref(false)
 const suppliers: Ref<ISuppliers[] | undefined> = ref()

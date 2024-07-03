@@ -1,4 +1,5 @@
 import { useApi } from '@/composables/useApi.ts'
+import { ISuppliers } from '@/modules/UserController/types.ts'
 
 export const getSuppliers = () => {
   return new Promise((resolve, reject) => {
@@ -13,7 +14,7 @@ export const getSuppliers = () => {
   })
 }
 
-export const updateSuppliers = (state) => {
+export const updateSuppliers = (state: ISuppliers) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('/Partners/UpdateSupplier', state)
@@ -26,7 +27,7 @@ export const updateSuppliers = (state) => {
   })
 }
 
-export const createSuppliers = (state) => {
+export const createSuppliers = (state: ISuppliers) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('/Partners/AddSupplier', state)
@@ -38,7 +39,6 @@ export const createSuppliers = (state) => {
       })
   })
 }
-
 
 export const getCustomers = () => {
   return new Promise((resolve, reject) => {
@@ -53,7 +53,7 @@ export const getCustomers = () => {
   })
 }
 
-export const updateCustomers = (state) => {
+export const updateCustomers = (state: ISuppliers) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('/Partners/UpdateCustomer', state)
@@ -66,7 +66,7 @@ export const updateCustomers = (state) => {
   })
 }
 
-export const createCustomers = (state) => {
+export const createCustomers = (state: ISuppliers) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('/Partners/AddCustomer', state)

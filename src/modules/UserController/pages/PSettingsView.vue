@@ -1,25 +1,107 @@
 <template>
-  <div class="bg-white rounded-lg p-3 shadow">
-    <h2 class="text-[24px] font-bold mb-3">Настройки</h2>
+  <div class="bg-white p-3 shadow rounded-lg">
+    <h3 class="text-[24px] font-bold mb-3">Настройки</h3>
     <div class="grid md:grid-cols-4 grid-cols-1 gap-3">
-      <el-input placeholder="Ф.И.О" />
-      <el-input placeholder="Серия и номер паспорта" />
-      <el-input placeholder="Телефон номер" />
-      <el-date-picker
-        v-model="birthday"
-        type="date"
-        placeholder="Дата рождения"
-        class="!w-full"
+      <el-input
+        placeholder="Логин"
+        v-model="form.login"
+        :class="{ error: v$.login.$error }"
       />
-      <el-input placeholder="Email" />
-      <el-input placeholder="Офис работы" />
-      <el-button type="primary">Изменить</el-button>
+      <el-input
+        type="password"
+        show-password
+        placeholder="Пароль"
+        v-model="form.password"
+        :class="{ error: v$.password.$error }"
+      />
+      <el-input
+        placeholder="Телефон номер"
+        v-model="form.phone"
+        :class="{ error: v$.phone.$error }"
+      />
+      <el-input
+        placeholder="Имя"
+        v-model="form.name"
+        :class="{ error: v$.name.$error }"
+      />
+      <el-select
+        v-model="form.role"
+        placeholder="Роль"
+        :class="{ error: v$.role.$error }"
+      >
+        <el-option
+          v-for="item in roles"
+          :key="item.value"
+          :label="
+            item.label === 'Admin'
+              ? 'Админ'
+              : item.label === 'Manager'
+                ? 'Менеджер'
+                : 'Продавец'
+          "
+          :value="item.value"
+        />
+      </el-select>
+      <el-button type="primary" :loading="loading" @click="onSubmit"
+        >Изменить</el-button
+      >
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import { onMounted, reactive, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
-const birthday = ref('')
+import { useApi } from '@/composables/useApi.ts'
+import { roles } from '@/data/user.ts'
+
+const route = useRoute()
+const router = useRouter()
+const form = ref({
+  id: 0,
+  login: '',
+  password: '',
+  role: '',
+  name: '',
+  phone: '',
+})
+const rules = reactive({
+  login: { required },
+  password: { required },
+  role: { required },
+  name: { required },
+  phone: { required },
+})
+const loading = ref(false)
+const v$ = useVuelidate(rules, form.value)
+
+const onSubmit = async () => {
+  v$.value.$touch()
+  if (v$.value.$invalid) return
+
+  loading.value = true
+  try {
+    const res = await useApi().$post('/Users/UpdateUser', form.value)
+    toast.success('User was created successfully!')
+    await router.push({ name: 'Users' })
+    console.log(res)
+  } catch (err) {
+    console.log(err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  form.value.name = route.query.name
+  form.value.login = route.query.login
+  form.value.password = route.query.password
+  form.value.role = route.query.role
+  form.value.phone = route.query.phone
+  form.value.id = route.query.id
+})
 </script>
 <style scoped></style>

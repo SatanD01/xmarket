@@ -1,6 +1,8 @@
 <template>
   <div v-if="suppliers">
-    <div class="flex items-center justify-between gap-3 bg-white p-3 shadow rounded-lg mb-3">
+    <div
+      class="flex items-center justify-between gap-3 bg-white p-3 shadow rounded-lg mb-3"
+    >
       <h3 class="text-[24px] font-bold">Поставщики</h3>
       <el-button type="primary" @click="createDialog = true"
         >Доабвить поставщика</el-button
@@ -15,6 +17,7 @@
         />
       </div>
       <Vue3EasyDataTable
+        buttons-pagination
         class="w-full"
         :headers="headers"
         :items="suppliers"
@@ -39,7 +42,7 @@
             @click="openDialog(data)"
             size="small"
             class="!p-2"
-            type="warning"
+            type="primary"
             plain
           >
             <Pencil class="w-[15px] h-[15px]" />

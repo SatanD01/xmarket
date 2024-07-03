@@ -7,7 +7,7 @@
       </RouterLink>
     </div>
     <div class="bg-white rounded-lg p-4 w-full mt-6">
-      <Vue3EasyDataTable :headers="headers" :items="users">
+      <Vue3EasyDataTable :headers="headers" :items="users" buttons-pagination>
         <template #item-createdAt="data">
           {{ dayjs(data?.createdAt).format('DD-MM-YYYY') }}
         </template>
@@ -19,20 +19,38 @@
         <template #item-passwordSalt="data">
           <div class="flex items-center gap-4">
             <RouterLink
-              :to="{ name: 'UsersEdit', params: { id: data?.login } }"
+              :to="{
+                name: 'UsersEdit',
+                params: {
+                  id: data?.id,
+                },
+                query: {
+                  id: data?.id,
+                  login: data?.login,
+                  password: data?.password,
+                  role: data?.role,
+                  name: data?.name,
+                  phone: data?.phone,
+                },
+              }"
               class="py-2"
             >
-              <FilePenIcon />
+              <el-button plain type="primary" size="small" class="!p-2">
+                <Pencil class="w-[15px] h-[15px]" />
+              </el-button>
             </RouterLink>
-            <div
+            <el-button
               @click="openDelete(data?.id)"
-              class="p-2 rounded-md bg-gray-200 cursor-pointer group hover:bg-red-400 transition-200"
+              size="small"
+              type="danger"
+              class="!p-2"
+              plain
             >
               <Trash
                 :size="16"
                 class="text-red-500 group-hover:text-white transition-200"
               />
-            </div>
+            </el-button>
           </div>
         </template>
       </Vue3EasyDataTable>
@@ -60,8 +78,9 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { FilePenIcon, Trash } from 'lucide-vue-next'
+import { FilePenIcon, Pencil, Trash } from 'lucide-vue-next'
 import { Ref, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 import { toast } from 'vue3-toastify'
 

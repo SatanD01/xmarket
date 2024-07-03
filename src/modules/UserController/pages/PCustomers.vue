@@ -18,6 +18,7 @@
         />
       </div>
       <Vue3EasyDataTable
+        buttons-pagination
         class="w-full"
         :headers="headers"
         :items="customer"
@@ -42,7 +43,7 @@
             @click="openDialog(data)"
             size="small"
             class="!p-2"
-            type="warning"
+            type="primary"
             plain
           >
             <Pencil class="w-[15px] h-[15px]" />

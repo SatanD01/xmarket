@@ -3,8 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AuthRoutes from '@/modules/Auth/router'
 import ChartRoutes from '@/modules/Charts/router'
 import OfficeRoutes from '@/modules/Offices/router'
+import Order from '@/modules/Order/router'
 import ProductsRoutes from '@/modules/Products/router'
-import UserController from '@/modules/UserController/router'
+import ReplenishmentRoutes from '@/modules/Replenishment/router'
+import UserRoutes from '@/modules/UserController/router'
 import { checkRouteIsExist } from '@/router/middleware'
 
 const router = createRouter({
@@ -20,9 +22,11 @@ const router = createRouter({
       },
       children: [
         ...OfficeRoutes,
-        ...UserController,
+        ...UserRoutes,
         ...ProductsRoutes,
         ...ChartRoutes,
+        ...ReplenishmentRoutes,
+        ...Order,
       ],
     },
     ...AuthRoutes,
