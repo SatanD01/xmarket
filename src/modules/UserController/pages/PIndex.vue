@@ -19,7 +19,20 @@
         <template #item-passwordSalt="data">
           <div class="flex items-center gap-4">
             <RouterLink
-              :to="{ name: 'UsersEdit', params: { id: data?.id } }"
+              :to="{
+                name: 'UsersEdit',
+                params: {
+                  id: data?.id,
+                },
+                query: {
+                  id: data?.id,
+                  login: data?.login,
+                  password: data?.password,
+                  role: data?.role,
+                  name: data?.name,
+                  phone: data?.phone,
+                },
+              }"
               class="py-2"
             >
               <el-button plain type="primary" size="small" class="!p-2">
@@ -67,6 +80,7 @@
 import dayjs from 'dayjs'
 import { FilePenIcon, Pencil, Trash } from 'lucide-vue-next'
 import { Ref, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 import { toast } from 'vue3-toastify'
 
