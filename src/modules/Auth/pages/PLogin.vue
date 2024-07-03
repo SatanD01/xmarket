@@ -2,10 +2,10 @@
   <div class="container">
     <div class="flex items-center justify-center w-full h-screen">
       <div
-        class="w-1/2 m-auto grid grid-cols-2 bg-white rounded-2xl p-3 shadow-md"
+        class="md:w-1/2 m-auto grid grid-cols-1 gap-3 md:gap-0 md:grid-cols-2 bg-white rounded-2xl p-3 shadow-md"
       >
         <div
-          class="h-full flex flex-col gap-3 items-center justify-center border-r border-dashed"
+          class="h-full flex flex-col gap-3 items-center justify-center border-b pb-2 md:pb-0 md:border-r border-dashed"
         >
           <img class="w-[200px]" src="/logo_black.png" alt="logo" />
           <div>

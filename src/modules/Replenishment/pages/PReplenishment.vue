@@ -43,6 +43,7 @@
 
       <el-dialog v-model="dialog" width="80%">
         <Vue3EasyDataTable
+          hover:shadow-xl transition duration-200 ease-in-out
           class="mt-4 h-[300px] overflow-y-scroll"
           :headers="tempHeaders"
           :items="templateProducts"
@@ -67,12 +68,13 @@
 
         <div class="mt-4">
           <el-input
-            placeholder="Search"
+            placeholder="Поиск"
             class="mb-3 md:!w-[300px]"
             size="large"
             v-model="searchValue"
           />
           <Vue3EasyDataTable
+            buttons-pagination
             :headers="headers"
             class="h-[500px] overflow-y-auto"
             :items="items"
@@ -182,6 +184,7 @@
       </div>
     </div>
   </div>
+  <CTableSceleton v-else />
 </template>
 
 <script setup lang="ts">
@@ -189,6 +192,7 @@ import { CirclePlus, Delete, FolderOpened } from '@element-plus/icons-vue'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import { paymentType } from '@/data'
 import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'

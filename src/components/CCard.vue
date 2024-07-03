@@ -1,5 +1,5 @@
 <template>
-  <Vue3EasyDataTable :headers="headers" :items="items">
+  <Vue3EasyDataTable :headers="headers" :items="items" buttons-pagination>
     <template #item-img="item">
       <div class="w-[100px] py-3">
         <el-image

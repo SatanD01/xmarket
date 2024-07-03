@@ -124,16 +124,6 @@
                 <span class="ms-2 font-semibold"> График </span>
               </router-link>
             </li>
-            <li>
-              <router-link
-                exact-active-class="active-route"
-                class="hover:bg-[#409eff30] rounded-lg p-3 ease-in mt-4 flex gap-3 items-center"
-                to="/admin-settings"
-              >
-                <Settings />
-                <span class="ms-2 font-semibold"> Настройки профиля </span>
-              </router-link>
-            </li>
           </ul>
         </div>
       </div>

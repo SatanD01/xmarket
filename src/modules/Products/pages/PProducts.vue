@@ -13,13 +13,23 @@
         >
       </div>
       <div class="bg-white p-3 rounded-lg shadow">
-        <el-input
-          placeholder="Search"
-          class="mb-3 md:!w-[300px]"
-          size="large"
-          v-model="searchValue"
-        />
+        <div class="flex items-center gap-3">
+          <el-input
+            placeholder="Поиск"
+            class="mb-3 md:!w-[300px]"
+            size="large"
+            v-model="searchValue"
+          />
+          <el-button
+            size="large"
+            @click="scanDialogOpen"
+            type="primary"
+            class="!ms-0 mb-3 !p-2"
+            ><QrCode
+          /></el-button>
+        </div>
         <Vue3EasyDataTable
+          buttons-pagination
           :headers="headers"
           :items="items"
           :search-field="[
@@ -196,8 +206,19 @@
           >Обновить</el-button
         >
       </el-dialog>
+      <el-dialog
+        v-model="scanDialog"
+        title="Сканер бар кода"
+        :align-center="width < 768"
+        :width="width > 768 ? 500 : 300"
+      >
+        <div>
+          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        </div>
+      </el-dialog>
     </div>
   </div>
+  <CTableSceleton v-else />
 </template>
 
 <script lang="ts" setup>
@@ -206,11 +227,13 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import Compressor from 'compressorjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Pencil, Trash } from 'lucide-vue-next'
+import { Pencil, QrCode, Trash } from 'lucide-vue-next'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import type { Header, Item } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import { groupTypes, isOriginal } from '@/data'
 import { useAuthStore } from '@/modules/Auth/store.ts'
 import {
@@ -221,6 +244,7 @@ import {
 import { IProduct } from '@/modules/Products/types.ts'
 import { Roles } from '@/types'
 
+const scanDialog = ref(false)
 const authStore = useAuthStore()
 const { width } = useWindowSize()
 const searchValue = ref('')
@@ -254,13 +278,28 @@ const rules = {
   name: { required },
   description: { required },
 }
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.partNumber) scanDialog.value = false
+}
+const onLoaded = (error: any) => {
+  console.log(error)
+}
+const scanDialogOpen = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+    scanDialog.value = true
+  } catch (err) {
+    alert(err)
+  }
+}
 const v$ = useVuelidate(rules, state)
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },
   { text: 'Название', value: 'name', sortable: true },
   { text: 'Описание', value: 'description', sortable: true },
-  { text: 'Поставщик', value: 'manufacturer', sortable: true },
+  { text: 'Производитель', value: 'manufacturer', sortable: true },
   { text: 'Тип', value: 'origin', sortable: true },
   { text: 'Модель', value: 'carModel', sortable: true },
   { text: 'Год выпуска', value: 'carYear', sortable: true },
