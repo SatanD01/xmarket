@@ -48,13 +48,13 @@
           ></el-input>
           <el-select
             size="large"
-            v-model="product.origin"
+            v-model="product.group"
             type="text"
             placeholder="Group"
-            :class="v$.origin.$error ? 'error' : ''"
+            :class="v$.group.$error ? 'error' : ''"
           >
             <el-option
-              v-for="item in isOriginal"
+              v-for="item in groupTypes"
               :key="item"
               :label="item"
               :value="item"
@@ -82,13 +82,13 @@
           ></el-input>
           <el-select
             size="large"
-            v-model="product.group"
+            v-model="product.origin"
             type="text"
             placeholder="Origin"
-            :class="v$.group.$error ? 'error' : ''"
+            :class="v$.origin.$error ? 'error' : ''"
           >
             <el-option
-              v-for="item in groupTypes"
+              v-for="item in isOriginal"
               :key="item"
               :label="item"
               :value="item"
