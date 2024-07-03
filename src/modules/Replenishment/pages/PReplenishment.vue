@@ -150,6 +150,7 @@
       </div>
     </div>
   </div>
+  <CTableSceleton v-else />
 </template>
 
 <script setup lang="ts">
@@ -157,6 +158,7 @@ import { CirclePlus, Delete } from '@element-plus/icons-vue'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import { paymentType } from '@/data'
 import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'

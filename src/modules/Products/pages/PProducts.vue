@@ -218,6 +218,7 @@
       </el-dialog>
     </div>
   </div>
+  <CTableSceleton v-else />
 </template>
 
 <script lang="ts" setup>
@@ -232,6 +233,7 @@ import { StreamBarcodeReader } from 'vue-barcode-reader'
 import type { Header, Item } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import { groupTypes, isOriginal } from '@/data'
 import { useAuthStore } from '@/modules/Auth/store.ts'
 import {
