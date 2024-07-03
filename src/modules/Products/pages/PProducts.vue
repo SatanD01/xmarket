@@ -15,11 +15,19 @@
       <div class="bg-white p-3 rounded-lg shadow">
         <el-input
           placeholder="Search"
-          class="mb-3 md:!w-[300px]"
+          class="mb-3 md:!w-[300px] me-2"
           size="large"
           v-model="searchValue"
         />
+        <el-button
+          size="large"
+          @click="scanDialog = true"
+          type="primary"
+          class="!ms-0 mb-3 !p-2"
+          ><QrCode
+        /></el-button>
         <Vue3EasyDataTable
+          buttons-pagination
           :headers="headers"
           :items="items"
           :search-field="[
@@ -196,6 +204,16 @@
           >Обновить</el-button
         >
       </el-dialog>
+      <el-dialog
+        v-model="scanDialog"
+        title="Сканер бар кода"
+        width="500"
+        :fullscreen="width < 768"
+      >
+        <div>
+          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -206,8 +224,9 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import Compressor from 'compressorjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Pencil, Trash } from 'lucide-vue-next'
+import { Pencil, QrCode, Trash } from 'lucide-vue-next'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import type { Header, Item } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
@@ -221,6 +240,7 @@ import {
 import { IProduct } from '@/modules/Products/types.ts'
 import { Roles } from '@/types'
 
+const scanDialog = ref(false)
 const authStore = useAuthStore()
 const { width } = useWindowSize()
 const searchValue = ref('')
@@ -253,6 +273,13 @@ const rules = {
   weight: { required },
   name: { required },
   description: { required },
+}
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.partNumber) scanDialog.value = false
+}
+const onLoaded = (error: any) => {
+  console.log(error)
 }
 const v$ = useVuelidate(rules, state)
 const headers: Header[] = [

@@ -17,6 +17,7 @@
         />
       </div>
       <Vue3EasyDataTable
+        buttons-pagination
         class="w-full"
         :headers="headers"
         :items="suppliers"

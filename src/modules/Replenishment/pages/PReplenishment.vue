@@ -30,6 +30,7 @@
       </div>
       <el-dialog v-model="dialog" width="80%">
         <Vue3EasyDataTable
+          buttons-pagination
           class="mt-4"
           :headers="tempHeaders"
           :items="templateProducts"
@@ -85,6 +86,7 @@
             v-model="searchValue"
           />
           <Vue3EasyDataTable
+            buttons-pagination
             :headers="headers"
             :items="items"
             :search-field="[

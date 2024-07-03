@@ -123,10 +123,14 @@
         </div>
       </div>
     </div>
-    <el-dialog v-model="scanDialog" title="Tips" width="500">
+    <el-dialog
+      v-model="scanDialog"
+      title="Сканер бар кода"
+      width="500"
+      :fullscreen="width < 768"
+    >
       <div>
         <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
-        {{ onDecode }}
       </div>
     </el-dialog>
   </div>
@@ -134,6 +138,7 @@
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useWindowSize } from '@vueuse/core'
 import Compressor from 'compressorjs'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
@@ -145,6 +150,7 @@ import { IProduct } from '@/modules/Products/types.ts'
 import { getSuppliers } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types.ts'
 
+const { width } = useWindowSize()
 const router = useRouter()
 const scanDialog = ref(false)
 const suppliers: Ref<ISuppliers[] | undefined> = ref()
