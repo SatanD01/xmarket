@@ -22,35 +22,35 @@
             v-model="product.name"
             size="large"
             type="text"
-            placeholder="Name"
+            placeholder="Название товара"
             :class="v$.name.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.description"
             type="text"
-            placeholder="Description"
+            placeholder="Описание"
             :class="v$.description.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.carModel"
             type="text"
-            placeholder="Car model"
+            placeholder="Модель машины"
             :class="v$.carModel.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.carYear"
             type="text"
-            placeholder="Car year"
+            placeholder="Год машины"
             :class="v$.carYear.$error ? 'error' : ''"
           ></el-input>
           <el-select
             size="large"
             v-model="product.group"
             type="text"
-            placeholder="Group"
+            placeholder="Категория"
             :class="v$.group.$error ? 'error' : ''"
           >
             <el-option
@@ -60,31 +60,24 @@
               :value="item"
             />
           </el-select>
-          <el-select
+          <el-input
             size="large"
             v-model="product.manufacturer"
             placeholder="Поставщик"
             :class="v$.manufacturer.$error ? 'error' : ''"
-          >
-            <el-option
-              v-for="item in suppliers"
-              :key="item.name"
-              :label="item.name"
-              :value="item.name"
-            />
-          </el-select>
+          />
           <el-input
             size="large"
             v-model="product.manualCode"
             type="text"
-            placeholder="Product Code"
+            placeholder="Номер продукта"
             :class="v$.manualCode.$error ? 'error' : ''"
           ></el-input>
           <el-select
             size="large"
             v-model="product.origin"
             type="text"
-            placeholder="Origin"
+            placeholder="Тип товара"
             :class="v$.origin.$error ? 'error' : ''"
           >
             <el-option
@@ -98,14 +91,14 @@
             size="large"
             v-model="product.partNumber"
             type="text"
-            placeholder="Part number"
+            placeholder="Баркод"
             :class="v$.partNumber.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.weight"
             type="number"
-            placeholder="Weight"
+            placeholder="Вес"
             :class="v$.weight.$error ? 'error' : ''"
           ></el-input>
 
@@ -117,7 +110,11 @@
             class="!ms-0"
             >Сканировать QR-Код</el-button
           >
-          <el-button size="large" @click="createProductBtn" type="primary"
+          <el-button
+            size="large"
+            @click="createProductBtn"
+            class="!ms-0"
+            type="primary"
             >Создать</el-button
           >
         </div>

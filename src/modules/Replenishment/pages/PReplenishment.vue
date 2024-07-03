@@ -80,7 +80,7 @@
         <!--        </div>-->
         <div class="mt-4">
           <el-input
-            placeholder="Search"
+            placeholder="Поиск"
             class="mb-3 md:!w-[300px]"
             size="large"
             v-model="searchValue"

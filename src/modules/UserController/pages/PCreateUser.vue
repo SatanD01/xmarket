@@ -3,14 +3,14 @@
     <h3 class="text-[24px] font-bold mb-3">Создать пользователя</h3>
     <div class="grid md:grid-cols-4 grid-cols-1 gap-3">
       <el-input
-        placeholder="Login"
+        placeholder="Логин"
         v-model="form.login"
         :class="{ error: v$.login.$error }"
       />
       <el-input
         type="password"
         show-password
-        placeholder="Password"
+        placeholder="Пароль"
         v-model="form.password"
         :class="{ error: v$.password.$error }"
       />

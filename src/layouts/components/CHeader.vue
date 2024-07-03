@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-white w-full flex justify-between items-center border-b p-1 sticky top-0 z-[1]"
+    class="bg-white px-4 w-full flex justify-between items-center border-b p-1 sticky top-0 z-[1]"
   >
     <div class="burger-container" @click="$emit('on-toggle')">
       <div
@@ -19,7 +19,7 @@
         <div class="line line3"></div>
       </div>
     </div>
-    <div class="flex items-center gap-5 cursor-pointer">
+    <div class="flex items-center me-1 gap-5 cursor-pointer">
       <router-link to="/cart">
         <el-badge :value="store.basketItems.length" type="primary">
           <div
