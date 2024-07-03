@@ -219,9 +219,8 @@ const addProduct = async () => {
   templateProducts.value = await addProductItem({})
 }
 const removeItem = (item: IProduct) => {
-  const fIndex = (element) => element === item.id
+  const fIndex = (element) => element.id == item.id
   const index = templateProducts.value.findIndex(fIndex)
-  console.log(fIndex)
   templateProducts.value.splice(index, 1)
 }
 
