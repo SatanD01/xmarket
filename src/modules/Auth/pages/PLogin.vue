@@ -18,7 +18,7 @@
 
         <div class="grid grid-cols-1 gap-3 pl-3">
           <h4 class="h4 font-bold roboto-bold text-center">Войти в систему</h4>
-          <form class="flex flex-col items-end">
+          <form class="flex flex-col items-end" @keydown.enter="loginBtn">
             <div class="mb-2 w-full">
               <label class="text-[14px]" for="username">Логин</label>
               <el-input

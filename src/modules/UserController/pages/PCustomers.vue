@@ -102,6 +102,7 @@
       </div>
     </el-dialog>
   </div>
+  <CTableSceleton v-else />
 </template>
 <script setup lang="ts">
 import { useVuelidate } from '@vuelidate/core'
@@ -113,6 +114,7 @@ import { onMounted, reactive, Ref, ref } from 'vue'
 import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import {
   createCustomers,
   getCustomers,
