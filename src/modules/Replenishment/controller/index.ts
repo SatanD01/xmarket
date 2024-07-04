@@ -26,3 +26,16 @@ export const getReplenishmentOrders = () => {
       })
   })
 }
+
+export const processReplenishmentOrder = (id: number) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('inventory/processReplenishmentOrder', { id: id })
+      .then((res) => {
+        resolve(res)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}

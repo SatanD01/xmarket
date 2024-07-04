@@ -1,7 +1,13 @@
 <template>
   <div v-if="products">
     <div class="grid grid-cols-1 gap-3 bg-white p-3 shadow rounded-lg mb-3">
-      <h3 class="text-[24px] font-bold">Пополнение склада</h3>
+      <div class="flex items-center justify-between">
+        <h3 class="text-[24px] font-bold">Пополнение склада</h3>
+        <el-button @click="openModal(-1)" type="primary">
+          <p class="text-center">Create Order</p>
+        </el-button>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <el-select
           size="large"
@@ -43,7 +49,10 @@
 
       <el-dialog v-model="dialog" width="80%">
         <Vue3EasyDataTable
-          hover:shadow-xl transition duration-200 ease-in-out
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
           class="mt-4 h-[300px] overflow-y-scroll"
           :headers="tempHeaders"
           :items="templateProducts"
@@ -154,10 +163,10 @@
     </div>
 
     <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Orders</h3>
+      <h3 class="text-[24px] font-bold">Template orders</h3>
       <div class="grid grid-cols-6 gap-3 mt-4">
         <div
-          v-for="(elem, index) in allReplenishments"
+          v-for="(elem, index) in tempOrders"
           :key="index"
           class="cursor-pointer"
         >
@@ -166,20 +175,38 @@
             class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
-            <p class="text-center text-white">{{ index + 1 }} - Order</p>
+            <p class="text-center text-white">
+              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:MM') }}
+            </p>
           </div>
 
-          <el-button type="primary" plain class="mt-1 w-full"
+          <el-button
+            @click="processReplenishment(elem)"
+            type="primary"
+            plain
+            class="mt-1 w-full"
             >Oбработка</el-button
           >
         </div>
-
+      </div>
+    </div>
+    <div class="bg-white p-3 mt-5 rounded-lg shadow">
+      <h3 class="text-[24px] font-bold">Completed orders</h3>
+      <div class="grid grid-cols-6 gap-3 mt-4">
         <div
-          @click="openModal(-1)"
-          class="rounded-lg shadow p-3 flex flex-col gap-1 justify-center items-center cursor-pointer hover:shadow-xl transition duration-200 ease-in-out"
+          v-for="(elem, index) in completedOrders"
+          :key="index"
+          class="cursor-pointer"
         >
-          <el-icon size="22"><CirclePlus /></el-icon>
-          <p class="text-center">Create Order</p>
+          <div
+            @click="openModal(elem)"
+            class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+          >
+            <el-icon size="22" color="white"><FolderOpened /></el-icon>
+            <p class="text-center text-white">
+              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:MM') }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -189,6 +216,7 @@
 
 <script setup lang="ts">
 import { CirclePlus, Delete, FolderOpened } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
 
@@ -201,7 +229,9 @@ import { IProduct } from '@/modules/Products/types.ts'
 import {
   addProductItem,
   getReplenishmentOrders,
+  processReplenishmentOrder,
 } from '@/modules/Replenishment/controller'
+import { IReplenishment } from '@/modules/Replenishment/types.ts'
 import { getCustomers } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types.ts'
 
@@ -214,6 +244,9 @@ const dialog = ref(false)
 const suppliersList: Ref<ISuppliers[] | undefined> = ref()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref()
+const allReplenishments: Ref<IReplenishment[] | undefined> = ref()
+const tempOrders: Ref<IReplenishment[] | undefined> = ref()
+const completedOrders: Ref<IReplenishment[] | undefined> = ref()
 const templateProducts: Ref<
   {
     productId: number | null | undefined
@@ -253,7 +286,8 @@ const headers: Header[] = [
 ]
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
-  { text: 'Название', value: 'name', sortable: true },
+  { text: 'Фото', value: 'product.image' },
+  { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Quantity', value: 'quantity' },
   { text: 'Cost price', value: 'costPrice' },
   { text: 'Sale price', value: 'salePrice' },
@@ -310,13 +344,28 @@ const removeItem = (item: IProduct) => {
   const index = templateProducts.value.findIndex(fIndex)
   templateProducts.value.splice(index, 1)
 }
-const allReplenishments = ref()
+const processReplenishment = async (item: IReplenishment) => {
+  await processReplenishmentOrder(item.id)
+  allReplenishments.value = await getReplenishmentOrders()
+  tempOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Template') return el
+  })
+  completedOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Completed') return el
+  })
+}
 onMounted(async () => {
   suppliersList.value = await getCustomers()
   locationsList.value = await getOffices()
   products.value = await getProducts()
   allReplenishments.value = await getReplenishmentOrders()
-  console.log('all', allReplenishments.value)
+  tempOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Template') return el
+  })
+  completedOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Completed') return el
+  })
+  console.log('all', tempOrders.value)
 })
 </script>
 <style scoped></style>
