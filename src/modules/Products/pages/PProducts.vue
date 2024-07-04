@@ -58,7 +58,24 @@
                 :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
                 :initial-index="4"
                 fit="cover"
-              />
+              >
+                <template #viewer>
+                  <div
+                    class="custom-viewer flex flex-row absolute top-[50px] left-[30px]"
+                  >
+                    <el-button
+                      @click="copyImage(`data:image/jpeg;base64,${item.image}`)"
+                      >Копировать</el-button
+                    >
+                    <el-button
+                      @click="
+                        downloadImage(`data:image/jpeg;base64,${item.image}`)
+                      "
+                      >Скачать</el-button
+                    >
+                  </div>
+                </template>
+              </el-image>
             </div>
           </template>
           <template #item-origin="item">
@@ -243,6 +260,43 @@ const loading = ref(false)
 const dialog = ref(false)
 const products: Ref<IProduct[] | undefined> = ref()
 const providersList = ['BYD']
+
+const copyImage = async (base64String) => {
+  try {
+    const img = new Image()
+    img.src = base64String
+
+    img.onload = async () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+
+      canvas.toBlob(async (blob) => {
+        try {
+          const item = new ClipboardItem({ 'image/png': blob })
+          await navigator.clipboard.write([item])
+          ElMessage.success('Изображение скопировано в буфер обмена')
+        } catch (err) {
+          console.error(err)
+          ElMessage.error('Не удалось скопировать изображение')
+        }
+      }, 'image/png')
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage.error('Не удалось скопировать изображение')
+  }
+}
+
+const downloadImage = (img) => {
+  const link = document.createElement('a')
+  link.href = img
+  link.download = 'image.jpeg'
+  link.click()
+}
+
 const state = reactive<IProduct>({
   id: null,
   carModel: '',
@@ -376,3 +430,9 @@ onMounted(async () => {
   console.log(products.value)
 })
 </script>
+
+<style>
+.custom-viewer el-button {
+  margin: 5px;
+}
+</style>

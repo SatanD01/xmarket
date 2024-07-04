@@ -101,7 +101,9 @@
                 to="/offices"
               >
                 <Blinds />
-                <span class="ms-2 font-semibold"> Список Офисов </span>
+                <span class="ms-2 font-semibold">
+                  Список Магазинов и складов
+                </span>
               </router-link>
             </li>
             <li v-if="[Roles.ADMIN].includes(authStore.user?.role)">

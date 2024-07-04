@@ -9,6 +9,15 @@
       </div>
       <div class="bg-white rounded-lg p-4 w-full mt-6">
         <Vue3EasyDataTable :headers="headers" :items="users" buttons-pagination>
+          <template #item-role="data">
+            {{
+              data.role === 'Admin'
+                ? 'Админ'
+                : data.role === 'Manager'
+                  ? 'Менеджер'
+                  : 'Продавец'
+            }}
+          </template>
           <template #item-createdAt="data">
             {{ dayjs(data?.createdAt).format('DD-MM-YYYY') }}
           </template>
