@@ -43,7 +43,10 @@
 
       <el-dialog v-model="dialog" width="80%">
         <Vue3EasyDataTable
-          hover:shadow-xl transition duration-200 ease-in-out
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
           class="mt-4 h-[300px] overflow-y-scroll"
           :headers="tempHeaders"
           :items="templateProducts"
@@ -245,7 +248,7 @@ const headers: Header[] = [
   { text: 'Тип', value: 'origin', sortable: true },
   { text: 'Модель', value: 'carModel', sortable: true },
   { text: 'Год выпуска', value: 'carYear', sortable: true },
-  { text: 'Группа', value: 'group', sortable: true },
+  { text: 'Категория', value: 'group', sortable: true },
   { text: 'Баркод', value: 'partNumber', sortable: true },
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
