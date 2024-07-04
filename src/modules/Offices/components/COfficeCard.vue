@@ -4,12 +4,19 @@
   >
     <div class="w-full h-full">
       <iframe
+        v-if="office.addressUrl"
         :src="office.addressUrl"
         width="100%"
         height="200"
         frameborder="1"
         allowfullscreen="false"
       ></iframe>
+      <div
+        v-else
+        class="bg-gray-200 w-full h-[200px] flex items-center justify-center"
+      >
+        <span>Локация не указана</span>
+      </div>
     </div>
     <div class="p-2 flex flex-col gap-1 bg-white rounded-b-lg">
       <p class="font-bold text-[14px]">Название: {{ office.name }}</p>
@@ -19,7 +26,7 @@
         {{ office.description }}
       </p>
       <p class="text-[12px] text-gray-500">
-        Тип: {{ office.type === 'Warehouse' ? 'Склад' : 'Офис' }}
+        Тип: {{ office.type === 'Warehouse' ? 'Склад' : 'Магазин' }}
       </p>
       <div class="grid grid-cols-1 gap-3 mt-2">
         <el-button class="w-full" type="primary" plain @click="editBtn"
@@ -31,7 +38,7 @@
 
     <el-dialog
       v-model="dialogVisible"
-      title="Изменить офис"
+      title="Изменить локацию"
       width="800"
       :fullscreen="fullscreen"
     >
@@ -44,7 +51,6 @@
         />
         <el-input
           size="large"
-          :class="v$.description.$error ? 'error' : ''"
           v-model="officeData.description"
           placeholder="Описание"
         />
@@ -52,7 +58,6 @@
           size="large"
           v-model="officeData.address"
           placeholder="Адрес"
-          :class="v$.address.$error ? 'error' : ''"
         />
         <el-select
           :class="v$.type.$error ? 'error' : ''"
@@ -63,8 +68,8 @@
           <el-option
             v-for="item in officeTypes"
             :key="item"
-            :label="officeTypes == 'Warehouse' ? 'Склад' : 'Офис'"
-            :value="item"
+            :label="item.label"
+            :value="item.value"
           />
         </el-select>
       </div>
@@ -79,7 +84,6 @@
         <el-input
           size="large"
           v-model="officeData.addressUrl"
-          :class="v$.addressUrl.$error ? 'error' : ''"
           placeholder="Ссылка на Яндекс карты"
           class="mt-3"
         />
@@ -121,13 +125,19 @@ const officeData = reactive<IOffice>({
   id: '',
 })
 const rules = {
-  address: { required },
-  addressUrl: { required },
-  description: { required },
   name: { required },
   type: { required },
 }
-const officeTypes = ref(['Warehouse'])
+const officeTypes = ref([
+  {
+    label: 'Склад',
+    value: 'Warehouse',
+  },
+  {
+    label: 'Магазин',
+    value: 'Store',
+  },
+])
 const v$ = useVuelidate(rules, officeData)
 const editBtn = () => {
   dialogVisible.value = true

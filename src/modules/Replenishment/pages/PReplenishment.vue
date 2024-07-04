@@ -278,7 +278,7 @@ const headers: Header[] = [
   { text: 'Тип', value: 'origin', sortable: true },
   { text: 'Модель', value: 'carModel', sortable: true },
   { text: 'Год выпуска', value: 'carYear', sortable: true },
-  { text: 'Группа', value: 'group', sortable: true },
+  { text: 'Категория', value: 'group', sortable: true },
   { text: 'Баркод', value: 'partNumber', sortable: true },
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },

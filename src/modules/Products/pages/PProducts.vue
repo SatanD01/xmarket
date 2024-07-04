@@ -58,8 +58,30 @@
                 :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
                 :initial-index="4"
                 fit="cover"
-              />
+              >
+                <template #viewer>
+                  <div
+                    class="custom-viewer flex flex-row absolute top-[50px] left-[30px]"
+                  >
+                    <el-button
+                      @click="copyImage(`data:image/jpeg;base64,${item.image}`)"
+                      >Копировать</el-button
+                    >
+                    <el-button
+                      @click="
+                        downloadImage(`data:image/jpeg;base64,${item.image}`)
+                      "
+                      >Скачать</el-button
+                    >
+                  </div>
+                </template>
+              </el-image>
             </div>
+          </template>
+          <template #item-origin="item">
+            <span>{{
+              item.origin === 'Original' ? 'Оригинал' : 'Дубликат'
+            }}</span>
           </template>
           <template
             v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
@@ -110,69 +132,57 @@
               v-model="state.name"
               size="large"
               type="text"
-              placeholder="Name"
+              placeholder="Название"
               :class="v$.name.$error ? 'error' : ''"
             ></el-input>
             <el-input
               size="large"
               v-model="state.description"
               type="text"
-              placeholder="Description"
-              :class="v$.description.$error ? 'error' : ''"
+              placeholder="Описание"
             ></el-input>
             <el-input
               size="large"
               v-model="state.carModel"
               type="text"
-              placeholder="Car model"
-              :class="v$.carModel.$error ? 'error' : ''"
+              placeholder="Модель машины"
             ></el-input>
             <el-input
               size="large"
               v-model="state.carYear"
               type="text"
-              placeholder="Car year"
-              :class="v$.carYear.$error ? 'error' : ''"
+              placeholder="Год машины"
             ></el-input>
             <el-select
               size="large"
               v-model="state.origin"
               type="text"
-              placeholder="Group"
+              placeholder="Тип товара"
               :class="v$.origin.$error ? 'error' : ''"
             >
               <el-option
                 v-for="item in isOriginal"
                 :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-            <el-select
-              size="large"
-              v-model="state.manufacturer"
-              placeholder="Поставщик"
-              :class="v$.manufacturer.$error ? 'error' : ''"
-            >
-              <el-option
-                v-for="item in providersList"
-                :key="item"
-                :label="item"
+                :label="item === 'Original' ? 'Оригинал' : 'Дубликат'"
                 :value="item"
               />
             </el-select>
             <el-input
               size="large"
+              v-model="state.manufacturer"
+              placeholder="Производитель"
+            />
+            <el-input
+              size="large"
               v-model="state.manualCode"
               type="text"
-              placeholder="Product Code"
-              :class="v$.manualCode.$error ? 'error' : ''"
+              placeholder="Код продукта"
             ></el-input>
             <el-select
               size="large"
               v-model="state.group"
               type="text"
-              placeholder="Origin"
+              placeholder="Категория"
               :class="v$.group.$error ? 'error' : ''"
             >
               <el-option
@@ -186,15 +196,13 @@
               size="large"
               v-model="state.partNumber"
               type="text"
-              placeholder="Part number"
-              :class="v$.partNumber.$error ? 'error' : ''"
+              placeholder="Баркод"
             ></el-input>
             <el-input
               size="large"
               v-model="state.weight"
               type="number"
-              placeholder="Weight"
-              :class="v$.weight.$error ? 'error' : ''"
+              placeholder="Вес"
             ></el-input>
           </div>
         </div>
@@ -252,6 +260,43 @@ const loading = ref(false)
 const dialog = ref(false)
 const products: Ref<IProduct[] | undefined> = ref()
 const providersList = ['BYD']
+
+const copyImage = async (base64String) => {
+  try {
+    const img = new Image()
+    img.src = base64String
+
+    img.onload = async () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+
+      canvas.toBlob(async (blob) => {
+        try {
+          const item = new ClipboardItem({ 'image/png': blob })
+          await navigator.clipboard.write([item])
+          ElMessage.success('Изображение скопировано в буфер обмена')
+        } catch (err) {
+          console.error(err)
+          ElMessage.error('Не удалось скопировать изображение')
+        }
+      }, 'image/png')
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage.error('Не удалось скопировать изображение')
+  }
+}
+
+const downloadImage = (img) => {
+  const link = document.createElement('a')
+  link.href = img
+  link.download = 'image.jpeg'
+  link.click()
+}
+
 const state = reactive<IProduct>({
   id: null,
   carModel: '',
@@ -267,16 +312,9 @@ const state = reactive<IProduct>({
   description: '',
 })
 const rules = {
-  carModel: { required },
-  carYear: { required },
-  group: { required },
-  manualCode: { required },
-  manufacturer: { required },
-  origin: { required },
-  partNumber: { required },
-  weight: { required },
   name: { required },
-  description: { required },
+  origin: { required },
+  group: { required },
 }
 const onDecode = (result: any) => {
   searchValue.value = result
@@ -303,7 +341,7 @@ const headers: Header[] = [
   { text: 'Тип', value: 'origin', sortable: true },
   { text: 'Модель', value: 'carModel', sortable: true },
   { text: 'Год выпуска', value: 'carYear', sortable: true },
-  { text: 'Группа', value: 'group', sortable: true },
+  { text: 'Категория', value: 'group', sortable: true },
   { text: 'Баркод', value: 'partNumber', sortable: true },
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
@@ -346,9 +384,9 @@ const updateCustomer = async () => {
   }
 }
 const deleteBtn = (id: number) => {
-  ElMessageBox.confirm('Delete product. Continue?', 'Warning', {
-    confirmButtonText: 'OK',
-    cancelButtonText: 'Cancel',
+  ElMessageBox.confirm('Вы уверены, что хотите удалить товар?', 'Warning', {
+    confirmButtonText: 'Да',
+    cancelButtonText: 'Нет',
     type: 'warning',
   })
     .then(async () => {
@@ -356,13 +394,13 @@ const deleteBtn = (id: number) => {
       products.value = await getProducts()
       ElMessage({
         type: 'success',
-        message: 'Delete completed',
+        message: 'Успешно удален',
       })
     })
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: 'Delete canceled',
+        message: 'Товар не удален',
       })
     })
 }
@@ -392,3 +430,9 @@ onMounted(async () => {
   console.log(products.value)
 })
 </script>
+
+<style>
+.custom-viewer el-button {
+  margin: 5px;
+}
+</style>

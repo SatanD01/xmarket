@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-lg shadow p-3">
-    <h2 class="text-[24px] font-bold mb-3">Создать офис</h2>
+    <h2 class="text-[24px] font-bold mb-3">Создать Магазин\Склад</h2>
     <div class="grid md:grid-cols-4 grid-cols-1 gap-3">
       <el-input
         size="large"
@@ -12,19 +12,12 @@
         size="large"
         v-model="officeData.description"
         placeholder="Описание"
-        :class="v$.description.$error ? 'error' : ''"
       />
-      <el-input
-        size="large"
-        v-model="officeData.address"
-        placeholder="Адрес"
-        :class="v$.address.$error ? 'error' : ''"
-      />
+      <el-input size="large" v-model="officeData.address" placeholder="Адрес" />
       <el-input
         size="large"
         v-model="officeData.addressUrl"
         placeholder="Ссылка на яндекс карты"
-        :class="v$.addressUrl.$error ? 'error' : ''"
       />
       <el-select
         size="large"
@@ -35,8 +28,8 @@
         <el-option
           v-for="item in officeTypes"
           :key="item"
-          :label="item"
-          :value="item"
+          :label="item.label"
+          :value="item.value"
         />
       </el-select>
       <el-button size="large" @click="createOffice" type="primary"
@@ -63,11 +56,17 @@ import { useApi } from '@/composables/useApi.ts'
 import { IOffice } from '@/modules/Offices/types.ts'
 
 const router = useRouter()
-const officeTypes = ref(['Warehouse'])
+const officeTypes = ref([
+  {
+    label: 'Склад',
+    value: 'Warehouse',
+  },
+  {
+    label: 'Магазин',
+    value: 'Store',
+  },
+])
 const rules = {
-  address: { required },
-  addressUrl: { required },
-  description: { required },
   name: { required },
   type: { required },
 }
@@ -87,7 +86,7 @@ const createOffice = async () => {
     .then((res) => {
       console.log(res)
       router.push({ name: 'Offices' })
-      toast.success('Added successfully.')
+      toast.success('Успешно добавлен.')
     })
     .catch((err) => {
       console.log(err)

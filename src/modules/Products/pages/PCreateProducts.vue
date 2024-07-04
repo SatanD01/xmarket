@@ -1,16 +1,12 @@
 <template>
   <div class="p-3 shadow rounded-lg bg-white">
-    <h3 class="text-[24px] font-bold mb-3">Пополнение склада</h3>
+    <h3 class="text-[24px] font-bold mb-3">Создание товара</h3>
     <div class="gap-3 grid grid-cols-1 md:grid-cols-12">
       <div class="col-span-1 md:col-span-3">
         <p class="text-[14px] mb-2">
           Фотография товара (.jpeg, .png, .jpg, .webp)
         </p>
-        <input
-          type="file"
-          :class="v$.imageString.$error ? 'error' : ''"
-          @change="onFileChange"
-        />
+        <input type="file" @change="onFileChange" />
         <p v-if="file">
           Size: {{ (file?.size / (1024 * 1024)).toFixed(2) }} Mb
         </p>
@@ -30,21 +26,18 @@
             v-model="product.description"
             type="text"
             placeholder="Описание"
-            :class="v$.description.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.carModel"
             type="text"
             placeholder="Модель машины"
-            :class="v$.carModel.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.carYear"
             type="text"
             placeholder="Год машины"
-            :class="v$.carYear.$error ? 'error' : ''"
           ></el-input>
           <el-select
             size="large"
@@ -63,15 +56,13 @@
           <el-input
             size="large"
             v-model="product.manufacturer"
-            placeholder="Поставщик"
-            :class="v$.manufacturer.$error ? 'error' : ''"
+            placeholder="Производитель"
           />
           <el-input
             size="large"
             v-model="product.manualCode"
             type="text"
             placeholder="Номер продукта"
-            :class="v$.manualCode.$error ? 'error' : ''"
           ></el-input>
           <el-select
             size="large"
@@ -83,7 +74,7 @@
             <el-option
               v-for="item in isOriginal"
               :key="item"
-              :label="item"
+              :label="item === 'Original' ? 'Оригинал' : 'Дубликат'"
               :value="item"
             />
           </el-select>
@@ -92,14 +83,12 @@
             v-model="product.partNumber"
             type="text"
             placeholder="Баркод"
-            :class="v$.partNumber.$error ? 'error' : ''"
           ></el-input>
           <el-input
             size="large"
             v-model="product.weight"
             type="number"
             placeholder="Вес"
-            :class="v$.weight.$error ? 'error' : ''"
           ></el-input>
 
           <!--          <el-button type="primary" class="!ms-0">Сохрать шаблон</el-button>-->
@@ -166,16 +155,8 @@ const product = reactive<IProduct>({
 })
 const rules = {
   name: { required },
-  description: { required },
-  manufacturer: { required },
   origin: { required },
-  carModel: { required },
-  carYear: { required },
   group: { required },
-  partNumber: { required },
-  manualCode: { required },
-  weight: { required },
-  imageString: { required },
 }
 const file = ref('')
 const onFileChange = (e) => {
