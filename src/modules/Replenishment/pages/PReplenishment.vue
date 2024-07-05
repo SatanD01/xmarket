@@ -12,6 +12,7 @@
         <el-select
           size="large"
           v-model="order.sourceId"
+          :class="v$.sourceId.$error ? 'error' : ''"
           placeholder="Поставщик"
         >
           <el-option
@@ -24,6 +25,7 @@
         <el-select
           size="large"
           v-model="order.destinationId"
+          :class="v$.destinationId.$error ? 'error' : ''"
           placeholder="Локация"
         >
           <el-option
@@ -36,6 +38,7 @@
         <el-select
           size="large"
           v-model="order.paymentType"
+          :class="v$.paymentType.$error ? 'error' : ''"
           placeholder="Тип оплаты"
         >
           <el-option
@@ -216,6 +219,8 @@
 
 <script setup lang="ts">
 import { CirclePlus, Delete, FolderOpened } from '@element-plus/icons-vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
@@ -296,8 +301,20 @@ const tempHeaders: Header[] = [
 const items = computed((): Item[] | undefined => {
   return products.value
 })
+const rules = {
+  sourceId: { required },
+  destinationId: { required },
+  paymentType: { required },
+}
+const v$ = useVuelidate(rules, order)
 
 const openModal = (order) => {
+  if (order === -1) {
+    v$.value.$touch()
+    if (v$.value.$invalid) return
+    dialog.value = true
+    templateProducts.value = []
+  }
   dialog.value = true
   templateProducts.value = []
   if (order !== -1) {
