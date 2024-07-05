@@ -310,7 +310,7 @@ const rules = {
 }
 const v$ = useVuelidate(rules, order)
 
-const openModal = (order, status: string) => {
+const openModal = async (order, status: string) => {
   if (order === -1) {
     v$.value.$touch()
     if (v$.value.$invalid) return
