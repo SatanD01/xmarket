@@ -66,6 +66,16 @@
                 <span class="ms-2 font-semibold"> Пополнение склада </span>
               </router-link>
             </li>
+            <li>
+              <router-link
+                exact-active-class="active-route"
+                class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
+                to="/check-product"
+              >
+                <ListChecks />
+                <span class="ms-2 font-semibold"> Доступные товары </span>
+              </router-link>
+            </li>
             <li
               v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
             >
@@ -140,8 +150,8 @@ import {
   ArrowLeft,
   Blinds,
   Box,
+  ListChecks,
   PackageOpen,
-  Settings,
   ShoppingCart,
   UserRoundCog,
   UserRoundPlus,
