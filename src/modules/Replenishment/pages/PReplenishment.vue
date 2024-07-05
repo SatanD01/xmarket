@@ -3,7 +3,7 @@
     <div class="grid grid-cols-1 gap-3 bg-white p-3 shadow rounded-lg mb-3">
       <div class="flex items-center justify-between">
         <h3 class="text-[24px] font-bold">Пополнение склада</h3>
-        <el-button @click="openModal(-1)" type="primary">
+        <el-button @click="openModal(-1, 'create')" type="primary">
           <p class="text-center">Create Order</p>
         </el-button>
       </div>
@@ -47,7 +47,7 @@
         </el-select>
       </div>
 
-      <el-dialog v-model="dialog" width="80%">
+      <el-dialog align-center v-model="dialogCreate" width="80%">
         <Vue3EasyDataTable
           hover:shadow-xl
           transition
@@ -171,7 +171,7 @@
           class="cursor-pointer"
         >
           <div
-            @click="openModal(elem)"
+            @click="openModal(elem, 'update')"
             class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
@@ -199,7 +199,6 @@
           class="cursor-pointer"
         >
           <div
-            @click="openModal(elem)"
             class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
@@ -215,7 +214,7 @@
 </template>
 
 <script setup lang="ts">
-import { CirclePlus, Delete, FolderOpened } from '@element-plus/icons-vue'
+import { Delete, FolderOpened } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
@@ -228,6 +227,8 @@ import { getProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
 import {
   addProductItem,
+  addReplenishmentOrderItem,
+  deleteReplenishmentOrderItem,
   getReplenishmentOrders,
   processReplenishmentOrder,
 } from '@/modules/Replenishment/controller'
@@ -240,13 +241,15 @@ const searchValue = ref('')
 const quantity = ref(null)
 const costPrice = ref(null)
 const salePrice = ref(null)
-const dialog = ref(false)
+const dialogCreate = ref(false)
 const suppliersList: Ref<ISuppliers[] | undefined> = ref()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref()
 const allReplenishments: Ref<IReplenishment[] | undefined> = ref()
 const tempOrders: Ref<IReplenishment[] | undefined> = ref()
 const completedOrders: Ref<IReplenishment[] | undefined> = ref()
+const statusUpdate = ref('')
+const currentOrder = ref(null)
 const templateProducts: Ref<
   {
     productId: number | null | undefined
@@ -286,7 +289,6 @@ const headers: Header[] = [
 ]
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
-  { text: 'Фото', value: 'product.image' },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Quantity', value: 'quantity' },
   { text: 'Cost price', value: 'costPrice' },
@@ -297,52 +299,86 @@ const items = computed((): Item[] | undefined => {
   return products.value
 })
 
-const openModal = (order) => {
-  dialog.value = true
+const openModal = async (order, status: string) => {
+  statusUpdate.value = status
+  dialogCreate.value = true
   templateProducts.value = []
   if (order !== -1) {
-    templateProducts.value = order.items
+    allReplenishments.value = await getReplenishmentOrders()
+    currentOrder.value = allReplenishments.value.filter(
+      (item) => item.id === order.id,
+    )
+    templateProducts.value = currentOrder.value[0].items
   }
-  console.log(order)
 }
 
-const addProduct = (item: IProduct) => {
+const addProduct = async (item: IProduct) => {
   innerVisible.value = true
   quantity.value = null
   costPrice.value = null
   salePrice.value = null
   product.value = item
 }
-const updCount = () => {
-  if (quantity.value && costPrice.value && salePrice.value) {
-    console.log(product.value)
-    templateProducts.value.push({
+const updCount = async () => {
+  if (statusUpdate.value === 'create') {
+    if (quantity.value && costPrice.value && salePrice.value) {
+      templateProducts.value.push({
+        productId: product.value.id,
+        name: product.value.name,
+        image: product.value.image,
+        quantity: quantity.value,
+        costPrice: costPrice.value,
+        salePrice: salePrice.value,
+      })
+      innerVisible.value = false
+    }
+  } else {
+    await addReplenishmentOrderItem({
       productId: product.value.id,
-      name: product.value.name,
-      image: product.value.image,
+      orderId: currentOrder.value[0].id,
       quantity: quantity.value,
       costPrice: costPrice.value,
       salePrice: salePrice.value,
+    }).then(async () => {
+      allReplenishments.value = await getReplenishmentOrders()
+      currentOrder.value = allReplenishments.value.filter(
+        (item) => item.id === currentOrder.value[0].id,
+      )
+      templateProducts.value = currentOrder.value[0].items
     })
     innerVisible.value = false
   }
 }
 const saveProducts = async () => {
-  order.items = templateProducts.value.map((el) => {
-    return {
-      productId: el.productId,
-      quantity: el.quantity,
-      costPrice: el.costPrice,
-      salePrice: el.salePrice,
-    }
-  })
-  console.log(order.items)
-  templateProducts.value = await addProductItem(order)
+  console.log('update', statusUpdate.value)
+  if (statusUpdate.value === 'create') {
+    order.items = templateProducts.value.map((el) => {
+      return {
+        productId: el.productId,
+        quantity: el.quantity,
+        costPrice: el.costPrice,
+        salePrice: el.salePrice,
+      }
+    })
+    templateProducts.value = await addProductItem(order)
+  }
+  dialogCreate.value = false
 }
-const removeItem = (item: IProduct) => {
-  const fIndex = (element) => element.id == item.id
-  const index = templateProducts.value.findIndex(fIndex)
-  templateProducts.value.splice(index, 1)
+const removeItem = async (item: IProduct) => {
+  if (statusUpdate.value === 'create') {
+    const fIndex = (element) => element.id == item.id
+    const index = templateProducts.value.findIndex(fIndex)
+    templateProducts.value.splice(index, 1)
+  } else {
+    console.log('ccrrr', currentOrder.value)
+    await deleteReplenishmentOrderItem(item.id, currentOrder.value[0].id).then(
+      () => {
+        const fIndex = (element) => element.id == item.id
+        const index = templateProducts.value.findIndex(fIndex)
+        templateProducts.value.splice(index, 1)
+      },
+    )
+  }
 }
 const processReplenishment = async (item: IReplenishment) => {
   await processReplenishmentOrder(item.id)
@@ -365,7 +401,6 @@ onMounted(async () => {
   completedOrders.value = allReplenishments.value.filter((el) => {
     if (el.status === 'Completed') return el
   })
-  console.log('all', tempOrders.value)
 })
 </script>
 <style scoped></style>
