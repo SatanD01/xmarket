@@ -318,7 +318,7 @@ const openModal = async (order, status: string) => {
     templateProducts.value = []
   }
   statusUpdate.value = status
-
+  dialogCreate.value = true
   templateProducts.value = []
   if (order !== -1) {
     allReplenishments.value = await getReplenishmentOrders()
