@@ -5,7 +5,7 @@
     >
       <h3 class="text-[24px] font-bold">Поставщики</h3>
       <el-button type="primary" @click="createDialog = true"
-        >Доабвить поставщика</el-button
+        >Добавить поставщика</el-button
       >
     </div>
     <div class="bg-white p-3 shadow rounded-lg">
@@ -156,9 +156,8 @@ const openDialog = (data) => {
 }
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
-  { text: 'Тип', value: 'type' },
-  { text: 'Поставщик', value: 'name', sortable: true },
-  { text: 'Описание', value: 'description', sortable: true },
+  { text: 'Имя', value: 'name', sortable: true },
+  { text: 'Описание поставщика', value: 'description', sortable: true },
   { text: 'Телефон', value: 'phone', sortable: true },
   { text: 'Создан', value: 'createdAt', sortable: true },
   { text: 'Изменен', value: 'updatedAt', sortable: true },

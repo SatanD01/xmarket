@@ -26,3 +26,42 @@ export const getReplenishmentOrders = () => {
       })
   })
 }
+
+export const processReplenishmentOrder = (id: number) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('inventory/processReplenishmentOrder', { id: id })
+      .then((res) => {
+        resolve(res)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const addReplenishmentOrderItem = (data) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('inventory/addOrderItem', data)
+      .then((res) => {
+        resolve(res)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const deleteReplenishmentOrderItem = (id: number, orderId: number) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('inventory/deleteOrderItem', { id: id, orderId: orderId })
+      .then((res) => {
+        resolve(res)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}

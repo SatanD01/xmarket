@@ -85,11 +85,11 @@ const loginBtn = async () => {
     const response = await useApi().$post<ILogin>('/users/authenticate', login)
     authStore.setToken(response.data.token)
     await router.push({ name: 'Dashboard' })
-    toast.success('Login successfully')
+    toast.success('Вы вошли успешно')
     loading.value = true
   } catch (err) {
     console.log(err)
-    toast.error('Username or password incorrect')
+    toast.error('Логин или пароль не верный')
   } finally {
     loading.value = false
   }

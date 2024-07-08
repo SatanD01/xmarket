@@ -4,13 +4,27 @@
       <div
         class="bg-white gap-3 shadow rounded-lg mb-3 p-3 flex items-center justify-between"
       >
-        <h1 class="font-bold text-[32px]">Товары</h1>
-        <el-button
-          type="primary"
-          @click="$router.push({ name: 'CreateProduct' })"
-          v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
-          >Создать товар</el-button
-        >
+        <h1 class="font-bold text-[32px]">Доступные товары</h1>
+        <div class="flex gap-3 items-center">
+          <el-select v-model="office">
+            <el-option
+              v-for="(item, index) in officesList"
+              :label="item"
+              :value="item"
+              :key="index"
+            />
+          </el-select>
+          <el-button
+            type="primary"
+            @click="$router.push({ name: 'CreateProduct' })"
+            v-if="
+              [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                authStore.user?.role,
+              )
+            "
+            >Поиск</el-button
+          >
+        </div>
       </div>
       <div class="bg-white p-3 rounded-lg shadow">
         <div class="flex items-center gap-3">
