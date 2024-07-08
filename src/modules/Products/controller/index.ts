@@ -30,7 +30,9 @@ export const getProducts = () => {
 export const getAvailableProducts = (id) => {
   return new Promise((resolve, reject) => {
     useApi()
-      .$post('/Inventory/GetAvailableInventoryItems', id)
+      .$post('Inventory/GetAvailableInventoryItems', {
+        id: id,
+      })
       .then((res) => {
         resolve(res.data)
       })

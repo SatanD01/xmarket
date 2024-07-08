@@ -1,5 +1,4 @@
 <template>
-  {{ products }}
   <div v-if="products">
     <div>
       <div
@@ -7,7 +6,12 @@
       >
         <h1 class="font-bold text-[32px]">Доступные товары</h1>
         <div class="flex gap-3 items-center">
-          <el-select v-model="office" class="min-w-[120px]">
+          <label for="location"></label>
+          <el-select
+            v-model="office"
+            class="min-w-[120px]"
+            @change="getAvailableProduct"
+          >
             <el-option
               v-for="(item, index) in officesList"
               :label="item.name"
@@ -38,20 +42,19 @@
           :headers="headers"
           :items="items"
           :search-field="[
-            'id',
-            'name',
-            'description',
-            'manufacturer',
-            'origin',
-            'carModel',
-            'carYear',
-            'group',
-            'partNumber',
-            'manualCode',
-            'weight',
-            'quantity',
-            'costPrice',
-            'salePrice',
+            'product.id',
+            'product.name',
+            'product.description',
+            'product.manufacturer',
+            'product.origin',
+            'product.carModel',
+            'product.carYear',
+            'product.group',
+            'product.partNumber',
+            'product.manualCode',
+            'product.weight',
+            'product.quantity',
+            'product.salePrice',
           ]"
           :search-value="searchValue"
         >
@@ -59,11 +62,13 @@
             <div class="py-3">
               <el-image
                 style="width: 80px; height: 60px"
-                :src="`data:image/jpeg;base64,${item.image}`"
+                :src="`data:image/jpeg;base64,${item.product.image}`"
                 :zoom-rate="1.0"
                 :max-scale="5"
                 :min-scale="0.2"
-                :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
+                :preview-src-list="[
+                  `data:image/jpeg;base64,${item.product.image}`,
+                ]"
                 :initial-index="4"
                 fit="cover"
               >
@@ -72,12 +77,18 @@
                     class="custom-viewer flex flex-row absolute top-[50px] left-[30px]"
                   >
                     <el-button
-                      @click="copyImage(`data:image/jpeg;base64,${item.image}`)"
+                      @click="
+                        copyImage(
+                          `data:image/jpeg;base64,${item.product.image}`,
+                        )
+                      "
                       >Копировать</el-button
                     >
                     <el-button
                       @click="
-                        downloadImage(`data:image/jpeg;base64,${item.image}`)
+                        downloadImage(
+                          `data:image/jpeg;base64,${item.product.image}`,
+                        )
                       "
                       >Скачать</el-button
                     >
@@ -88,7 +99,7 @@
           </template>
           <template #item-origin="item">
             <span>{{
-              item.origin === 'Original' ? 'Оригинал' : 'Дубликат'
+              item.product.origin === 'Original' ? 'Оригинал' : 'Дубликат'
             }}</span>
           </template>
         </Vue3EasyDataTable>
@@ -128,7 +139,9 @@ const searchValue = ref('')
 const products: Ref<IProduct[] | undefined> = ref()
 const office = ref(1)
 const officesList = ref([])
-
+const getAvailableProduct = async () => {
+  products.value = await getAvailableProducts(office.value)
+}
 const copyImage = async (base64String) => {
   try {
     const img = new Image()
@@ -181,18 +194,20 @@ const scanDialogOpen = async () => {
   }
 }
 const headers: Header[] = [
-  { text: 'Id', value: 'id', sortable: true },
+  { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Фото', value: 'image' },
-  { text: 'Название', value: 'name', sortable: true },
-  { text: 'Описание', value: 'description', sortable: true },
-  { text: 'Производитель', value: 'manufacturer', sortable: true },
+  { text: 'Название', value: 'product.name', sortable: true },
+  { text: 'Описание', value: 'product.description', sortable: true },
+  { text: 'Производитель', value: 'product.manufacturer', sortable: true },
   { text: 'Тип', value: 'origin', sortable: true },
-  { text: 'Модель', value: 'carModel', sortable: true },
-  { text: 'Год выпуска', value: 'carYear', sortable: true },
-  { text: 'Категория', value: 'group', sortable: true },
-  { text: 'Баркод', value: 'partNumber', sortable: true },
-  { text: 'Код', value: 'manualCode', sortable: true },
-  { text: 'Вес', value: 'weight', sortable: true },
+  { text: 'Модель', value: 'product.carModel', sortable: true },
+  { text: 'Год выпуска', value: 'product.carYear', sortable: true },
+  { text: 'Категория', value: 'product.group', sortable: true },
+  { text: 'Баркод', value: 'product.partNumber', sortable: true },
+  { text: 'Код', value: 'product.manualCode', sortable: true },
+  { text: 'Вес', value: 'product.weight', sortable: true },
+  { text: 'Количество', value: 'quantity', sortable: true },
+  { text: 'Цена', value: 'salePrice', sortable: true },
 ]
 
 const items = computed((): Item[] | undefined => {
