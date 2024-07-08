@@ -30,6 +30,7 @@
         >
           <el-option
             v-for="(item, index) in locationsList"
+            v-show="item.type === 'Warehouse'"
             :value="item?.id"
             :label="item?.name"
             :key="index"
