@@ -3,7 +3,7 @@
     <div class="grid grid-cols-1 gap-3 bg-white p-3 shadow rounded-lg mb-3">
       <div class="flex items-center justify-between">
         <h3 class="text-[24px] font-bold">Пополнение склада</h3>
-        <el-button @click="openModal(-1, 'create')" type="primary">
+        <el-button @click="openCreateModal()" type="primary">
           <p class="text-center">Create Order</p>
         </el-button>
       </div>
@@ -56,14 +56,14 @@
           transition
           duration-200
           ease-in-out
-          class="mt-4 h-[300px] overflow-y-scroll"
+          class="mt-4 h-[35%] overflow-y-scroll"
           :headers="tempHeaders"
           :items="templateProducts"
         >
           <template #item-opera="item">
             <div class="flex items-center gap-2">
               <el-icon
-                @click="removeItem(item)"
+                @click="removeItemCreate(item)"
                 class="cursor-pointer"
                 size="large"
                 ><Delete
@@ -73,7 +73,10 @@
         </Vue3EasyDataTable>
 
         <div class="flex items-center justify-end my-3">
-          <el-button @click="saveProducts" type="primary" class="w-[100px]"
+          <el-button
+            @click="saveCreateProducts"
+            type="primary"
+            class="w-[100px]"
             >Save</el-button
           >
         </div>
@@ -88,8 +91,8 @@
           <Vue3EasyDataTable
             buttons-pagination
             :headers="headers"
-            class="h-[500px] overflow-y-auto"
-            :items="items"
+            class="h-[40%] overflow-y-auto"
+            :items="products"
             :search-field="[
               'id',
               'name',
@@ -122,7 +125,7 @@
             <template #item-opera="item">
               <div class="flex items-center">
                 <el-button
-                  @click="addProduct(item)"
+                  @click="innerDialog(item)"
                   size="small"
                   class="!p-2 !ml-[8px]"
                   type="primary"
@@ -158,10 +161,141 @@
             </div>
 
             <template #footer>
-              <el-button type="primary" @click="updCount">Save</el-button>
+              <el-button type="primary" @click="addProduct('create')"
+                >Save</el-button
+              >
             </template>
           </el-dialog>
         </div>
+      </el-dialog>
+      <el-dialog align-center v-model="dialogUpdate" width="80%">
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
+          class="mt-4 h-[35%] overflow-y-scroll"
+          :headers="tempHeaders"
+          :items="templateProducts"
+        >
+          <template #item-opera="item">
+            <div class="flex items-center gap-2">
+              <el-icon
+                @click="removeItemUpdate(item)"
+                class="cursor-pointer"
+                size="large"
+                ><Delete
+              /></el-icon>
+            </div>
+          </template>
+        </Vue3EasyDataTable>
+
+        <div class="flex items-center justify-end my-3">
+          <el-button
+            @click="saveUpdateProducts"
+            type="primary"
+            class="w-[100px]"
+            >Save</el-button
+          >
+        </div>
+
+        <div class="mt-4">
+          <el-input
+            placeholder="Поиск"
+            class="mb-3 md:!w-[300px]"
+            size="large"
+            v-model="searchValue"
+          />
+          <Vue3EasyDataTable
+            buttons-pagination
+            :headers="headers"
+            class="h-[40%] overflow-y-auto"
+            :items="products"
+            :search-field="[
+              'id',
+              'name',
+              'description',
+              'manufacturer',
+              'origin',
+              'carModel',
+              'carYear',
+              'group',
+              'partNumber',
+              'manualCode',
+              'weight',
+            ]"
+            :search-value="searchValue"
+          >
+            <template #item-image="item">
+              <div class="py-3">
+                <el-image
+                  style="width: 80px; height: 60px"
+                  :src="`data:image/jpeg;base64,${item.image}`"
+                  :zoom-rate="1.0"
+                  :max-scale="5"
+                  :min-scale="0.2"
+                  :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
+                  :initial-index="4"
+                  fit="cover"
+                />
+              </div>
+            </template>
+            <template #item-opera="item">
+              <div class="flex items-center">
+                <el-button
+                  @click="innerDialog(item)"
+                  size="small"
+                  class="!p-2 !ml-[8px]"
+                  type="primary"
+                >
+                  Добавить
+                </el-button>
+              </div>
+            </template>
+          </Vue3EasyDataTable>
+
+          <el-dialog
+            v-model="innerVisible"
+            width="500"
+            title="Inner Dialog"
+            append-to-body
+          >
+            <div class="flex items-center gap-2">
+              <el-input
+                class="!w-[150px]"
+                placeholder="Quantity"
+                v-model="quantity"
+              />
+              <el-input
+                class="!w-[150px]"
+                placeholder="Net price"
+                v-model="costPrice"
+              />
+              <el-input
+                class="!w-[150px]"
+                placeholder="Sale price"
+                v-model="salePrice"
+              />
+            </div>
+
+            <template #footer>
+              <el-button type="primary" @click="addProduct('update')"
+                >Save</el-button
+              >
+            </template>
+          </el-dialog>
+        </div>
+      </el-dialog>
+      <el-dialog align-center v-model="dialogView" width="80%">
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
+          class="mt-4 h-[35%] overflow-y-scroll"
+          :headers="tempHeadersView"
+          :items="templateProducts"
+        />
       </el-dialog>
     </div>
 
@@ -174,12 +308,12 @@
           class="cursor-pointer"
         >
           <div
-            @click="openModal(elem, 'update')"
+            @click="openDialogUpdate(elem)"
             class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
             <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:MM') }}
+              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
           </div>
 
@@ -202,18 +336,19 @@
           class="cursor-pointer"
         >
           <div
+            @click="viewOrders(elem)"
             class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
             <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:MM') }}
+              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <CTableSceleton v-else />
+  <CTableSkeleton v-else />
 </template>
 
 <script setup lang="ts">
@@ -221,10 +356,11 @@ import { Delete, FolderOpened } from '@element-plus/icons-vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
-import { computed, onMounted, reactive, Ref, ref } from 'vue'
-import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { onMounted, reactive, Ref, ref } from 'vue'
+import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
-import CTableSceleton from '@/components/CTableSceleton.vue'
+import CTableSkeleton from '@/components/CTableSceleton.vue'
 import { paymentType } from '@/data'
 import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
@@ -239,44 +375,35 @@ import {
 } from '@/modules/Replenishment/controller'
 import { IReplenishment } from '@/modules/Replenishment/types.ts'
 import { getCustomers } from '@/modules/UserController/controller'
-import { ISuppliers } from '@/modules/UserController/types.ts'
+import {
+  ISuppliers,
+  ITemplateProducts,
+} from '@/modules/UserController/types.ts'
 
-const innerVisible = ref(false)
-const searchValue = ref('')
-const quantity = ref(null)
-const costPrice = ref(null)
-const salePrice = ref(null)
-const dialogCreate = ref(false)
 const suppliersList: Ref<ISuppliers[] | undefined> = ref()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref()
 const allReplenishments: Ref<IReplenishment[] | undefined> = ref()
+const templateProducts: Ref<ITemplateProducts[]> = ref([])
 const tempOrders: Ref<IReplenishment[] | undefined> = ref()
 const completedOrders: Ref<IReplenishment[] | undefined> = ref()
-const statusUpdate = ref('')
+const product: Ref<IProduct | undefined> = ref()
 const currentOrder = ref(null)
-const templateProducts: Ref<
-  {
-    productId: number | null | undefined
-    name: string | null
-    image: string | undefined
-    quantity: number | null
-    costPrice: number | null
-    salePrice: number | null
-  }[]
-> = ref([])
-const order = reactive({
-  sourceId: null,
-  destinationId: null,
-  paymentType: null,
-  items: [],
-})
-const product: Ref<{
-  id: number | null
-  name: string | null
-  image: string | null
-}> = ref()
-
+const tempHeaders: Header[] = [
+  { text: 'Id', value: 'productId', sortable: true },
+  { text: 'Название', value: 'product.name', sortable: true },
+  { text: 'Quantity', value: 'quantity' },
+  { text: 'Cost price', value: 'costPrice' },
+  { text: 'Sale price', value: 'salePrice' },
+  { text: 'Operations', value: 'opera' },
+]
+const tempHeadersView: Header[] = [
+  { text: 'Id', value: 'productId', sortable: true },
+  { text: 'Название', value: 'product.name', sortable: true },
+  { text: 'Quantity', value: 'quantity' },
+  { text: 'Cost price', value: 'costPrice' },
+  { text: 'Sale price', value: 'salePrice' },
+]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },
@@ -292,16 +419,19 @@ const headers: Header[] = [
   { text: 'Вес', value: 'weight', sortable: true },
   { text: 'Operations', value: 'opera' },
 ]
-const tempHeaders: Header[] = [
-  { text: 'Id', value: 'productId', sortable: true },
-  { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Quantity', value: 'quantity' },
-  { text: 'Cost price', value: 'costPrice' },
-  { text: 'Sale price', value: 'salePrice' },
-  { text: 'Operations', value: 'opera' },
-]
-const items = computed((): Item[] | undefined => {
-  return products.value
+const dialogCreate = ref(false)
+const dialogUpdate = ref(false)
+const dialogView = ref(false)
+const searchValue = ref('')
+const innerVisible = ref(false)
+const quantity = ref(null)
+const costPrice = ref(null)
+const salePrice = ref(null)
+const order = reactive({
+  sourceId: null,
+  destinationId: null,
+  paymentType: null,
+  items: [],
 })
 const rules = {
   sourceId: { required },
@@ -310,95 +440,72 @@ const rules = {
 }
 const v$ = useVuelidate(rules, order)
 
-const openModal = async (order, status: string) => {
-  if (order === -1) {
-    v$.value.$touch()
-    if (v$.value.$invalid) return
-    dialogCreate.value = true
-    templateProducts.value = []
-  }
-  statusUpdate.value = status
+const openCreateModal = () => {
+  v$.value.$touch()
+  if (v$.value.$invalid) return
   dialogCreate.value = true
-  templateProducts.value = []
-  if (order !== -1) {
-    allReplenishments.value = await getReplenishmentOrders()
-    currentOrder.value = allReplenishments.value.filter(
-      (item) => item.id === order.id,
-    )
-    templateProducts.value = currentOrder.value[0].items
-  }
 }
-
-const addProduct = async (item: IProduct) => {
+const openDialogUpdate = (item) => {
+  dialogUpdate.value = true
+  templateProducts.value = item.items
+  currentOrder.value = item
+  console.log(item)
+}
+const innerDialog = (item: IProduct) => {
   innerVisible.value = true
   quantity.value = null
   costPrice.value = null
   salePrice.value = null
   product.value = item
 }
-const updCount = async () => {
-  if (statusUpdate.value === 'create') {
-    if (quantity.value && costPrice.value && salePrice.value) {
-      templateProducts.value.push({
+const addProduct = async (status: string) => {
+  if (quantity.value && costPrice.value && salePrice.value) {
+    if (status === 'update') {
+      await addReplenishmentOrderItem({
         productId: product.value.id,
-        name: product.value.name,
-        image: product.value.image,
+        orderId: currentOrder.value.id,
         quantity: quantity.value,
         costPrice: costPrice.value,
         salePrice: salePrice.value,
       })
-      innerVisible.value = false
     }
-  } else {
-    await addReplenishmentOrderItem({
+    templateProducts.value.push({
       productId: product.value.id,
-      orderId: currentOrder.value[0].id,
+      product: {
+        name: product.value.name,
+      },
+      image: product.value.image,
       quantity: quantity.value,
       costPrice: costPrice.value,
       salePrice: salePrice.value,
-    }).then(async () => {
-      allReplenishments.value = await getReplenishmentOrders()
-      currentOrder.value = allReplenishments.value.filter(
-        (item) => item.id === currentOrder.value[0].id,
-      )
-      templateProducts.value = currentOrder.value[0].items
     })
     innerVisible.value = false
   }
 }
-const saveProducts = async () => {
-  console.log('update', statusUpdate.value)
-  if (statusUpdate.value === 'create') {
-    order.items = templateProducts.value.map((el) => {
-      return {
-        productId: el.productId,
-        quantity: el.quantity,
-        costPrice: el.costPrice,
-        salePrice: el.salePrice,
-      }
-    })
-    templateProducts.value = await addProductItem(order)
-  }
-  dialogCreate.value = false
+const removeItemCreate = (item) => {
+  const fIndex = (element) => element.productId == item.productId
+  const index = templateProducts.value.findIndex(fIndex)
+  templateProducts.value.splice(index, 1)
 }
-const removeItem = async (item: IProduct) => {
-  if (statusUpdate.value === 'create') {
-    const fIndex = (element) => element.id == item.id
-    const index = templateProducts.value.findIndex(fIndex)
-    templateProducts.value.splice(index, 1)
-  } else {
-    console.log('ccrrr', currentOrder.value)
-    await deleteReplenishmentOrderItem(item.id, currentOrder.value[0].id).then(
-      () => {
-        const fIndex = (element) => element.id == item.id
-        const index = templateProducts.value.findIndex(fIndex)
-        templateProducts.value.splice(index, 1)
-      },
-    )
-  }
+const removeItemUpdate = async (item) => {
+  await deleteReplenishmentOrderItem(item.id, currentOrder.value.id).then(
+    () => {
+      const fIndex = (element) => element.id == item.id
+      const index = templateProducts.value.findIndex(fIndex)
+      templateProducts.value.splice(index, 1)
+    },
+  )
 }
-const processReplenishment = async (item: IReplenishment) => {
-  await processReplenishmentOrder(item.id)
+const saveCreateProducts = async () => {
+  order.items = templateProducts.value.map((el) => {
+    return {
+      productId: el.productId,
+      quantity: el.quantity,
+      costPrice: el.costPrice,
+      salePrice: el.salePrice,
+    }
+  })
+  await addProductItem(order)
   allReplenishments.value = await getReplenishmentOrders()
   tempOrders.value = allReplenishments.value.filter((el) => {
     if (el.status === 'Template') return el
@@ -406,7 +513,43 @@ const processReplenishment = async (item: IReplenishment) => {
   completedOrders.value = allReplenishments.value.filter((el) => {
     if (el.status === 'Completed') return el
   })
+  dialogCreate.value = false
 }
+const saveUpdateProducts = () => {
+  dialogUpdate.value = false
+}
+const processReplenishment = async (item: IReplenishment) => {
+  ElMessageBox.confirm('Continue?', 'Warning', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
+  })
+    .then(async () => {
+      ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+      await processReplenishmentOrder(item.id)
+      allReplenishments.value = await getReplenishmentOrders()
+      tempOrders.value = allReplenishments.value.filter((el) => {
+        if (el.status === 'Template') return el
+      })
+      completedOrders.value = allReplenishments.value.filter((el) => {
+        if (el.status === 'Completed') return el
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
+}
+const viewOrders = (item: IReplenishment) => {
+  dialogView.value = true
+  templateProducts.value = item.items
+}
+
 onMounted(async () => {
   suppliersList.value = await getCustomers()
   locationsList.value = await getOffices()
