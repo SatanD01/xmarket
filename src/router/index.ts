@@ -6,6 +6,7 @@ import OfficeRoutes from '@/modules/Offices/router'
 import Order from '@/modules/Order/router'
 import ProductsRoutes from '@/modules/Products/router'
 import ReplenishmentRoutes from '@/modules/Replenishment/router'
+import TransferRoutes from '@/modules/Transfer/router'
 import UserRoutes from '@/modules/UserController/router'
 import { checkRouteIsExist } from '@/router/middleware'
 
@@ -27,6 +28,7 @@ const router = createRouter({
         ...ChartRoutes,
         ...ReplenishmentRoutes,
         ...Order,
+        ...TransferRoutes,
       ],
     },
     ...AuthRoutes,
