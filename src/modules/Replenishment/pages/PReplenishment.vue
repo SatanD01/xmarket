@@ -179,7 +179,7 @@
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
             <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:MM') }}
+              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
           </div>
 
@@ -206,7 +206,7 @@
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
             <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:MM') }}
+              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
           </div>
         </div>

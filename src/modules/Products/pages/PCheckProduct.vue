@@ -6,24 +6,14 @@
       >
         <h1 class="font-bold text-[32px]">Доступные товары</h1>
         <div class="flex gap-3 items-center">
-          <el-select v-model="office">
+          <el-select v-model="office" class="min-w-[120px]">
             <el-option
               v-for="(item, index) in officesList"
-              :label="item"
-              :value="item"
+              :label="item.name"
+              :value="item.id"
               :key="index"
             />
           </el-select>
-          <el-button
-            type="primary"
-            @click="$router.push({ name: 'CreateProduct' })"
-            v-if="
-              [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
-                authStore.user?.role,
-              )
-            "
-            >Поиск</el-button
-          >
         </div>
       </div>
       <div class="bg-white p-3 rounded-lg shadow">
@@ -258,6 +248,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table'
 import CTableSceleton from '@/components/CTableSceleton.vue'
 import { groupTypes, isOriginal } from '@/data'
 import { useAuthStore } from '@/modules/Auth/store.ts'
+import { getOffices } from '@/modules/Offices/controller'
 import {
   deleteProduct,
   getProducts,
@@ -274,6 +265,8 @@ const loading = ref(false)
 const dialog = ref(false)
 const products: Ref<IProduct[] | undefined> = ref()
 const providersList = ['BYD']
+const office = ref(1)
+const officesList = ref([])
 
 const copyImage = async (base64String) => {
   try {
@@ -441,6 +434,7 @@ const onFileChange = (e) => {
 
 onMounted(async () => {
   products.value = await getProducts()
+  officesList.value = await getOffices()
   console.log(products.value)
 })
 </script>
