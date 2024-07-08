@@ -27,6 +27,19 @@ export const getProducts = () => {
   })
 }
 
+export const getAvailableProducts = (id) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('/Inventory/GetAvailableInventoryItems', id)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
 export const updateProduct = (data: IProduct) => {
   return new Promise((resolve, reject) => {
     useApi()
