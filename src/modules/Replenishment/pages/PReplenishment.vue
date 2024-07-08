@@ -356,6 +356,7 @@ import { Delete, FolderOpened } from '@element-plus/icons-vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import dayjs from 'dayjs'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
@@ -518,14 +519,31 @@ const saveUpdateProducts = () => {
   dialogUpdate.value = false
 }
 const processReplenishment = async (item: IReplenishment) => {
-  await processReplenishmentOrder(item.id)
-  allReplenishments.value = await getReplenishmentOrders()
-  tempOrders.value = allReplenishments.value.filter((el) => {
-    if (el.status === 'Template') return el
+  ElMessageBox.confirm('Continue?', 'Warning', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
   })
-  completedOrders.value = allReplenishments.value.filter((el) => {
-    if (el.status === 'Completed') return el
-  })
+    .then(async () => {
+      ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+      await processReplenishmentOrder(item.id)
+      allReplenishments.value = await getReplenishmentOrders()
+      tempOrders.value = allReplenishments.value.filter((el) => {
+        if (el.status === 'Template') return el
+      })
+      completedOrders.value = allReplenishments.value.filter((el) => {
+        if (el.status === 'Completed') return el
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
 }
 const viewOrders = (item: IReplenishment) => {
   dialogView.value = true
