@@ -286,6 +286,17 @@
           </el-dialog>
         </div>
       </el-dialog>
+      <el-dialog align-center v-model="dialogView" width="80%">
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
+          class="mt-4 h-[35%] overflow-y-scroll"
+          :headers="tempHeadersView"
+          :items="templateProducts"
+        />
+      </el-dialog>
     </div>
 
     <div class="bg-white p-3 mt-5 rounded-lg shadow">
@@ -325,6 +336,7 @@
           class="cursor-pointer"
         >
           <div
+            @click="viewOrders(elem)"
             class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
@@ -384,6 +396,13 @@ const tempHeaders: Header[] = [
   { text: 'Sale price', value: 'salePrice' },
   { text: 'Operations', value: 'opera' },
 ]
+const tempHeadersView: Header[] = [
+  { text: 'Id', value: 'productId', sortable: true },
+  { text: 'Название', value: 'product.name', sortable: true },
+  { text: 'Quantity', value: 'quantity' },
+  { text: 'Cost price', value: 'costPrice' },
+  { text: 'Sale price', value: 'salePrice' },
+]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },
@@ -401,6 +420,7 @@ const headers: Header[] = [
 ]
 const dialogCreate = ref(false)
 const dialogUpdate = ref(false)
+const dialogView = ref(false)
 const searchValue = ref('')
 const innerVisible = ref(false)
 const quantity = ref(null)
@@ -507,6 +527,10 @@ const processReplenishment = async (item: IReplenishment) => {
     if (el.status === 'Completed') return el
   })
 }
+const viewOrders = (item: IReplenishment) => {
+  dialogView.value = true
+  templateProducts.value = item.items
+}
 
 onMounted(async () => {
   suppliersList.value = await getCustomers()
@@ -520,167 +544,5 @@ onMounted(async () => {
     if (el.status === 'Completed') return el
   })
 })
-
-// import { useVuelidate } from '@vuelidate/core'
-// import { required } from '@vuelidate/validators'
-// import dayjs from 'dayjs'
-// import { computed, onMounted, reactive, Ref, ref } from 'vue'
-// import Vue3EasyDataTable, { type Header, type Item } from 'vue3-easy-data-table'
-//
-// import CTableSceleton from '@/components/CTableSceleton.vue'
-// import { paymentType } from '@/data'
-// import { getOffices } from '@/modules/Offices/controller'
-// import { IOffice } from '@/modules/Offices/types.ts'
-// import { getProducts } from '@/modules/Products/controller'
-// import { IProduct } from '@/modules/Products/types.ts'
-// import {
-//   addProductItem,
-//   addReplenishmentOrderItem,
-//   deleteReplenishmentOrderItem,
-//   getReplenishmentOrders,
-//   processReplenishmentOrder,
-// } from '@/modules/Replenishment/controller'
-// import { IReplenishment } from '@/modules/Replenishment/types.ts'
-// import { getCustomers } from '@/modules/UserController/controller'
-// import { ISuppliers } from '@/modules/UserController/types.ts'
-//
-// const innerVisible = ref(false)
-// const searchValue = ref('')
-// const quantity = ref(null)
-// const costPrice = ref(null)
-// const salePrice = ref(null)
-// const dialogCreate = ref(false)
-// const tempOrders: Ref<IReplenishment[] | undefined> = ref()
-// const completedOrders: Ref<IReplenishment[] | undefined> = ref()
-// const statusUpdate = ref('')
-// const currentOrder = ref(null)
-// const templateProducts: Ref<
-//   {
-//     productId: number | null | undefined
-//     name: string | null
-//     image: string | undefined
-//     quantity: number | null
-//     costPrice: number | null
-//     salePrice: number | null
-//   }[]
-// > = ref([])
-// const order = reactive({
-//   sourceId: null,
-//   destinationId: null,
-//   paymentType: null,
-//   items: [],
-// })
-// const product: Ref<{
-//   id: number | null
-//   name: string | null
-//   image: string | null
-// }> = ref()
-//
-
-// const items = computed((): Item[] | undefined => {
-//   return products.value
-// })
-
-//
-// const openModal = async (order, status: string) => {
-//   if (order === -1) {
-//     v$.value.$touch()
-//     if (v$.value.$invalid) return
-//     dialogCreate.value = true
-//     templateProducts.value = []
-//   }
-//   statusUpdate.value = status
-//
-//   templateProducts.value = []
-//   if (order !== -1) {
-//     allReplenishments.value = await getReplenishmentOrders()
-//     currentOrder.value = allReplenishments.value.filter(
-//       (item) => item.id === order.id,
-//     )
-//     templateProducts.value = currentOrder.value[0].items
-//   }
-// }
-//
-// const addProduct = async (item: IProduct) => {
-//   innerVisible.value = true
-//   quantity.value = null
-//   costPrice.value = null
-//   salePrice.value = null
-//   product.value = item
-// }
-// const updCount = async () => {
-//   if (statusUpdate.value === 'create') {
-//     if (quantity.value && costPrice.value && salePrice.value) {
-//       templateProducts.value.push({
-//         productId: product.value.id,
-//         name: product.value.name,
-//         image: product.value.image,
-//         quantity: quantity.value,
-//         costPrice: costPrice.value,
-//         salePrice: salePrice.value,
-//       })
-//       innerVisible.value = false
-//     }
-//   } else {
-//     await addReplenishmentOrderItem({
-//       productId: product.value.id,
-//       orderId: currentOrder.value[0].id,
-//       quantity: quantity.value,
-//       costPrice: costPrice.value,
-//       salePrice: salePrice.value,
-//     }).then(async () => {
-//       allReplenishments.value = await getReplenishmentOrders()
-//       currentOrder.value = allReplenishments.value.filter(
-//         (item) => item.id === currentOrder.value[0].id,
-//       )
-//       templateProducts.value = currentOrder.value[0].items
-//     })
-//     innerVisible.value = false
-//   }
-// }
-// const saveProducts = async () => {
-//   console.log('update', statusUpdate.value)
-//   if (statusUpdate.value === 'create') {
-//     order.items = templateProducts.value.map((el) => {
-//       return {
-//         productId: el.productId,
-//         quantity: el.quantity,
-//         costPrice: el.costPrice,
-//         salePrice: el.salePrice,
-//       }
-//     })
-//     templateProducts.value = await addProductItem(order)
-//   }
-//   dialogCreate.value = false
-// }
-// const removeItem = async (item: IProduct) => {
-//   if (statusUpdate.value === 'create') {
-//     const fIndex = (element) => element.id == item.id
-//     const index = templateProducts.value.findIndex(fIndex)
-//     templateProducts.value.splice(index, 1)
-//   } else {
-//     console.log('ccrrr', currentOrder.value)
-//     await deleteReplenishmentOrderItem(item.id, currentOrder.value[0].id).then(
-//       () => {
-//         const fIndex = (element) => element.id == item.id
-//         const index = templateProducts.value.findIndex(fIndex)
-//         templateProducts.value.splice(index, 1)
-//       },
-//     )
-//   }
-// }
-// const processReplenishment = async (item: IReplenishment) => {
-//   await processReplenishmentOrder(item.id)
-//   allReplenishments.value = await getReplenishmentOrders()
-//   tempOrders.value = allReplenishments.value.filter((el) => {
-//     if (el.status === 'Template') return el
-//   })
-//   completedOrders.value = allReplenishments.value.filter((el) => {
-//     if (el.status === 'Completed') return el
-//   })
-// }
-// onMounted(async () => {
-
-// })
 </script>
 <style scoped></style>
