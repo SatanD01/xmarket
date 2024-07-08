@@ -14,6 +14,7 @@
           >
             <el-option
               v-for="(item, index) in officesList"
+              v-show="item.type === 'Store'"
               :label="item.name"
               :value="item.id"
               :key="index"
@@ -136,9 +137,10 @@ import { IProduct } from '@/modules/Products/types.ts'
 const scanDialog = ref(false)
 const { width } = useWindowSize()
 const searchValue = ref('')
-const products: Ref<IProduct[] | undefined> = ref()
-const office = ref(1)
 const officesList = ref([])
+const office = ref()
+const products: Ref<IProduct[] | undefined> = ref()
+
 const getAvailableProduct = async () => {
   products.value = await getAvailableProducts(office.value)
 }
@@ -215,8 +217,9 @@ const items = computed((): Item[] | undefined => {
 })
 
 onMounted(async () => {
-  products.value = await getAvailableProducts(office.value)
   officesList.value = await getOffices()
+  office.value = officesList.value.find((el) => el.type === 'Store')?.id
+  products.value = await getAvailableProducts(office.value)
   console.log(products.value)
 })
 </script>
