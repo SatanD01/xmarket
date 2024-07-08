@@ -2,7 +2,12 @@
   <div>
     <h3 class="text-[24px] font-bold capitalize">перенос товара</h3>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-      <el-select size="large" v-model="order.sourceId" placeholder="Warehouse">
+      <el-select
+        size="large"
+        v-model="order.sourceId"
+        placeholder="Warehouse"
+        @change="getProductByWarehouse"
+      >
         <el-option
           v-for="(item, index) in locationsList"
           v-show="item.type === 'Warehouse'"
@@ -32,7 +37,7 @@
       ease-in-out
       class="mt-4 h-[300px] overflow-y-scroll"
       :headers="tempHeaders"
-      :items="[]"
+      :items="products"
     >
       <template #item-opera="item">
         <div class="flex items-center gap-2">
@@ -52,13 +57,9 @@ import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
 import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
-import { getProducts } from '@/modules/Products/controller'
+import { getAvailableProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
-import { getReplenishmentOrders } from '@/modules/Replenishment/controller'
-import { getCustomers } from '@/modules/UserController/controller'
-import { ISuppliers } from '@/modules/UserController/types.ts'
 
-const suppliersList: Ref<ISuppliers[] | undefined> = ref()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref()
 const order = reactive({
@@ -75,12 +76,17 @@ const tempHeaders: Header[] = [
   { text: 'Sale price', value: 'salePrice' },
   { text: 'Operations', value: 'opera' },
 ]
+
+const getProductByWarehouse = async () => {
+  try {
+    products.value = await getAvailableProducts(order.sourceId)
+  } catch (err) {
+    console.log(err)
+  }
+}
 onMounted(async () => {
   try {
-    suppliersList.value = await getCustomers()
     locationsList.value = await getOffices()
-    products.value = await getProducts()
-    products.value = await getReplenishmentOrders()
   } catch (err) {
     console.log(err)
   }
