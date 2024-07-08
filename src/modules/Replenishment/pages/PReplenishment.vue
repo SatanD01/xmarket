@@ -161,7 +161,127 @@
             </div>
 
             <template #footer>
-              <el-button type="primary" @click="addProduct">Save</el-button>
+              <el-button type="primary" @click="addProduct('create')"
+                >Save</el-button
+              >
+            </template>
+          </el-dialog>
+        </div>
+      </el-dialog>
+      <el-dialog align-center v-model="dialogUpdate" width="80%">
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
+          class="mt-4 h-[35%] overflow-y-scroll"
+          :headers="tempHeaders"
+          :items="templateProducts"
+        >
+          <template #item-opera="item">
+            <div class="flex items-center gap-2">
+              <el-icon
+                @click="removeItemUpdate(item)"
+                class="cursor-pointer"
+                size="large"
+                ><Delete
+              /></el-icon>
+            </div>
+          </template>
+        </Vue3EasyDataTable>
+
+        <div class="flex items-center justify-end my-3">
+          <el-button
+            @click="saveUpdateProducts"
+            type="primary"
+            class="w-[100px]"
+            >Save</el-button
+          >
+        </div>
+
+        <div class="mt-4">
+          <el-input
+            placeholder="Поиск"
+            class="mb-3 md:!w-[300px]"
+            size="large"
+            v-model="searchValue"
+          />
+          <Vue3EasyDataTable
+            buttons-pagination
+            :headers="headers"
+            class="h-[40%] overflow-y-auto"
+            :items="products"
+            :search-field="[
+              'id',
+              'name',
+              'description',
+              'manufacturer',
+              'origin',
+              'carModel',
+              'carYear',
+              'group',
+              'partNumber',
+              'manualCode',
+              'weight',
+            ]"
+            :search-value="searchValue"
+          >
+            <template #item-image="item">
+              <div class="py-3">
+                <el-image
+                  style="width: 80px; height: 60px"
+                  :src="`data:image/jpeg;base64,${item.image}`"
+                  :zoom-rate="1.0"
+                  :max-scale="5"
+                  :min-scale="0.2"
+                  :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
+                  :initial-index="4"
+                  fit="cover"
+                />
+              </div>
+            </template>
+            <template #item-opera="item">
+              <div class="flex items-center">
+                <el-button
+                  @click="innerDialog(item)"
+                  size="small"
+                  class="!p-2 !ml-[8px]"
+                  type="primary"
+                >
+                  Добавить
+                </el-button>
+              </div>
+            </template>
+          </Vue3EasyDataTable>
+
+          <el-dialog
+            v-model="innerVisible"
+            width="500"
+            title="Inner Dialog"
+            append-to-body
+          >
+            <div class="flex items-center gap-2">
+              <el-input
+                class="!w-[150px]"
+                placeholder="Quantity"
+                v-model="quantity"
+              />
+              <el-input
+                class="!w-[150px]"
+                placeholder="Net price"
+                v-model="costPrice"
+              />
+              <el-input
+                class="!w-[150px]"
+                placeholder="Sale price"
+                v-model="salePrice"
+              />
+            </div>
+
+            <template #footer>
+              <el-button type="primary" @click="addProduct('update')"
+                >Save</el-button
+              >
             </template>
           </el-dialog>
         </div>
@@ -177,7 +297,7 @@
           class="cursor-pointer"
         >
           <div
-            @click="dialogUpdate(elem)"
+            @click="openDialogUpdate(elem)"
             class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
@@ -235,7 +355,10 @@ import { getProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
 import {
   addProductItem,
+  addReplenishmentOrderItem,
+  deleteReplenishmentOrderItem,
   getReplenishmentOrders,
+  processReplenishmentOrder,
 } from '@/modules/Replenishment/controller'
 import { IReplenishment } from '@/modules/Replenishment/types.ts'
 import { getCustomers } from '@/modules/UserController/controller'
@@ -251,6 +374,8 @@ const allReplenishments: Ref<IReplenishment[] | undefined> = ref()
 const templateProducts: Ref<ITemplateProducts[]> = ref([])
 const tempOrders: Ref<IReplenishment[] | undefined> = ref()
 const completedOrders: Ref<IReplenishment[] | undefined> = ref()
+const product: Ref<IProduct | undefined> = ref()
+const currentOrder = ref(null)
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
@@ -299,18 +424,30 @@ const openCreateModal = () => {
   if (v$.value.$invalid) return
   dialogCreate.value = true
 }
-const product: Ref<IProduct | undefined> = ref()
+const openDialogUpdate = (item) => {
+  dialogUpdate.value = true
+  templateProducts.value = item.items
+  currentOrder.value = item
+  console.log(item)
+}
 const innerDialog = (item: IProduct) => {
   innerVisible.value = true
   quantity.value = null
   costPrice.value = null
   salePrice.value = null
-  console.log('iee', item)
   product.value = item
 }
-const addProduct = () => {
+const addProduct = async (status: string) => {
   if (quantity.value && costPrice.value && salePrice.value) {
-    console.log('proos', product.value)
+    if (status === 'update') {
+      await addReplenishmentOrderItem({
+        productId: product.value.id,
+        orderId: currentOrder.value.id,
+        quantity: quantity.value,
+        costPrice: costPrice.value,
+        salePrice: salePrice.value,
+      })
+    }
     templateProducts.value.push({
       productId: product.value.id,
       product: {
@@ -328,6 +465,15 @@ const removeItemCreate = (item) => {
   const fIndex = (element) => element.productId == item.productId
   const index = templateProducts.value.findIndex(fIndex)
   templateProducts.value.splice(index, 1)
+}
+const removeItemUpdate = async (item) => {
+  await deleteReplenishmentOrderItem(item.id, currentOrder.value.id).then(
+    () => {
+      const fIndex = (element) => element.id == item.id
+      const index = templateProducts.value.findIndex(fIndex)
+      templateProducts.value.splice(index, 1)
+    },
+  )
 }
 const saveCreateProducts = async () => {
   order.items = templateProducts.value.map((el) => {
@@ -347,6 +493,19 @@ const saveCreateProducts = async () => {
     if (el.status === 'Completed') return el
   })
   dialogCreate.value = false
+}
+const saveUpdateProducts = () => {
+  dialogUpdate.value = false
+}
+const processReplenishment = async (item: IReplenishment) => {
+  await processReplenishmentOrder(item.id)
+  allReplenishments.value = await getReplenishmentOrders()
+  tempOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Template') return el
+  })
+  completedOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Completed') return el
+  })
 }
 
 onMounted(async () => {
