@@ -148,7 +148,7 @@
       <template #item-opera="item">
         <div class="flex items-center gap-2">
           <el-icon
-            @click="removeItemUpdate(item)"
+            @click="deleteItem(item?.id, item?.orderId)"
             class="cursor-pointer"
             size="large"
             ><Delete
@@ -220,6 +220,7 @@ import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
 import { getAvailableProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
+import { deleteReplenishmentOrderItem } from '@/modules/Replenishment/controller'
 
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref([])
@@ -308,10 +309,21 @@ const getTransferOrders = async () => {
 }
 const processTransferOrder = async (id: number) => {
   try {
-    const res = await useApi().$post('Inventory/ProcessTransferOrder', {
+    await useApi().$post('Inventory/ProcessTransferOrder', {
       id: id,
     })
-    console.log(res)
+    await getTransferOrders()
+  } catch (err) {
+    console.log(err)
+  }
+}
+const deleteItem = async (id: number, orderId: number) => {
+  try {
+    await deleteReplenishmentOrderItem(id, orderId)
+    currentOrder.value?.items?.splice(
+      currentOrder.value?.items.findIndex((el) => el.id === id),
+      1,
+    )
   } catch (err) {
     console.log(err)
   }
