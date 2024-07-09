@@ -167,7 +167,7 @@
         />
       </template>
     </Vue3EasyDataTable>
-    <div>
+    <div class="mt-5">
       <el-input
         placeholder="Поиск"
         class="mb-3 md:!w-[300px]"
