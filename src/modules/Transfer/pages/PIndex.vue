@@ -180,7 +180,7 @@
         duration-200
         ease-in-out
         class="mt-4 h-[300px] overflow-y-scroll"
-        :headers="tempHeaders"
+        :headers="tempHeadersWithButton"
         :items="products"
         show-index
         :search-field="['product.id', 'product.name', 'quantity', 'salePrice']"
@@ -197,12 +197,20 @@
             @input="onInputChange(item.index - 1, item.quantity)"
           />
         </template>
+        <template #item-button="item">
+          <el-button
+            type="primary"
+            plain
+            class="!h-7"
+            @click="
+              updateTransferOrder(item.index - 1, item?.product?.id, item)
+            "
+          >
+            Save
+          </el-button>
+        </template>
       </Vue3EasyDataTable>
-    </div>
-    <div class="flex items-center justify-end my-3">
-      <el-button @click="saveUpdateProducts" type="primary" class="w-[100px]"
-        >Save</el-button
-      >
+      <pre> {{ order.items }} </pre>
     </div>
   </el-dialog>
 </template>
@@ -243,11 +251,19 @@ const tempHeaders: Header[] = [
   { text: 'Sale price', value: 'salePrice' },
   // { text: 'Operations', value: 'opera' },
 ]
-const tempUpdateHeaders: Header[] = [
+const tempHeadersWithButton: Header[] = [
   { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Quantity', value: 'quantity' },
   { text: 'Enter quantity', value: 'input' },
+  { text: 'Sale price', value: 'salePrice' },
+  { text: 'Actions', value: 'button' },
+]
+const tempUpdateHeaders: Header[] = [
+  { text: 'Id', value: 'product.id', sortable: true },
+  { text: 'Название', value: 'product.name', sortable: true },
+  { text: 'Quantity', value: 'quantity' },
+  // { text: 'Enter quantity', value: 'input' },
   { text: 'Sale price', value: 'salePrice' },
   { text: 'Operations', value: 'opera' },
 ]
@@ -272,6 +288,7 @@ const confirmTransaction = async () => {
   try {
     order.items = order.items.filter((el) => el.quantity)
     const res = await useApi().$post('Inventory/AddTransferOrder', order)
+    await getTransferOrders()
     selectDialog.value = false
     console.log(res)
   } catch (err) {
@@ -326,6 +343,28 @@ const deleteItem = async (id: number, orderId: number) => {
     )
   } catch (err) {
     console.log(err)
+  }
+}
+const updateTransferOrder = async (index: number, id: number, product) => {
+  const obj = order.items[index]
+  const data = {
+    ...obj,
+    orderId: currentOrder.value.items[0]?.orderId,
+  }
+  await useApi().$post('Inventory/AddOrderItem', data)
+  const instance = currentOrder.value?.items.findIndex(
+    (el) => el.product?.id === id,
+  )
+  if (instance === -1) {
+    currentOrder.value?.items.push({
+      ...product,
+      quantity: order.items[index].quantity,
+    })
+  } else {
+    currentOrder.value?.items.splice(instance, 1, {
+      ...product,
+      quantity: order.items[index].quantity,
+    })
   }
 }
 onMounted(async () => {
