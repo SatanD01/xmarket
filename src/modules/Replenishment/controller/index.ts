@@ -40,7 +40,7 @@ export const processReplenishmentOrder = (id: number) => {
   })
 }
 
-export const addReplenishmentOrderItem = (data) => {
+export const addOrderItem = (data) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('inventory/addOrderItem', data)
@@ -53,7 +53,7 @@ export const addReplenishmentOrderItem = (data) => {
   })
 }
 
-export const deleteReplenishmentOrderItem = (id: number, orderId: number) => {
+export const deleteOrderItem = (id: number, orderId: number) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('inventory/deleteOrderItem', { id: id, orderId: orderId })

@@ -126,7 +126,7 @@
             <template #item-opera="item">
               <div class="flex items-center">
                 <el-button
-                  @click="innerDialog(item)"
+                  @click="innerDialogCreate(item)"
                   size="small"
                   class="!p-2 !ml-[8px]"
                   type="primary"
@@ -138,7 +138,7 @@
           </Vue3EasyDataTable>
 
           <el-dialog
-            v-model="innerVisible"
+            v-model="innerVisibleCreate"
             width="500"
             title="Inner Dialog"
             append-to-body
@@ -244,7 +244,7 @@
             <template #item-opera="item">
               <div class="flex items-center">
                 <el-button
-                  @click="innerDialog(item)"
+                  @click="innerDialogUpdate(item)"
                   size="small"
                   class="!p-2 !ml-[8px]"
                   type="primary"
@@ -256,7 +256,7 @@
           </Vue3EasyDataTable>
 
           <el-dialog
-            v-model="innerVisible"
+            v-model="innerVisibleUpdate"
             width="500"
             title="Inner Dialog"
             append-to-body
@@ -368,9 +368,9 @@ import { IOffice } from '@/modules/Offices/types.ts'
 import { getProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
 import {
+  addOrderItem,
   addProductItem,
-  addReplenishmentOrderItem,
-  deleteReplenishmentOrderItem,
+  deleteOrderItem,
   getReplenishmentOrders,
   processReplenishmentOrder,
 } from '@/modules/Replenishment/controller'
@@ -424,7 +424,8 @@ const dialogCreate = ref(false)
 const dialogUpdate = ref(false)
 const dialogView = ref(false)
 const searchValue = ref('')
-const innerVisible = ref(false)
+const innerVisibleCreate = ref(false)
+const innerVisibleUpdate = ref(false)
 const quantity = ref(null)
 const costPrice = ref(null)
 const salePrice = ref(null)
@@ -452,8 +453,15 @@ const openDialogUpdate = (item) => {
   currentOrder.value = item
   console.log(item)
 }
-const innerDialog = (item: IProduct) => {
-  innerVisible.value = true
+const innerDialogCreate = (item: IProduct) => {
+  innerVisibleCreate.value = true
+  quantity.value = null
+  costPrice.value = null
+  salePrice.value = null
+  product.value = item
+}
+const innerDialogUpdate = (item: IProduct) => {
+  innerVisibleUpdate.value = true
   quantity.value = null
   costPrice.value = null
   salePrice.value = null
@@ -462,7 +470,7 @@ const innerDialog = (item: IProduct) => {
 const addProduct = async (status: string) => {
   if (quantity.value && costPrice.value && salePrice.value) {
     if (status === 'update') {
-      await addReplenishmentOrderItem({
+      await addOrderItem({
         productId: product.value.id,
         orderId: currentOrder.value.id,
         quantity: quantity.value,
@@ -480,7 +488,8 @@ const addProduct = async (status: string) => {
       costPrice: costPrice.value,
       salePrice: salePrice.value,
     })
-    innerVisible.value = false
+    innerVisibleCreate.value = false
+    innerVisibleUpdate.value = false
   }
 }
 const removeItemCreate = (item) => {
@@ -489,13 +498,11 @@ const removeItemCreate = (item) => {
   templateProducts.value.splice(index, 1)
 }
 const removeItemUpdate = async (item) => {
-  await deleteReplenishmentOrderItem(item.id, currentOrder.value.id).then(
-    () => {
-      const fIndex = (element) => element.id == item.id
-      const index = templateProducts.value.findIndex(fIndex)
-      templateProducts.value.splice(index, 1)
-    },
-  )
+  await deleteOrderItem(item.id, currentOrder.value.id).then(() => {
+    const fIndex = (element) => element.id == item.id
+    const index = templateProducts.value.findIndex(fIndex)
+    templateProducts.value.splice(index, 1)
+  })
 }
 const saveCreateProducts = async () => {
   order.items = templateProducts.value.map((el) => {
