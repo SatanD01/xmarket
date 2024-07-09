@@ -210,7 +210,6 @@
           </el-button>
         </template>
       </Vue3EasyDataTable>
-      <pre> {{ order.items }} </pre>
     </div>
   </el-dialog>
 </template>
@@ -228,7 +227,7 @@ import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
 import { getAvailableProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
-import { deleteReplenishmentOrderItem } from '@/modules/Replenishment/controller'
+import { deleteOrderItem } from '@/modules/Replenishment/controller'
 
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref([])
@@ -336,7 +335,7 @@ const processTransferOrder = async (id: number) => {
 }
 const deleteItem = async (id: number, orderId: number) => {
   try {
-    await deleteReplenishmentOrderItem(id, orderId)
+    await deleteOrderItem(id, orderId)
     currentOrder.value?.items?.splice(
       currentOrder.value?.items.findIndex((el) => el.id === id),
       1,
