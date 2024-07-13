@@ -50,252 +50,256 @@
           />
         </el-select>
       </div>
-
-      <el-dialog
-        :fullscreen="fullscreen"
-        align-center
-        v-model="dialogCreate"
-        width="80%"
-      >
-        <Vue3EasyDataTable
-          hover:shadow-xl
-          transition
-          duration-200
-          ease-in-out
-          class="mt-4 h-[35%] overflow-y-scroll"
-          :headers="tempHeaders"
-          :items="templateProducts"
+      <div v-if="products">
+        <el-dialog
+          :fullscreen="fullscreen"
+          align-center
+          v-model="dialogCreate"
+          width="80%"
         >
-          <template #item-opera="item">
-            <div class="flex items-center gap-2">
-              <el-icon
-                @click="removeItemCreate(item)"
-                class="cursor-pointer"
-                size="large"
-                ><Delete
-              /></el-icon>
-            </div>
-          </template>
-        </Vue3EasyDataTable>
-
-        <div class="flex items-center justify-end my-3">
-          <el-button
-            @click="saveCreateProducts"
-            type="primary"
-            class="w-[100px]"
-            >Сохранить</el-button
-          >
-        </div>
-
-        <div class="mt-4">
-          <el-input
-            placeholder="Поиск"
-            class="mb-3 md:!w-[300px]"
-            size="large"
-            v-model="searchValue"
-          />
           <Vue3EasyDataTable
-            buttons-pagination
-            :headers="headers"
-            class="h-[40%] overflow-y-auto"
-            :items="items"
-            :search-field="[
-              'id',
-              'name',
-              'description',
-              'manufacturer',
-              'origin',
-              'carModel',
-              'carYear',
-              'group',
-              'partNumber',
-              'manualCode',
-              'weight',
-            ]"
-            :search-value="searchValue"
+            hover:shadow-xl
+            transition
+            duration-200
+            ease-in-out
+            class="mt-4 h-[35%] overflow-y-scroll"
+            :headers="tempHeaders"
+            :items="templateProducts"
           >
-            <template #item-image="item">
-              <div class="py-3">
-                <el-image
-                  style="width: 80px; height: 60px"
-                  :src="`data:image/jpeg;base64,${item.image}`"
-                  :zoom-rate="1.0"
-                  :max-scale="5"
-                  :min-scale="0.2"
-                  :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
-                  :initial-index="4"
-                  fit="cover"
-                />
-              </div>
-            </template>
             <template #item-opera="item">
-              <div class="flex items-center">
-                <el-button
-                  @click="innerDialogCreate(item)"
-                  size="small"
-                  class="!p-2 !ml-[8px]"
-                  type="primary"
-                >
-                  Добавить
-                </el-button>
+              <div class="flex items-center gap-2">
+                <el-icon
+                  @click="removeItemCreate(item)"
+                  class="cursor-pointer"
+                  size="large"
+                  ><Delete
+                /></el-icon>
               </div>
             </template>
           </Vue3EasyDataTable>
 
-          <el-dialog
-            v-model="innerVisibleCreate"
-            width="500"
-            title="Добаить товар"
-            append-to-body
-          >
-            <div class="flex items-center gap-2">
-              <el-input
-                class="!w-[150px]"
-                placeholder="Количество"
-                v-model="quantity"
-              />
-            </div>
+          <div class="flex items-center justify-end my-3">
+            <el-button
+              @click="saveCreateProducts"
+              type="primary"
+              class="w-[100px]"
+              >Сохранить</el-button
+            >
+          </div>
 
-            <template #footer>
-              <el-button type="primary" @click="addProduct('create')"
-                >Создать</el-button
-              >
-            </template>
-          </el-dialog>
-        </div>
-      </el-dialog>
-      <el-dialog
-        :fullscreen="fullscreen"
-        align-center
-        v-model="dialogUpdate"
-        width="80%"
-      >
-        <Vue3EasyDataTable
-          hover:shadow-xl
-          transition
-          duration-200
-          ease-in-out
-          class="mt-4 h-[35%] overflow-y-scroll"
-          :headers="tempHeaders"
-          :items="templateProducts"
-        >
-          <template #item-opera="item">
-            <div class="flex items-center gap-2">
-              <el-icon
-                @click="removeItemUpdate(item)"
-                class="cursor-pointer"
-                size="large"
-                ><Delete
-              /></el-icon>
-            </div>
-          </template>
-        </Vue3EasyDataTable>
+          <div class="mt-4">
+            <el-input
+              placeholder="Поиск"
+              class="mb-3 md:!w-[300px]"
+              size="large"
+              v-model="searchValue"
+            />
+            <Vue3EasyDataTable
+              buttons-pagination
+              :headers="headers"
+              class="h-[40%] overflow-y-auto"
+              :items="items"
+              :search-field="[
+                'id',
+                'name',
+                'description',
+                'manufacturer',
+                'origin',
+                'carModel',
+                'carYear',
+                'group',
+                'partNumber',
+                'manualCode',
+                'weight',
+              ]"
+              :search-value="searchValue"
+            >
+              <template #item-image="item">
+                <div class="py-3">
+                  <el-image
+                    style="width: 80px; height: 60px"
+                    :src="`data:image/jpeg;base64,${item.image}`"
+                    :zoom-rate="1.0"
+                    :max-scale="5"
+                    :min-scale="0.2"
+                    :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
+                    :initial-index="4"
+                    fit="cover"
+                  />
+                </div>
+              </template>
+              <template #item-opera="item">
+                <div class="flex items-center">
+                  <el-button
+                    @click="innerDialogCreate(item)"
+                    size="small"
+                    class="!p-2 !ml-[8px]"
+                    type="primary"
+                  >
+                    Добавить
+                  </el-button>
+                </div>
+              </template>
+            </Vue3EasyDataTable>
 
-        <div class="flex items-center justify-end my-3">
-          <el-button
-            @click="saveUpdateProducts"
-            type="primary"
-            class="w-[100px]"
-            >Сохранить</el-button
-          >
-        </div>
-
-        <div class="mt-4">
-          <el-input
-            placeholder="Поиск"
-            class="mb-3 md:!w-[300px]"
-            size="large"
-            v-model="searchValue"
-          />
-          <Vue3EasyDataTable
-            buttons-pagination
-            :headers="headers"
-            class="h-[40%] overflow-y-auto"
-            :items="items"
-            :search-field="[
-              'id',
-              'name',
-              'description',
-              'manufacturer',
-              'origin',
-              'carModel',
-              'carYear',
-              'group',
-              'partNumber',
-              'manualCode',
-              'weight',
-            ]"
-            :search-value="searchValue"
-          >
-            <template #item-image="item">
-              <div class="py-3">
-                <el-image
-                  style="width: 80px; height: 60px"
-                  :src="`data:image/jpeg;base64,${item.image}`"
-                  :zoom-rate="1.0"
-                  :max-scale="5"
-                  :min-scale="0.2"
-                  :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
-                  :initial-index="4"
-                  fit="cover"
+            <el-dialog
+              v-model="innerVisibleCreate"
+              width="500"
+              title="Добаить товар"
+              append-to-body
+            >
+              <div class="flex items-center gap-2">
+                <el-input
+                  class="!w-[150px]"
+                  placeholder="Количество"
+                  v-model="quantity"
                 />
               </div>
-            </template>
-            <template #item-opera="item">
-              <div class="flex items-center">
-                <el-button
-                  @click="innerDialogUpdate(item)"
-                  size="small"
-                  class="!p-2 !ml-[8px]"
-                  type="primary"
+
+              <template #footer>
+                <el-button type="primary" @click="addProduct('create')"
+                  >Создать</el-button
                 >
-                  Добавить
-                </el-button>
+              </template>
+            </el-dialog>
+          </div>
+        </el-dialog>
+        <el-dialog
+          :fullscreen="fullscreen"
+          align-center
+          v-model="dialogUpdate"
+          width="80%"
+        >
+          <Vue3EasyDataTable
+            hover:shadow-xl
+            transition
+            duration-200
+            ease-in-out
+            class="mt-4 h-[35%] overflow-y-scroll"
+            :headers="tempHeaders"
+            :items="templateProducts"
+          >
+            <template #item-opera="item">
+              <div class="flex items-center gap-2">
+                <el-icon
+                  @click="removeItemUpdate(item)"
+                  class="cursor-pointer"
+                  size="large"
+                  ><Delete
+                /></el-icon>
               </div>
             </template>
           </Vue3EasyDataTable>
 
-          <el-dialog
-            v-model="innerVisible"
-            width="500"
-            title="Добавить товар"
-            append-to-body
-          >
-            <div class="flex items-center gap-2">
-              <el-input
-                class="!w-[150px]"
-                placeholder="Количество"
-                v-model="quantity"
-              />
-            </div>
+          <div class="flex items-center justify-end my-3">
+            <el-button
+              @click="saveUpdateProducts"
+              type="primary"
+              class="w-[100px]"
+              >Сохранить</el-button
+            >
+          </div>
 
-            <template #footer>
-              <el-button type="primary" @click="addProduct('update')"
-                >Сохранить</el-button
-              >
-            </template>
-          </el-dialog>
-        </div>
-      </el-dialog>
-      <el-dialog
-        :fullscreen="fullscreen"
-        align-center
-        v-model="dialogView"
-        width="80%"
-      >
-        <Vue3EasyDataTable
-          hover:shadow-xl
-          transition
-          duration-200
-          ease-in-out
-          class="mt-4 h-[35%] overflow-y-scroll"
-          :headers="tempHeadersView"
-          :items="templateProducts"
-        />
-      </el-dialog>
+          <div class="mt-4">
+            <el-input
+              placeholder="Поиск"
+              class="mb-3 md:!w-[300px]"
+              size="large"
+              v-model="searchValue"
+            />
+            <Vue3EasyDataTable
+              buttons-pagination
+              :headers="headers"
+              class="h-[40%] overflow-y-auto"
+              :items="items"
+              :search-field="[
+                'id',
+                'name',
+                'description',
+                'manufacturer',
+                'origin',
+                'carModel',
+                'carYear',
+                'group',
+                'partNumber',
+                'manualCode',
+                'weight',
+              ]"
+              :search-value="searchValue"
+            >
+              <template #item-image="item">
+                <div class="py-3">
+                  <el-image
+                    style="width: 80px; height: 60px"
+                    :src="`data:image/jpeg;base64,${item.image}`"
+                    :zoom-rate="1.0"
+                    :max-scale="5"
+                    :min-scale="0.2"
+                    :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
+                    :initial-index="4"
+                    fit="cover"
+                  />
+                </div>
+              </template>
+              <template #item-opera="item">
+                <div class="flex items-center">
+                  <el-button
+                    @click="innerDialogUpdate(item)"
+                    size="small"
+                    class="!p-2 !ml-[8px]"
+                    type="primary"
+                  >
+                    Добавить
+                  </el-button>
+                </div>
+              </template>
+            </Vue3EasyDataTable>
+
+            <el-dialog
+              v-model="innerVisibleUpdate"
+              width="500"
+              title="Добавить товар"
+              append-to-body
+            >
+              <div class="flex items-center gap-2">
+                <el-input
+                  class="!w-[150px]"
+                  placeholder="Количество"
+                  v-model="quantity"
+                />
+              </div>
+
+              <template #footer>
+                <el-button type="primary" @click="addProduct('update')"
+                  >Сохранить</el-button
+                >
+              </template>
+            </el-dialog>
+          </div>
+        </el-dialog>
+        <el-dialog
+          :fullscreen="fullscreen"
+          align-center
+          v-model="dialogView"
+          width="80%"
+        >
+          <Vue3EasyDataTable
+            hover:shadow-xl
+            transition
+            duration-200
+            ease-in-out
+            class="mt-4 h-[35%] overflow-y-scroll"
+            :headers="tempHeadersView"
+            :items="templateProducts"
+          />
+        </el-dialog>
+      </div>
     </div>
 
-    <div v-if="order.destinationId" class="bg-white p-3 mt-5 rounded-lg shadow">
+    <div
+      v-show="order.destinationId && templateProducts"
+      class="bg-white p-3 mt-5 rounded-lg shadow"
+    >
       <h3 class="text-[24px] font-bold">Загатовки заказов</h3>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div
@@ -323,7 +327,10 @@
         </div>
       </div>
     </div>
-    <div v-if="order.destinationId" class="bg-white p-3 mt-5 rounded-lg shadow">
+    <div
+      v-show="order.destinationId && templateProducts"
+      class="bg-white p-3 mt-5 rounded-lg shadow"
+    >
       <h3 class="text-[24px] font-bold">Завершенные заказы</h3>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div
