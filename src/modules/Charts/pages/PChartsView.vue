@@ -25,6 +25,7 @@
         >Месячный отчет</el-button
       >
     </div>
+    {{ totalProfitPrice }}
     <Vue3EasyDataTable
       buttons-pagination
       :headers="headers"
@@ -82,7 +83,6 @@ import {
 
 const reports = ref(null)
 const searchValue = ref('')
-const { width } = useWindowSize()
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },
@@ -124,9 +124,14 @@ const items: Item[] = computed(() => {
   })
 })
 
+const totalProfitPrice = computed(() =>
+  items.value?.reduce((total, el) => total + el?.totalProfit, 0),
+)
+
 const dailyReport = async () => {
   reports.value = await getDailyReport()
 }
+
 const weeklyReport = async () => {
   reports.value = await getWeeklyReport()
 }
@@ -137,7 +142,6 @@ const monthlyReport = async () => {
 onMounted(async () => {
   reports.value = await getDailyReport()
   console.log(reports.value.items)
-  table_col.value = width.value <= 768 ? 5 : 10
 })
 </script>
 <style scoped></style>
