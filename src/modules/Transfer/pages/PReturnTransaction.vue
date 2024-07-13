@@ -15,6 +15,7 @@
               <p class="text-center text-white">
                 {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
               </p>
+              <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
             </div>
           </div>
         </template>

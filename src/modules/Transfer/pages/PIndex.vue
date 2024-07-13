@@ -54,7 +54,10 @@
       <h3 class="text-[24px] font-bold">Загатовки переноса</h3>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <template v-for="(elem, index) in templateOrders" :key="index">
-          <div class="cursor-pointer" v-if="elem?.status === 'Template'">
+          <div
+            class="cursor-pointer"
+            v-if="elem?.status === 'Template' && elem?.items?.length"
+          >
             <div
               @click="openDialogUpdate(elem)"
               class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
@@ -63,6 +66,7 @@
               <p class="text-center text-white">
                 {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
               </p>
+              <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
             </div>
 
             <el-button
@@ -82,13 +86,14 @@
         <template v-for="(elem, index) in templateOrders" :key="index">
           <div class="cursor-pointer" v-if="elem?.status === 'Completed'">
             <div
-              @click="openDialogUpdate(elem)"
+              @click="openDialogUpdate(elem, true)"
               class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
             >
               <el-icon size="22" color="white"><FolderOpened /></el-icon>
               <p class="text-center text-white">
                 {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
               </p>
+              <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
             </div>
           </div>
         </template>
@@ -219,6 +224,23 @@
       </Vue3EasyDataTable>
     </div>
   </el-dialog>
+  <el-dialog
+    :fullscreen="fullscreen"
+    align-center
+    v-model="viewDialog"
+    width="80%"
+  >
+    <Vue3EasyDataTable
+      hover:shadow-xl
+      transition
+      duration-200
+      ease-in-out
+      class="mt-4 h-[35%] overflow-y-scroll"
+      :headers="tempUpdateHeaders"
+      :items="currentOrder?.items"
+    >
+    </Vue3EasyDataTable>
+  </el-dialog>
 </template>
 <script setup lang="ts">
 import { Delete, FolderOpened } from '@element-plus/icons-vue'
@@ -249,6 +271,7 @@ const order = reactive({
   items: [],
 })
 const selectDialog = ref(false)
+const viewDialog = ref(false)
 const searchValue = ref('')
 const dialogUpdate = ref(false)
 const currentOrder = ref(null)
@@ -319,8 +342,12 @@ const getProductByWarehouse = async () => {
     console.log(err)
   }
 }
-const openDialogUpdate = (item) => {
-  dialogUpdate.value = true
+const openDialogUpdate = (item, view?: boolean) => {
+  if (view) {
+    viewDialog.value = true
+  } else {
+    dialogUpdate.value = true
+  }
   currentOrder.value = item
   order.sourceId = item.sourceId
   getProductByWarehouse()
