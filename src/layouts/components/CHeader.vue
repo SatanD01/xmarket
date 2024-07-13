@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-white px-4 w-full flex justify-between items-center border-b p-1 sticky top-0 z-[1]"
+    class="bg-white px-4 w-full flex justify-between items-center border-b p-1 sticky top-0 z-[3]"
   >
     <div class="burger-container" @click="$emit('on-toggle')">
       <div

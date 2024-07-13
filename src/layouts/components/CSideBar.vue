@@ -63,7 +63,7 @@
                 to="/transfer-goods"
               >
                 <PackageOpen />
-                <span class="ms-2 font-semibold"> Transfer goods </span>
+                <span class="ms-2 font-semibold"> Перенос товара </span>
               </router-link>
             </li>
             <li>

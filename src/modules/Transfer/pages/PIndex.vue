@@ -1,56 +1,58 @@
 <template>
   <div>
-    <h3 class="text-[24px] font-bold capitalize">перенос товара</h3>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-      <el-select
-        size="large"
-        v-model="order.sourceId"
-        placeholder="Warehouse"
-        @change="getProductByWarehouse"
-        :class="v$.sourceId.$error ? 'error' : ''"
-      >
-        <el-option
-          v-for="(item, index) in locationsList"
-          v-show="item.type === 'Warehouse'"
-          :value="item?.id"
-          :label="item?.name"
-          :key="index"
-        />
-      </el-select>
-      <el-select
-        size="large"
-        v-model="order.destinationId"
-        :class="v$.destinationId.$error ? 'error' : ''"
-        placeholder="Локация"
-      >
-        <el-option
-          v-for="(item, index) in locationsList"
-          v-show="item.type === 'Store'"
-          :value="item?.id"
-          :label="item?.name"
-          :key="index"
-        />
-      </el-select>
-      <el-select
-        size="large"
-        v-model="order.paymentType"
-        :class="v$.paymentType.$error ? 'error' : ''"
-        placeholder="Тип оплаты"
-      >
-        <el-option
-          v-for="(item, index) in paymentType"
-          :value="item?.value"
-          :label="item?.label"
-          :key="index"
-        />
-      </el-select>
-      <el-button type="primary" size="large" @click="addTransaction">
-        Add transaction
-      </el-button>
+    <div class="p-3 bg-white shadow rounded-lg">
+      <h3 class="text-[24px] font-bold capitalize">Перенос товара</h3>
+      <div class="grid grid-cols-1 mt-4 md:grid-cols-4 gap-3">
+        <el-select
+          size="large"
+          v-model="order.sourceId"
+          placeholder="Склад"
+          @change="getProductByWarehouse"
+          :class="v$.sourceId.$error ? 'error' : ''"
+        >
+          <el-option
+            v-for="(item, index) in locationsList"
+            v-show="item.type === 'Warehouse'"
+            :value="item?.id"
+            :label="item?.name"
+            :key="index"
+          />
+        </el-select>
+        <el-select
+          size="large"
+          v-model="order.destinationId"
+          :class="v$.destinationId.$error ? 'error' : ''"
+          placeholder="Магазин"
+        >
+          <el-option
+            v-for="(item, index) in locationsList"
+            v-show="item.type === 'Store'"
+            :value="item?.id"
+            :label="item?.name"
+            :key="index"
+          />
+        </el-select>
+        <el-select
+          size="large"
+          v-model="order.paymentType"
+          :class="v$.paymentType.$error ? 'error' : ''"
+          placeholder="Тип оплаты"
+        >
+          <el-option
+            v-for="(item, index) in paymentType"
+            :value="item?.value"
+            :label="item?.label"
+            :key="index"
+          />
+        </el-select>
+        <el-button type="primary" size="large" @click="addTransaction">
+          Создать перенос
+        </el-button>
+      </div>
     </div>
     <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Template orders</h3>
-      <div class="grid grid-cols-6 gap-3 mt-4">
+      <h3 class="text-[24px] font-bold">Загатовки переноса</h3>
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <template v-for="(elem, index) in templateOrders" :key="index">
           <div class="cursor-pointer" v-if="elem?.status === 'Template'">
             <div
@@ -75,8 +77,8 @@
       </div>
     </div>
     <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Completed orders</h3>
-      <div class="grid grid-cols-6 gap-3 mt-4">
+      <h3 class="text-[24px] font-bold">Завершенные переносы</h3>
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <template v-for="(elem, index) in templateOrders" :key="index">
           <div class="cursor-pointer" v-if="elem?.status === 'Completed'">
             <div
@@ -93,7 +95,7 @@
       </div>
     </div>
   </div>
-  <el-dialog v-model="selectDialog">
+  <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
     <div class="flex flex-col justify-center">
       <el-input
         placeholder="Поиск"
@@ -120,7 +122,7 @@
             type="number"
             v-model="order.items[item.index - 1].quantity"
             :max="item.quantity"
-            placeholder="Enter quantity"
+            placeholder="Количество"
             @input="onInputChange(item.index - 1, item.quantity)"
           />
         </template>
@@ -131,11 +133,16 @@
         @click="confirmTransaction"
         class="mt-5"
       >
-        Add transaction
+        Сохранить
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog align-center v-model="dialogUpdate" width="80%">
+  <el-dialog
+    :fullscreen="fullscreen"
+    align-center
+    v-model="dialogUpdate"
+    width="80%"
+  >
     <Vue3EasyDataTable
       hover:shadow-xl
       transition
@@ -193,7 +200,7 @@
             type="number"
             v-model="order.items[item.index - 1].quantity"
             :max="item.quantity"
-            placeholder="Enter quantity"
+            placeholder="Количество"
             @input="onInputChange(item.index - 1, item.quantity)"
           />
         </template>
@@ -206,7 +213,7 @@
               updateTransferOrder(item.index - 1, item?.product?.id, item)
             "
           >
-            Save
+            Добавить
           </el-button>
         </template>
       </Vue3EasyDataTable>
@@ -217,6 +224,7 @@
 import { Delete, FolderOpened } from '@element-plus/icons-vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
@@ -229,6 +237,8 @@ import { getAvailableProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
 import { deleteOrderItem } from '@/modules/Replenishment/controller'
 
+const fullscreen = ref(false)
+const { width } = useWindowSize()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref([])
 const templateOrders = ref([])
@@ -245,26 +255,26 @@ const currentOrder = ref(null)
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Quantity', value: 'quantity' },
-  { text: 'Enter quantity', value: 'input' },
-  { text: 'Sale price', value: 'salePrice' },
+  { text: 'Количество', value: 'quantity' },
+  { text: 'Количество', value: 'input' },
+  { text: 'Цена продажи', value: 'salePrice' },
   // { text: 'Operations', value: 'opera' },
 ]
 const tempHeadersWithButton: Header[] = [
   { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Quantity', value: 'quantity' },
-  { text: 'Enter quantity', value: 'input' },
-  { text: 'Sale price', value: 'salePrice' },
-  { text: 'Actions', value: 'button' },
+  { text: 'Количество', value: 'quantity' },
+  { text: 'Количество', value: 'input' },
+  { text: 'Цена продажи', value: 'salePrice' },
+  { text: 'Управление', value: 'button' },
 ]
 const tempUpdateHeaders: Header[] = [
   { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Quantity', value: 'quantity' },
+  { text: 'Количество', value: 'quantity' },
   // { text: 'Enter quantity', value: 'input' },
-  { text: 'Sale price', value: 'salePrice' },
-  { text: 'Operations', value: 'opera' },
+  { text: 'Цена продажи', value: 'salePrice' },
+  { text: 'Управление', value: 'opera' },
 ]
 const rules = {
   sourceId: { required },
@@ -373,5 +383,6 @@ onMounted(async () => {
   } catch (err) {
     console.log(err)
   }
+  fullscreen.value = width.value <= 768
 })
 </script>
