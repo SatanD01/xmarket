@@ -83,7 +83,7 @@
             @click="saveCreateProducts"
             type="primary"
             class="w-[100px]"
-            >Save</el-button
+            >Сохранить</el-button
           >
         </div>
 
@@ -151,24 +151,24 @@
             <div class="flex items-center gap-2">
               <el-input
                 class="!w-[150px]"
-                placeholder="Quantity"
+                placeholder="Количество"
                 v-model="quantity"
               />
               <el-input
                 class="!w-[150px]"
-                placeholder="Net price"
+                placeholder="Чистая цена"
                 v-model="costPrice"
               />
               <el-input
                 class="!w-[150px]"
-                placeholder="Sale price"
+                placeholder="Цена продажи"
                 v-model="salePrice"
               />
             </div>
 
             <template #footer>
               <el-button type="primary" @click="addProduct('create')"
-                >Save</el-button
+                >Сохранить</el-button
               >
             </template>
           </el-dialog>

@@ -196,7 +196,7 @@
             @click="saveUpdateProducts"
             type="primary"
             class="w-[100px]"
-            >Save</el-button
+            >Сохранить</el-button
           >
         </div>
 
@@ -258,13 +258,13 @@
           <el-dialog
             v-model="innerVisible"
             width="500"
-            title="Inner Dialog"
+            title="Добавить товар"
             append-to-body
           >
             <div class="flex items-center gap-2">
               <el-input
                 class="!w-[150px]"
-                placeholder="Quantity"
+                placeholder="Количество"
                 v-model="quantity"
               />
             </div>

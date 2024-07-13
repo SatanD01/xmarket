@@ -169,7 +169,7 @@
           type="number"
           v-model="order.items[item.index - 1].quantity"
           :max="item.quantity"
-          placeholder="Enter quantity"
+          placeholder="Введите количество"
           @input="onInputChange(item.index - 1, item.quantity)"
         />
       </template>
