@@ -39,7 +39,7 @@
       <template #item-opera="item">
         <div class="flex items-center gap-2">
           <el-icon
-            @click="deleteItem(item?.id, item?.orderId)"
+            @click="returnTransaction(item)"
             class="cursor-pointer"
             size="large"
             ><FileOutput
@@ -50,9 +50,7 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
-import { ArrowLeft, Delete, FolderOpened } from '@element-plus/icons-vue'
-import { useVuelidate } from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
+import { FolderOpened } from '@element-plus/icons-vue'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { FileOutput } from 'lucide-vue-next'
@@ -61,7 +59,6 @@ import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
 import { useApi } from '@/composables/useApi.ts'
 import { getSaleOrders } from '@/modules/Order/controller'
-import { getAvailableProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
 
 const fullscreen = ref(false)
@@ -74,7 +71,6 @@ const order = reactive({
   paymentType: null,
   items: [],
 })
-const selectDialog = ref(false)
 
 const dialogUpdate = ref(false)
 const currentOrder = ref(null)
@@ -86,39 +82,28 @@ const tempUpdateHeaders: Header[] = [
   { text: 'Цена продажи', value: 'salePrice' },
   { text: 'Return', value: 'opera' },
 ]
-const rules = {
-  sourceId: { required },
-  destinationId: { required },
-  paymentType: { required },
-}
 
-const v$ = useVuelidate(rules, order)
-const onInputChange = (index: number, count: number) => {
-  if (order.items[index].quantity > count) {
-    order.items[index].quantity = count
-  }
-}
-const getProductByWarehouse = async () => {
-  try {
-    products.value = await getAvailableProducts(order.sourceId)
-    order.items = products.value.map((el) => {
-      return {
-        productId: el.product?.id,
-        quantity: null,
-        costPrice: el.costPrice,
-        salePrice: el.salePrice,
-      }
-    })
-  } catch (err) {
-    console.log(err)
-  }
-}
 const openDialogUpdate = (item) => {
   dialogUpdate.value = true
   currentOrder.value = item
   order.sourceId = item.sourceId
 }
-
+const returnTransaction = async (data) => {
+  try {
+    console.log(data, 'data')
+    await useApi().$post('Inventory/AddSaleReturnTransaction', {
+      productId: data?.productId,
+      quantity: data?.quantity,
+      costPrice: data?.costPrice,
+      salePrice: data?.salePrice,
+      sourceId: currentOrder.value?.sourceId,
+      destinationId: currentOrder.value?.destinationId,
+    })
+    // console.log(res.data)
+  } catch (err) {
+    console.log(err)
+  }
+}
 onMounted(async () => {
   try {
     templateOrders.value = await getSaleOrders()
