@@ -70,6 +70,16 @@
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
+                to="/return-transaction"
+              >
+                <PackageOpen />
+                <span class="ms-2 font-semibold"> Return transaction </span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                exact-active-class="active-route"
+                class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
                 to="/create-order"
               >
                 <ShoppingCart />
