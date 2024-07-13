@@ -3,7 +3,7 @@
     class="grid grid-cols-1 gap-3 bg-white rounded-lg shadow p-3"
     v-if="reports"
   >
-    <h3 class="text-[24px] font-bold mb-3">Дневная прибль</h3>
+    <h3 class="text-[24px] font-bold mb-3">Отчетность</h3>
     <div class="flex flex-wrap gap-3">
       <el-input
         placeholder="Поиск"
@@ -25,7 +25,6 @@
         >Месячный отчет</el-button
       >
     </div>
-    {{ totalProfitPrice }}
     <Vue3EasyDataTable
       buttons-pagination
       :headers="headers"
@@ -70,7 +69,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
 import { ClipboardMinus } from 'lucide-vue-next'
 import { computed, onMounted, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
