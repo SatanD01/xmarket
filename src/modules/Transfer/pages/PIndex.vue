@@ -55,9 +55,14 @@
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <template v-for="(elem, index) in templateOrders" :key="index">
           <div
-            class="cursor-pointer"
-            v-if="elem?.status === 'Template' && elem?.items?.length"
+            class="cursor-pointer relative"
+            v-if="elem?.status === 'Template'"
           >
+            <Trash
+              @click="deleteOrder(elem.id)"
+              :size="16"
+              class="text-white absolute top-2 right-2 transition-200 hover:text-red-500"
+            />
             <div
               @click="openDialogUpdate(elem)"
               class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
@@ -100,6 +105,7 @@
       </div>
     </div>
   </div>
+  <pre> {{ currentOrder?.items }} </pre>
   <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
     <div class="flex flex-col justify-center">
       <el-input
@@ -248,6 +254,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
+import { Trash } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
@@ -349,6 +356,7 @@ const openDialogUpdate = (item, view?: boolean) => {
     dialogUpdate.value = true
   }
   currentOrder.value = item
+  console.log(item, 'item')
   order.sourceId = item.sourceId
   getProductByWarehouse()
 }
@@ -401,6 +409,17 @@ const updateTransferOrder = async (index: number, id: number, product) => {
       ...product,
       quantity: order.items[index].quantity,
     })
+  }
+}
+
+const deleteOrder = async (id: number) => {
+  try {
+    await useApi().$post('Inventory/DeleteOrder', {
+      id,
+    })
+    await getTransferOrders()
+  } catch (err) {
+    console.log(err)
   }
 }
 onMounted(async () => {
