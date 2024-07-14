@@ -105,7 +105,6 @@
       </div>
     </div>
   </div>
-  <pre> {{ currentOrder?.items }} </pre>
   <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
     <div class="flex flex-col justify-center">
       <el-input
@@ -229,6 +228,7 @@
         </template>
       </Vue3EasyDataTable>
     </div>
+    <pre> {{ currentOrder?.items }} </pre>
   </el-dialog>
   <el-dialog
     :fullscreen="fullscreen"
@@ -395,21 +395,13 @@ const updateTransferOrder = async (index: number, id: number, product) => {
     ...obj,
     orderId: currentOrder.value.items[0]?.orderId,
   }
-  await useApi().$post('Inventory/AddOrderItem', data)
-  const instance = currentOrder.value?.items.findIndex(
-    (el) => el.product?.id === id,
-  )
-  if (instance === -1) {
-    currentOrder.value?.items.push({
-      ...product,
-      quantity: order.items[index].quantity,
-    })
-  } else {
-    currentOrder.value?.items.splice(instance, 1, {
-      ...product,
-      quantity: order.items[index].quantity,
-    })
-  }
+  const res = await useApi().$post('Inventory/AddOrderItem', data)
+  currentOrder.value?.items.push({
+    ...product,
+    id: res.data?.id,
+    orderId: res.data?.orderId,
+    quantity: order.items[index].quantity,
+  })
 }
 
 const deleteOrder = async (id: number) => {
