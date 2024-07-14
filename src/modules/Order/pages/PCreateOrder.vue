@@ -305,7 +305,7 @@
         <div
           v-for="(elem, index) in tempOrders"
           :key="index"
-          class="cursor-pointer"
+          class="cursor-pointer relative"
         >
           <div
             @click="openDialogUpdate(elem)"
@@ -315,6 +315,7 @@
             <p class="text-center text-white">
               {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
+            <p class="text-white">ID: {{ elem.id }}</p>
           </div>
 
           <el-button
@@ -324,6 +325,14 @@
             class="mt-1 w-full"
             >Oбработка</el-button
           >
+          <el-button
+            type="danger"
+            :icon="Delete"
+            size="small"
+            circle
+            @click="deleteTempOrder(elem)"
+            class="absolute top-[-2px] right-[-2px]"
+          />
         </div>
       </div>
     </div>
@@ -346,6 +355,7 @@
             <p class="text-center text-white">
               {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
+            <p class="text-white">ID: {{ elem.id }}</p>
           </div>
         </div>
       </div>
@@ -370,6 +380,7 @@ import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
 import {
   addProductItem,
+  deleteTemOrder,
   getAllProducts,
   getSaleOrders,
   processSaleOrder,
@@ -474,6 +485,7 @@ const v$ = useVuelidate(rules, order)
 const openCreateModal = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
+  templateProducts.value = []
   loader.value = true
   console.log(order)
   products.value = await getAllProducts(order.sourceId)
@@ -535,6 +547,18 @@ const removeItemUpdate = async (item) => {
     templateProducts.value.splice(index, 1)
   })
 }
+
+const deleteTempOrder = async (item: IReplenishment) => {
+  await deleteTemOrder(item.id)
+  allReplenishments.value = await getSaleOrders()
+  tempOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Template') return el
+  })
+  completedOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Completed') return el
+  })
+}
+
 const saveCreateProducts = async () => {
   order.items = templateProducts.value.map((el) => {
     return {

@@ -53,6 +53,19 @@ export const processSaleOrder = (id: number) => {
   })
 }
 
+export const deleteTemOrder = (id: number) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('inventory/deleteOrder', { id: id })
+      .then((res) => {
+        resolve(res)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
 // export const addSaleOrderItem = (data) => {
 //   return new Promise((resolve, reject) => {
 //     useApi()
