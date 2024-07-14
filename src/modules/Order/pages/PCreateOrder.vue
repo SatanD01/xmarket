@@ -451,14 +451,15 @@ const openCreateModal = async () => {
   if (v$.value.$invalid) return
   loader.value = true
   products.value = await getAllProducts(order.sourceId)
-  console.log('pr', products.value)
   dialogCreate.value = true
   loader.value = false
 }
-const openDialogUpdate = (item) => {
+const openDialogUpdate = async (item) => {
   dialogUpdate.value = true
   templateProducts.value = item.items
   currentOrder.value = item
+  console.log(item)
+  products.value = await getAllProducts(order.sourceId)
   console.log(item)
 }
 const innerDialogCreate = (item: IProduct) => {
@@ -576,6 +577,9 @@ watch(
 onMounted(async () => {
   suppliersList.value = await getCustomers()
   locationsList.value = await getOffices()
+  if (order.sourceId) {
+    products.value = await getAllProducts(order.sourceId)
+  }
 })
 </script>
 <style scoped></style>
