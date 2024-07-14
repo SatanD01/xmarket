@@ -1,13 +1,15 @@
 <template>
   <div>
     <div v-if="skeleton">
-      <div class="bg-white rounded-lg p-4 w-full flex justify-between">
+      <div
+        class="bg-white shadow rounded-lg p-4 w-full flex flex-wrap gap-3 justify-between"
+      >
         <h1 class="text-2xl font-semibold capitalize">Пользователи</h1>
         <RouterLink :to="{ name: 'CreateUser' }">
           <el-button type="primary"> Создать пользователя </el-button>
         </RouterLink>
       </div>
-      <div class="bg-white rounded-lg p-4 w-full mt-6">
+      <div class="bg-white shadow rounded-lg p-4 w-full mt-6">
         <Vue3EasyDataTable :headers="headers" :items="users" buttons-pagination>
           <template #item-role="data">
             {{

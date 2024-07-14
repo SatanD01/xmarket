@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between">
         <h3 class="text-[24px] font-bold">Пополнение склада</h3>
         <el-button @click="openCreateModal()" type="primary">
-          <p class="text-center">Create Order</p>
+          <p class="text-center">Создать заказ</p>
         </el-button>
       </div>
 
@@ -51,7 +51,12 @@
         </el-select>
       </div>
 
-      <el-dialog align-center v-model="dialogCreate" width="80%">
+      <el-dialog
+        :fullscreen="fullscreen"
+        align-center
+        v-model="dialogCreate"
+        width="80%"
+      >
         <Vue3EasyDataTable
           hover:shadow-xl
           transition
@@ -78,7 +83,7 @@
             @click="saveCreateProducts"
             type="primary"
             class="w-[100px]"
-            >Save</el-button
+            >Сохранить</el-button
           >
         </div>
 
@@ -140,36 +145,41 @@
           <el-dialog
             v-model="innerVisibleCreate"
             width="500"
-            title="Inner Dialog"
+            title="Добавить товар"
             append-to-body
           >
             <div class="flex items-center gap-2">
               <el-input
                 class="!w-[150px]"
-                placeholder="Quantity"
+                placeholder="Количество"
                 v-model="quantity"
               />
               <el-input
                 class="!w-[150px]"
-                placeholder="Net price"
+                placeholder="Чистая цена"
                 v-model="costPrice"
               />
               <el-input
                 class="!w-[150px]"
-                placeholder="Sale price"
+                placeholder="Цена продажи"
                 v-model="salePrice"
               />
             </div>
 
             <template #footer>
               <el-button type="primary" @click="addProduct('create')"
-                >Save</el-button
+                >Сохранить</el-button
               >
             </template>
           </el-dialog>
         </div>
       </el-dialog>
-      <el-dialog align-center v-model="dialogUpdate" width="80%">
+      <el-dialog
+        :fullscreen="fullscreen"
+        align-center
+        v-model="dialogUpdate"
+        width="80%"
+      >
         <Vue3EasyDataTable
           hover:shadow-xl
           transition
@@ -196,7 +206,7 @@
             @click="saveUpdateProducts"
             type="primary"
             class="w-[100px]"
-            >Save</el-button
+            >Сохранить</el-button
           >
         </div>
 
@@ -258,36 +268,41 @@
           <el-dialog
             v-model="innerVisibleUpdate"
             width="500"
-            title="Inner Dialog"
+            title="Добавить товар"
             append-to-body
           >
             <div class="flex items-center gap-2">
               <el-input
                 class="!w-[150px]"
-                placeholder="Quantity"
+                placeholder="Количество"
                 v-model="quantity"
               />
               <el-input
                 class="!w-[150px]"
-                placeholder="Net price"
+                placeholder="Чистая цена"
                 v-model="costPrice"
               />
               <el-input
                 class="!w-[150px]"
-                placeholder="Sale price"
+                placeholder="Цена продажи"
                 v-model="salePrice"
               />
             </div>
 
             <template #footer>
               <el-button type="primary" @click="addProduct('update')"
-                >Save</el-button
+                >Добавить</el-button
               >
             </template>
           </el-dialog>
         </div>
       </el-dialog>
-      <el-dialog align-center v-model="dialogView" width="80%">
+      <el-dialog
+        :fullscreen="fullscreen"
+        align-center
+        v-model="dialogView"
+        width="80%"
+      >
         <Vue3EasyDataTable
           hover:shadow-xl
           transition
@@ -301,8 +316,8 @@
     </div>
 
     <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Template orders</h3>
-      <div class="grid grid-cols-6 gap-3 mt-4">
+      <h3 class="text-[24px] font-bold">Загатовки заказов</h3>
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div
           v-for="(elem, index) in tempOrders"
           :key="index"
@@ -329,8 +344,8 @@
       </div>
     </div>
     <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Completed orders</h3>
-      <div class="grid grid-cols-6 gap-3 mt-4">
+      <h3 class="text-[24px] font-bold">Завершенные заказы</h3>
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div
           v-for="(elem, index) in completedOrders"
           :key="index"
@@ -356,6 +371,7 @@
 import { Delete, FolderOpened } from '@element-plus/icons-vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
+import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted, reactive, Ref, ref } from 'vue'
@@ -381,6 +397,8 @@ import {
   ITemplateProducts,
 } from '@/modules/UserController/types.ts'
 
+const fullscreen = ref(false)
+const { width } = useWindowSize()
 const suppliersList: Ref<ISuppliers[] | undefined> = ref()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref()
@@ -393,17 +411,17 @@ const currentOrder = ref(null)
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Quantity', value: 'quantity' },
-  { text: 'Cost price', value: 'costPrice' },
-  { text: 'Sale price', value: 'salePrice' },
-  { text: 'Operations', value: 'opera' },
+  { text: 'Количество', value: 'quantity' },
+  { text: 'Чистая цена', value: 'costPrice' },
+  { text: 'Цена продажи', value: 'salePrice' },
+  { text: 'Управление', value: 'opera' },
 ]
 const tempHeadersView: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Quantity', value: 'quantity' },
-  { text: 'Cost price', value: 'costPrice' },
-  { text: 'Sale price', value: 'salePrice' },
+  { text: 'Количество', value: 'quantity' },
+  { text: 'Чистая цена', value: 'costPrice' },
+  { text: 'Цена продажи', value: 'salePrice' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
@@ -418,7 +436,7 @@ const headers: Header[] = [
   { text: 'Баркод', value: 'partNumber', sortable: true },
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
-  { text: 'Operations', value: 'opera' },
+  { text: 'Управление', value: 'opera' },
 ]
 const dialogCreate = ref(false)
 const dialogUpdate = ref(false)
@@ -569,6 +587,7 @@ onMounted(async () => {
   completedOrders.value = allReplenishments.value.filter((el) => {
     if (el.status === 'Completed') return el
   })
+  fullscreen.value = width.value <= 768
 })
 </script>
 <style scoped></style>
