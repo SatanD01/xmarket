@@ -26,10 +26,11 @@
       >
     </div>
     <Vue3EasyDataTable
+      id="my-spreadsheet"
       buttons-pagination
       :headers="headers"
       class="overflow-y-auto"
-      :items="items"
+      :items="allItems"
       :search-field="[
         'id',
         'name',
@@ -46,7 +47,7 @@
       :search-value="searchValue"
     >
       <template #item-image="item">
-        <div class="py-3">
+        <div class="py-3" v-if="item.id">
           <el-image
             style="width: 80px; height: 60px"
             :src="`data:image/jpeg;base64,${item.image}`"
@@ -60,7 +61,7 @@
         </div>
       </template>
     </Vue3EasyDataTable>
-    <el-button type="primary" class="w-full !ms-0"
+    <el-button type="primary" class="w-full !ms-0" @click="exportToCSV"
       ><ClipboardMinus />
       <span class="ms-2 text-wrap !leading-4"
         >Экспортровать дневную прибль</span
@@ -69,6 +70,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import ExcelJS from 'exceljs'
 import { ClipboardMinus } from 'lucide-vue-next'
 import { computed, onMounted, ref } from 'vue'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
@@ -100,7 +102,7 @@ const headers: Header[] = [
   { text: 'Прибль', value: 'totalProfit', sortable: true },
 ]
 const items: Item[] = computed(() => {
-  return reports.value.items.map((item) => {
+  return reports.value?.items.map((item) => {
     return {
       id: item.product.id,
       image: item.product.image,
@@ -122,10 +124,42 @@ const items: Item[] = computed(() => {
   })
 })
 
-const totalProfitPrice = computed(() =>
-  items.value?.reduce((total, el) => total + el?.totalProfit, 0),
-)
+const totalProfitPrice = computed(() => {
+  return {
+    pure: items.value?.reduce((total, el) => total + el?.totalCostPrice, 0),
+    sale: items.value?.reduce((total, el) => total + el?.totalSalePrice, 0),
+    profit: items.value?.reduce((total, el) => total + el?.totalProfit, 0),
+  }
+})
 
+const customRow = {
+  id: '',
+  image: '',
+  name: '',
+  description: '',
+  manufacturer: '',
+  origin: '',
+  carModel: '',
+  carYear: '',
+  group: '',
+  partNumber: '',
+  manualCode: '',
+  weight: '',
+  quantitySold: 'Общая сумма:',
+  totalSalePrice: totalProfitPrice.value.sale,
+  totalCostPrice: totalProfitPrice.value.pure,
+  totalProfit: totalProfitPrice.value.profit,
+}
+
+const allItems = computed(() => [
+  ...items.value,
+  {
+    ...customRow,
+    totalSalePrice: totalProfitPrice.value.sale,
+    totalCostPrice: totalProfitPrice.value.pure,
+    totalProfit: totalProfitPrice.value.profit,
+  },
+])
 const dailyReport = async () => {
   reports.value = await getDailyReport()
 }
@@ -137,6 +171,43 @@ const monthlyReport = async () => {
   reports.value = await getMonthlyReport()
 }
 
+const exportToCSV = () => {
+  const exportHeaders = headers
+    .filter((header) => header.value !== 'image')
+    .map((header) => header.text)
+  const csvData = allItems.value.map((item) => {
+    return [
+      item.id,
+      item.name,
+      item.description,
+      item.manufacturer,
+      item.origin,
+      item.carModel,
+      item.carYear,
+      item.group,
+      item.partNumber,
+      item.manualCode,
+      item.weight,
+      item.quantitySold,
+      item.totalCostPrice,
+      item.totalSalePrice,
+      item.totalProfit,
+    ]
+  })
+
+  const csvContent =
+    'data:text/csv;charset=utf-8,' +
+    exportHeaders.join(';') +
+    '\n' +
+    csvData.map((row) => row.join(';')).join('\n')
+
+  const encodedUri = encodeURI(csvContent)
+  const link = document.createElement('a')
+  link.setAttribute('href', encodedUri)
+  link.setAttribute('download', 'table_data.csv')
+  document.body.appendChild(link)
+  link.click()
+}
 onMounted(async () => {
   reports.value = await getDailyReport()
   console.log(reports.value.items)
