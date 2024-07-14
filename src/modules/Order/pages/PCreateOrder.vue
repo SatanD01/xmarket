@@ -11,8 +11,8 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <el-select
           size="large"
-          v-model="order.destinationId"
-          :class="v$.destinationId.$error ? 'error' : ''"
+          v-model="order.sourceId"
+          :class="v$.sourceId.$error ? 'error' : ''"
           placeholder="Магазин"
         >
           <el-option
@@ -25,8 +25,8 @@
         </el-select>
         <el-select
           size="large"
-          v-model="order.sourceId"
-          :class="v$.sourceId.$error ? 'error' : ''"
+          v-model="order.destinationId"
+          :class="v$.destinationId.$error ? 'error' : ''"
           placeholder="Клиент"
         >
           <el-option
@@ -475,6 +475,7 @@ const openCreateModal = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
   loader.value = true
+  console.log(order)
   products.value = await getAllProducts(order.sourceId)
   dialogCreate.value = true
   loader.value = false
@@ -484,7 +485,7 @@ const openDialogUpdate = async (item) => {
   templateProducts.value = item.items
   currentOrder.value = item
   console.log(item)
-  products.value = await getAllProducts(order.sourceId)
+  products.value = await getAllProducts(item.sourceId)
   console.log(item)
 }
 const innerDialogCreate = (item: IProduct) => {
@@ -543,6 +544,7 @@ const saveCreateProducts = async () => {
       salePrice: el.salePrice,
     }
   })
+  console.log(order)
   await addProductItem(order)
   allReplenishments.value = await getSaleOrders()
   tempOrders.value = allReplenishments.value.filter((el) => {
