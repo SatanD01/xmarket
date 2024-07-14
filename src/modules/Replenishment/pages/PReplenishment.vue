@@ -532,6 +532,7 @@ const saveCreateProducts = async () => {
     }
   })
   await addProductItem(order)
+  templateProducts.value = []
   allReplenishments.value = await getReplenishmentOrders()
   tempOrders.value = allReplenishments.value.filter((el) => {
     if (el.status === 'Template') return el
