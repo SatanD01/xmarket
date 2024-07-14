@@ -1,115 +1,235 @@
 <template>
   <div>
-    <div class="p-3 bg-white shadow rounded-lg">
+    <div class="p-3 bg-white shadow rounded-lg mb-5">
       <h3 class="text-[24px] font-bold capitalize">Return Transaction</h3>
     </div>
-    <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <template v-for="(elem, index) in templateOrders" :key="index">
-          <div class="cursor-pointer" v-if="elem?.status === 'Completed'">
-            <div
-              @click="openDialogUpdate(elem)"
-              class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+    <CTableSceleton v-if="loading" />
+    <div v-else class="bg-white p-3 rounded-lg shadow">
+      <el-input
+        placeholder="Поиск"
+        class="mb-3 md:!w-[300px]"
+        size="large"
+        v-model="searchValue"
+      />
+      <Vue3EasyDataTable
+        buttons-pagination
+        :headers="headers"
+        :items="products"
+        :search-field="[
+          'id',
+          'name',
+          'description',
+          'manufacturer',
+          'origin',
+          'carModel',
+          'carYear',
+          'group',
+          'partNumber',
+          'manualCode',
+          'weight',
+        ]"
+        :search-value="searchValue"
+      >
+        <template #item-image="item">
+          <div class="py-3">
+            <el-image
+              style="width: 80px; height: 60px"
+              :src="`data:image/jpeg;base64,${item.image}`"
+              :zoom-rate="1.0"
+              :max-scale="5"
+              :min-scale="0.2"
+              :preview-src-list="[`data:image/jpeg;base64,${item.image}`]"
+              :initial-index="4"
+              fit="cover"
             >
-              <el-icon size="22" color="white"><FolderOpened /></el-icon>
-              <p class="text-center text-white">
-                {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-              </p>
-              <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
-            </div>
+              <template #viewer>
+                <div
+                  class="custom-viewer flex flex-row absolute top-[50px] left-[30px]"
+                >
+                  <el-button
+                    @click="copyImage(`data:image/jpeg;base64,${item.image}`)"
+                    >Копировать</el-button
+                  >
+                  <el-button
+                    @click="
+                      downloadImage(`data:image/jpeg;base64,${item.image}`)
+                    "
+                    >Скачать</el-button
+                  >
+                </div>
+              </template>
+            </el-image>
           </div>
         </template>
-      </div>
+        <template #item-origin="item">
+          <span>{{
+            item.origin === 'Original' ? 'Оригинал' : 'Дубликат'
+          }}</span>
+        </template>
+        <template
+          v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
+          #item-opera="data"
+        >
+          <div class="flex items-center">
+            <el-button
+              @click="onOpenDialog(data)"
+              size="small"
+              class="!py-2 !px-1 !ml-[8px]"
+              type="danger"
+              plain
+            >
+              return
+            </el-button>
+          </div>
+        </template>
+      </Vue3EasyDataTable>
     </div>
+    <el-dialog v-model="dialog">
+      <div class="py-6 grid grid-cols-2 gap-6">
+        <el-select v-model="order.destinationId">
+          <el-option
+            v-for="(item, index) in locations"
+            :key="index"
+            :value="item.id"
+            :label="item.name"
+          >
+            {{ item.name }}
+          </el-option>
+        </el-select>
+        <el-select v-model="order.sourceId">
+          <el-option
+            v-for="(item, index) in customers"
+            :key="index"
+            :value="item.id"
+            :label="item.name"
+          >
+            {{ item.name }}
+          </el-option>
+        </el-select>
+        <el-input
+          v-model="order.quantity"
+          type="number"
+          placeholder="Enter quantity"
+        />
+        <pre> {{ currentOrder }} </pre>
+      </div>
+      <el-button type="primary" @click="returnTransaction">
+        Return transaction
+      </el-button>
+    </el-dialog>
   </div>
-  <el-dialog
-    :fullscreen="fullscreen"
-    align-center
-    v-model="dialogUpdate"
-    width="80%"
-  >
-    <Vue3EasyDataTable
-      hover:shadow-xl
-      transition
-      duration-200
-      ease-in-out
-      class="mt-4 h-[35%] overflow-y-scroll"
-      :headers="tempUpdateHeaders"
-      :items="currentOrder?.items"
-    >
-      <template #item-opera="item">
-        <div class="flex items-center gap-2">
-          <el-icon
-            @click="returnTransaction(item)"
-            class="cursor-pointer"
-            size="large"
-            ><FileOutput
-          /></el-icon>
-        </div>
-      </template>
-    </Vue3EasyDataTable>
-  </el-dialog>
 </template>
 <script setup lang="ts">
-import { FolderOpened } from '@element-plus/icons-vue'
 import { useWindowSize } from '@vueuse/core'
-import dayjs from 'dayjs'
-import { FileOutput } from 'lucide-vue-next'
+import { ElMessage } from 'element-plus'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import { useApi } from '@/composables/useApi.ts'
-import { getSaleOrders } from '@/modules/Order/controller'
+import { useAuthStore } from '@/modules/Auth/store.ts'
+import { getOffices } from '@/modules/Offices/controller'
+import { getProducts } from '@/modules/Products/controller'
 import { IProduct } from '@/modules/Products/types.ts'
+import { getCustomers } from '@/modules/UserController/controller'
+import { Roles } from '@/types'
 
 const fullscreen = ref(false)
 const { width } = useWindowSize()
+const authStore = useAuthStore()
+const dialog = ref(false)
 const products: Ref<IProduct[] | undefined> = ref([])
-const templateOrders = ref([])
+const searchValue = ref('')
+const customers = ref([])
+const locations = ref([])
 const order = reactive({
   sourceId: null,
   destinationId: null,
-  paymentType: null,
-  items: [],
+  quantity: '',
 })
 
-const dialogUpdate = ref(false)
+const loading = ref(false)
 const currentOrder = ref(null)
-const tempUpdateHeaders: Header[] = [
-  { text: 'Id', value: 'product.id', sortable: true },
-  { text: 'Название', value: 'product.name', sortable: true },
-  { text: 'Количество', value: 'quantity' },
-  // { text: 'Enter quantity', value: 'input' },
-  { text: 'Цена продажи', value: 'salePrice' },
-  { text: 'Return', value: 'opera' },
+const headers: Header[] = [
+  { text: 'Id', value: 'id', sortable: true },
+  { text: 'Фото', value: 'image' },
+  { text: 'Название', value: 'name', sortable: true },
+  { text: 'Описание', value: 'description', sortable: true },
+  { text: 'Производитель', value: 'manufacturer', sortable: true },
+  { text: 'Тип', value: 'origin', sortable: true },
+  { text: 'Модель', value: 'carModel', sortable: true },
+  { text: 'Год выпуска', value: 'carYear', sortable: true },
+  { text: 'Категория', value: 'group', sortable: true },
+  { text: 'Баркод', value: 'partNumber', sortable: true },
+  { text: 'Код', value: 'manualCode', sortable: true },
+  { text: 'Вес', value: 'weight', sortable: true },
+  { text: 'Operations', value: 'opera' },
 ]
-
-const openDialogUpdate = (item) => {
-  dialogUpdate.value = true
-  currentOrder.value = item
-  order.sourceId = item.sourceId
-}
-const returnTransaction = async (data) => {
+const copyImage = async (base64String) => {
   try {
-    console.log(data, 'data')
+    const img = new Image()
+    img.src = base64String
+
+    img.onload = async () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+
+      canvas.toBlob(async (blob) => {
+        try {
+          const item = new ClipboardItem({ 'image/png': blob })
+          await navigator.clipboard.write([item])
+          ElMessage.success('Изображение скопировано в буфер обмена')
+        } catch (err) {
+          console.error(err)
+          ElMessage.error('Не удалось скопировать изображение')
+        }
+      }, 'image/png')
+    }
+  } catch (err) {
+    console.error(err)
+    ElMessage.error('Не удалось скопировать изображение')
+  }
+}
+
+const downloadImage = (img) => {
+  const link = document.createElement('a')
+  link.href = img
+  link.download = 'image.jpeg'
+  link.click()
+}
+const returnTransaction = async () => {
+  try {
     await useApi().$post('Inventory/AddSaleReturnTransaction', {
-      productId: data?.productId,
-      quantity: data?.quantity,
-      costPrice: data?.costPrice,
-      salePrice: data?.salePrice,
-      sourceId: currentOrder.value?.sourceId,
-      destinationId: currentOrder.value?.destinationId,
+      productId: currentOrder.value?.id,
+      quantity: order?.quantity,
+      // costPrice: data?.costPrice,
+      // salePrice: data?.salePrice,
+      sourceId: order.sourceId,
+      destinationId: order.destinationId,
     })
     // console.log(res.data)
   } catch (err) {
     console.log(err)
   }
 }
+
+const onOpenDialog = async (data) => {
+  currentOrder.value = data
+  dialog.value = true
+}
 onMounted(async () => {
   try {
-    templateOrders.value = await getSaleOrders()
+    loading.value = true
+    products.value = await getProducts()
+    customers.value = await getCustomers()
+    locations.value = await getOffices()
   } catch (err) {
     console.log(err)
+  } finally {
+    loading.value = false
   }
   fullscreen.value = width.value <= 768
 })
