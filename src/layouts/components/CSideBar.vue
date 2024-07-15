@@ -43,7 +43,7 @@
                 to="/index"
               >
                 <Box />
-                <span class="ms-2 font-semibold"> Товары </span>
+                <span class="ms-2 font-semibold"> Список товаров </span>
               </router-link>
             </li>
             <li>
@@ -83,7 +83,7 @@
                 to="/return-transaction"
               >
                 <PackageOpen />
-                <span class="ms-2 font-semibold"> Return transaction </span>
+                <span class="ms-2 font-semibold"> Возварт товара </span>
               </router-link>
             </li>
 
@@ -154,7 +154,7 @@
                 to="/chart"
               >
                 <AreaChart />
-                <span class="ms-2 font-semibold"> График </span>
+                <span class="ms-2 font-semibold"> Отчетность </span>
               </router-link>
             </li>
           </ul>

@@ -4,10 +4,42 @@
     v-if="reports"
   >
     <h3 class="text-[24px] font-bold mb-3">Отчетность</h3>
+    <div class="grid gap-3 grid-cols-12">
+      <el-select
+        v-model="reportsExportType"
+        size="large"
+        class="col-span-12 md:col-span-2"
+      >
+        <el-option
+          v-for="(item, index) in exportTypes"
+          :label="item.label"
+          :value="item.value"
+          :key="index"
+        />
+      </el-select>
+      <el-date-picker
+        v-model="datePicker"
+        type="date"
+        class="col-span-12 md:col-span-2 !w-full"
+        placeholder="Выберите дату"
+        format="DD/MM/YYYY"
+        :clearable="false"
+        :editable="false"
+        value-format="YYYY-MM-DD"
+        size="large"
+      />
+      <el-button
+        @click="getReports(datePicker)"
+        size="large"
+        type="primary"
+        class="md:w-auto col-span-12 w-full"
+        >Поиск</el-button
+      >
+    </div>
     <div class="flex flex-wrap gap-3">
       <el-input
         placeholder="Поиск"
-        class="mb-3 w-full md:!w-[300px]"
+        class="mb-3 !w-[80%] md:!w-[300px]"
         size="large"
         v-model="searchValue"
       />
@@ -18,27 +50,6 @@
         class="!ms-0 mb-3 !p-2"
         ><QrCode
       /></el-button>
-      <el-select v-model="reportsExportType">
-        <el-option
-          v-for="(item, index) in exportTypes"
-          :label="item.label"
-          :value="item.value"
-          :key="index"
-        />
-      </el-select>
-      <el-button size="large" @click="dailyReport" class="!ms-0" type="primary"
-        >Дневной отчет</el-button
-      >
-      <el-button size="large" @click="weeklyReport" class="!ms-0" type="primary"
-        >Недельный отчет</el-button
-      >
-      <el-button
-        size="large"
-        @click="monthlyReport"
-        class="!ms-0"
-        type="primary"
-        >Месячный отчет</el-button
-      >
     </div>
     <Vue3EasyDataTable
       id="my-spreadsheet"
@@ -79,7 +90,7 @@
     <el-button type="primary" class="w-full !ms-0" @click="exportToCSV"
       ><ClipboardMinus />
       <span class="ms-2 text-wrap !leading-4"
-        >Экспортровать дневную прибль</span
+        >Экспортровать отчет</span
       ></el-button
     >
     <el-dialog
@@ -96,9 +107,11 @@
 </template>
 <script setup lang="ts">
 import { ClipboardMinus, QrCode } from 'lucide-vue-next'
-import { computed, onMounted, ref } from 'vue'
+import { MaskInput } from 'maska'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
+import { toast } from 'vue3-toastify'
 
 import {
   getDailyReport,
@@ -108,11 +121,20 @@ import {
 
 const reports = ref(null)
 const searchValue = ref('')
-const reportsExportType = ref(null)
+const datePicker = ref('')
+const reportsExportType = ref('daily')
 const exportTypes = ref([
   {
-    label: '',
-    value: '',
+    label: 'Дневной',
+    value: 'daily',
+  },
+  {
+    label: 'Недельный',
+    value: 'weekly',
+  },
+  {
+    label: 'Месячный',
+    value: 'monthly',
   },
 ])
 const headers: Header[] = [
@@ -192,15 +214,28 @@ const allItems = computed(() => [
     totalProfit: totalProfitPrice.value.profit,
   },
 ])
-const dailyReport = async () => {
-  reports.value = await getDailyReport()
-}
 
-const weeklyReport = async () => {
-  reports.value = await getWeeklyReport()
+const getReports = async (time) => {
+  if (datePicker.value) {
+    if (reportsExportType.value === 'daily') {
+      reports.value = await getDailyReport(time)
+    }
+    if (reportsExportType.value === 'weekly') {
+      reports.value = await getWeeklyReport(time)
+    }
+    if (reportsExportType.value === 'monthly') {
+      reports.value = await getMonthlyReport(time)
+    }
+  } else {
+    toast.error('Выберите дату')
+  }
 }
-const monthlyReport = async () => {
-  reports.value = await getMonthlyReport()
+const getStartOfMonth = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Месяцы начинаются с 0
+
+  return `${year}-${month}-01`
 }
 const onDecode = (result: any) => {
   searchValue.value = result
@@ -252,8 +287,19 @@ const exportToCSV = () => {
   link.click()
 }
 onMounted(async () => {
-  reports.value = await getDailyReport()
-  console.log(reports.value.items)
+  const currentDate = getStartOfMonth()
+  reports.value = await getMonthlyReport(currentDate)
+  await nextTick(() => {
+    const inputs = document.querySelectorAll('.el-date-editor .el-input__inner')
+    for (const key of inputs) {
+      if (key) {
+        key?.setAttribute('data-maska', '##/##/####')
+        new MaskInput(key, {
+          mask: (value) => '##/##/####',
+        })
+      }
+    }
+  })
 })
 </script>
 <style scoped></style>
