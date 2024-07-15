@@ -11,6 +11,21 @@
         size="large"
         v-model="searchValue"
       />
+      <el-button
+        size="large"
+        @click="scanDialogOpen"
+        type="primary"
+        class="!ms-0 mb-3 !p-2"
+        ><QrCode
+      /></el-button>
+      <el-select v-model="reportsExportType">
+        <el-option
+          v-for="(item, index) in exportTypes"
+          :label="item.label"
+          :value="item.value"
+          :key="index"
+        />
+      </el-select>
       <el-button size="large" @click="dailyReport" class="!ms-0" type="primary"
         >Дневной отчет</el-button
       >
@@ -67,12 +82,22 @@
         >Экспортровать дневную прибль</span
       ></el-button
     >
+    <el-dialog
+      v-model="scanDialog"
+      title="Сканер бар кода"
+      :align-center="width < 768"
+      :width="width > 768 ? 500 : 300"
+    >
+      <div>
+        <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
-import ExcelJS from 'exceljs'
-import { ClipboardMinus } from 'lucide-vue-next'
+import { ClipboardMinus, QrCode } from 'lucide-vue-next'
 import { computed, onMounted, ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
 
 import {
@@ -83,6 +108,13 @@ import {
 
 const reports = ref(null)
 const searchValue = ref('')
+const reportsExportType = ref(null)
+const exportTypes = ref([
+  {
+    label: '',
+    value: '',
+  },
+])
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },
@@ -123,7 +155,7 @@ const items: Item[] = computed(() => {
     }
   })
 })
-
+const scanDialog = ref(false)
 const totalProfitPrice = computed(() => {
   return {
     pure: items.value?.reduce((total, el) => total + el?.totalCostPrice, 0),
@@ -170,7 +202,18 @@ const weeklyReport = async () => {
 const monthlyReport = async () => {
   reports.value = await getMonthlyReport()
 }
-
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.product.partNumber) scanDialog.value = false
+}
+const scanDialogOpen = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+    scanDialog.value = true
+  } catch (err) {
+    alert(err)
+  }
+}
 const exportToCSV = () => {
   const exportHeaders = headers
     .filter((header) => header.value !== 'image')
@@ -204,7 +247,7 @@ const exportToCSV = () => {
   const encodedUri = encodeURI(csvContent)
   const link = document.createElement('a')
   link.setAttribute('href', encodedUri)
-  link.setAttribute('download', 'table_data.csv')
+  link.setAttribute('download', 'Отчетность.csv')
   document.body.appendChild(link)
   link.click()
 }
