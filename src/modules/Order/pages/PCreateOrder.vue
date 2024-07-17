@@ -93,6 +93,7 @@
               @click="saveCreateProducts"
               type="primary"
               class="w-[100px]"
+              :loading="store.loading"
               >Сохранить</el-button
             >
           </div>
@@ -347,6 +348,7 @@
             type="primary"
             plain
             class="mt-1 w-full"
+            :loading="store.loading"
             >Oбработка</el-button
           >
           <el-button
@@ -373,9 +375,12 @@
         >
           <div
             @click="viewOrders(elem)"
-            class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            class="shadow text-[14px] leading-5 p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
+            <p class="text-white">
+              {{ elem.source.name }} - {{ elem.destination.name }}
+            </p>
             <p class="text-center text-white">
               {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
@@ -421,7 +426,9 @@ import {
   ISuppliers,
   ITemplateProducts,
 } from '@/modules/UserController/types.ts'
+import { useMainStore } from '@/store'
 
+const store = useMainStore()
 const fullscreen = ref(false)
 const { width } = useWindowSize()
 const suppliersList: Ref<ISuppliers[] | undefined> = ref()
@@ -599,6 +606,7 @@ const deleteTempOrder = async (item: IReplenishment) => {
 }
 
 const saveCreateProducts = async () => {
+  store.loading = true
   order.items = templateProducts.value.map((el) => {
     return {
       productId: el.productId,
@@ -607,7 +615,6 @@ const saveCreateProducts = async () => {
       salePrice: el.salePrice,
     }
   })
-  console.log(order)
   await addProductItem(order)
   templateProducts.value = []
   allReplenishments.value = await getSaleOrders()
@@ -618,6 +625,7 @@ const saveCreateProducts = async () => {
     if (el.status === 'Completed') return el
   })
   dialogCreate.value = false
+  store.loading = false
 }
 const saveUpdateProducts = () => {
   dialogUpdate.value = false
@@ -629,6 +637,7 @@ const processReplenishment = async (item: IReplenishment) => {
     type: 'warning',
   })
     .then(async () => {
+      store.loading = true
       ElMessage({
         type: 'success',
         message: 'Успешно обработан',
@@ -647,6 +656,9 @@ const processReplenishment = async (item: IReplenishment) => {
         type: 'info',
         message: 'Обработка отменено',
       })
+    })
+    .finally(() => {
+      store.loading = false
     })
 }
 const viewOrders = (item: IReplenishment) => {
