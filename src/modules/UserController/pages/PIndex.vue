@@ -106,9 +106,9 @@ import { IUsers } from '@/modules/UserController/types.ts'
 
 const users: Ref<IUsers[]> = ref([])
 const headers: Header[] = [
+  { text: 'Id', value: 'id' },
   { text: 'Имя', value: 'name', sortable: true },
   { text: 'Роль', value: 'role', sortable: true },
-  { text: 'Id', value: 'id' },
   { text: 'Логин', value: 'login' },
   { text: 'Телефон', value: 'phone', sortable: true },
   { text: 'Создан', value: 'createdAt', sortable: true },

@@ -345,7 +345,7 @@ const headers: Header[] = [
   { text: 'Баркод', value: 'partNumber', sortable: true },
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
-  { text: 'Operations', value: 'opera' },
+  { text: 'Операции', value: 'opera' },
 ]
 
 const items = computed((): Item[] | undefined => {
@@ -384,7 +384,7 @@ const updateCustomer = async () => {
   }
 }
 const deleteBtn = (id: number) => {
-  ElMessageBox.confirm('Вы уверены, что хотите удалить товар?', 'Warning', {
+  ElMessageBox.confirm('Вы уверены, что хотите удалить товар?', 'Внимание!', {
     confirmButtonText: 'Да',
     cancelButtonText: 'Нет',
     type: 'warning',

@@ -85,7 +85,7 @@ const onSubmit = async () => {
   loading.value = true
   try {
     const res = await useApi().$post('/Users/UpdateUser', form.value)
-    toast.success('User was created successfully!')
+    toast.success('Пользователь создан!')
     await router.push({ name: 'Users' })
     console.log(res)
   } catch (err) {

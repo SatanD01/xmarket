@@ -21,14 +21,8 @@
             :class="width < 768 ? 'w-[80%]' : 'w-full'"
           >
             <div class="flex items-center justify-center flex-col md:mt-2">
-              <img
-                class="!w-[140px] text-center"
-                src="/logo_black.png"
-                alt="logo"
-              />
               <span class="text-center block font-bold"
-                ><span class="text-orange-600 text-sm">ENERGY</span> AUTO
-                PARTS</span
+                ><span class="text-orange-600">ENERGY</span> AUTO PARTS</span
               >
             </div>
           </router-link>
@@ -49,6 +43,16 @@
             <li>
               <router-link
                 exact-active-class="active-route"
+                class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
+                to="/check-product"
+              >
+                <ListChecks />
+                <span class="ms-2 font-semibold"> Доступные товары </span>
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-2 flex gap-3 items-center"
                 to="/replenishment"
               >
@@ -62,7 +66,7 @@
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
                 to="/transfer-goods"
               >
-                <PackageOpen />
+                <GitCompareArrows />
                 <span class="ms-2 font-semibold"> Перенос товара </span>
               </router-link>
             </li>
@@ -82,19 +86,8 @@
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
                 to="/return-transaction"
               >
-                <PackageOpen />
-                <span class="ms-2 font-semibold"> Возварт товара </span>
-              </router-link>
-            </li>
-
-            <li>
-              <router-link
-                exact-active-class="active-route"
-                class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
-                to="/check-product"
-              >
-                <ListChecks />
-                <span class="ms-2 font-semibold"> Доступные товары </span>
+                <ArchiveRestore />
+                <span class="ms-2 font-semibold"> Возврат товара </span>
               </router-link>
             </li>
             <li
@@ -133,7 +126,7 @@
               >
                 <Blinds />
                 <span class="ms-2 font-semibold">
-                  Список Магазинов и складов
+                  Список магазинов и складов
                 </span>
               </router-link>
             </li>
@@ -167,10 +160,12 @@
 <script lang="ts" setup>
 import { useWindowSize } from '@vueuse/core'
 import {
+  ArchiveRestore,
   AreaChart,
   ArrowLeft,
   Blinds,
   Box,
+  GitCompareArrows,
   ListChecks,
   PackageOpen,
   ShoppingCart,

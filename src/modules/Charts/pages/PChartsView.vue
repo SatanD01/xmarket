@@ -32,7 +32,7 @@
         @click="getReports(datePicker)"
         size="large"
         type="primary"
-        class="md:w-auto col-span-12 w-full"
+        class="md:col-span-2 col-span-12 w-full"
         >Поиск</el-button
       >
     </div>
@@ -153,7 +153,7 @@ const headers: Header[] = [
   { text: 'Количество', value: 'quantitySold', sortable: true },
   { text: 'Цена чистая', value: 'totalCostPrice', sortable: true },
   { text: 'Цена продажи', value: 'totalSalePrice', sortable: true },
-  { text: 'Прибль', value: 'totalProfit', sortable: true },
+  { text: 'Прибыль', value: 'totalProfit', sortable: true },
 ]
 const items: Item[] = computed(() => {
   return reports.value?.items.map((item) => {

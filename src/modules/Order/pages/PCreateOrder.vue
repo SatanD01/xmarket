@@ -52,6 +52,16 @@
       </div>
       <div v-if="products">
         <el-dialog
+          v-model="scanDialog"
+          title="Сканер бар кода"
+          :align-center="width < 768"
+          :width="width > 768 ? 500 : 300"
+        >
+          <div>
+            <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+          </div>
+        </el-dialog>
+        <el-dialog
           :fullscreen="fullscreen"
           align-center
           v-model="dialogCreate"
@@ -95,6 +105,13 @@
               size="large"
               v-model="searchValue"
             />
+            <el-button
+              size="large"
+              @click="scanDialogOpen"
+              type="primary"
+              class="ms-2 mb-3 !p-2"
+              ><QrCode
+            /></el-button>
             <Vue3EasyDataTable
               buttons-pagination
               :headers="headers"
@@ -191,8 +208,20 @@
               </div>
             </template>
           </Vue3EasyDataTable>
-
           <div class="flex items-center justify-end my-3">
+            <RouterLink
+              :to="{
+                name: 'PPdf',
+                query: {
+                  id: currentOrder?.id,
+                },
+              }"
+              class="py-2"
+            >
+              <el-button type="primary" class="w-[100px] me-2">
+                <Printer :size="15" class="me-2" /> Печать</el-button
+              >
+            </RouterLink>
             <el-button
               @click="saveUpdateProducts"
               type="primary"
@@ -208,6 +237,13 @@
               size="large"
               v-model="searchValue"
             />
+            <el-button
+              size="large"
+              @click="scanDialogOpen"
+              type="primary"
+              class="ms-2 mb-3 !p-2"
+              ><QrCode
+            /></el-button>
             <Vue3EasyDataTable
               buttons-pagination
               :headers="headers"
@@ -301,7 +337,7 @@
       v-show="order.destinationId && templateProducts"
       class="bg-white p-3 mt-5 rounded-lg shadow"
     >
-      <h3 class="text-[24px] font-bold">Загатовки заказов</h3>
+      <h3 class="text-[24px] font-bold">Заготовки заказов</h3>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div
           v-for="(elem, index) in tempOrders"
@@ -376,10 +412,11 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Printer, QrCode } from 'lucide-vue-next'
 import { computed, onMounted, reactive, Ref, ref, watch } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
 
-import CTableSkeleton from '@/components/CTableSceleton.vue'
 import { paymentType } from '@/data'
 import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
@@ -414,6 +451,8 @@ const templateProducts: Ref<ITemplateProducts[]> = ref([])
 const tempOrders: Ref<IReplenishment[] | undefined> = ref()
 const completedOrders: Ref<IReplenishment[] | undefined> = ref()
 const product: Ref<IProduct | undefined> = ref()
+const scanDialog = ref(false)
+
 const currentOrder = ref(null)
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
@@ -476,6 +515,18 @@ const quantity = ref(null)
 // const costPrice = ref(null)
 // const salePrice = ref(null)
 const loader = ref(false)
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.value.product.partNumber) scanDialog.value = false
+}
+const scanDialogOpen = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+    scanDialog.value = true
+  } catch (err) {
+    alert(err)
+  }
+}
 const order = reactive({
   sourceId: null,
   destinationId: null,
@@ -592,7 +643,7 @@ const saveUpdateProducts = () => {
   dialogUpdate.value = false
 }
 const processReplenishment = async (item: IReplenishment) => {
-  ElMessageBox.confirm('Продолжить?', 'Warning', {
+  ElMessageBox.confirm('Продолжить?', 'Внимание!', {
     confirmButtonText: 'Да',
     cancelButtonText: 'Отменить',
     type: 'warning',
@@ -601,7 +652,7 @@ const processReplenishment = async (item: IReplenishment) => {
       store.loading = true
       ElMessage({
         type: 'success',
-        message: 'Успешно удален',
+        message: 'Успешно обработан',
       })
       await processSaleOrder(item.id)
       allReplenishments.value = await getSaleOrders()
@@ -615,7 +666,7 @@ const processReplenishment = async (item: IReplenishment) => {
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: 'Удаление отменено',
+        message: 'Обработка отменено',
       })
     })
     .finally(() => {

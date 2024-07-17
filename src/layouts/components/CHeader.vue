@@ -20,18 +20,6 @@
       </div>
     </div>
     <div class="flex items-center me-1 gap-5 cursor-pointer">
-      <router-link to="/cart">
-        <el-badge :value="store.basketItems.length" type="primary">
-          <div
-            class="border group w-[40px] h-[40px] rounded flex items-center justify-center hover:transition-all transition-all hover:border-[#409eef] hover:text-[409eef]"
-          >
-            <ShoppingCart
-              class="group-hover:text-[#409eef] group-hover:transition-all transition-all"
-            />
-          </div>
-        </el-badge>
-      </router-link>
-
       <el-dropdown>
         <el-avatar
           shape="square"
@@ -55,12 +43,6 @@
                   }}
                 </p>
               </div>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <router-link class="flex" to="/admin-settings">
-                <Settings />
-                <span class="ms-2">Настройки профиля</span>
-              </router-link>
             </el-dropdown-item>
             <el-dropdown-item @click="logout">
               <LogOut /> <span class="ms-2">Выйти</span></el-dropdown-item
