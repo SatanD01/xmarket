@@ -1,8 +1,6 @@
 <template>
-  <el-button @click="printTable" type="primary" class="mb-4 flex items-center"
-    ><Printer :size="15" class="me-2" />Экспорт</el-button
-  >
   <div
+    v-if="data"
     ref="printableArea"
     class="bg-white p-3 shadow rounded-lg printable-area"
   >
@@ -19,9 +17,9 @@
                 <div>+998983381911</div>
               </div>
               <div class="header-model col-span-4">
-                <div>Магазин: BYD SONG PLUS EV</div>
-                <div>Клинент: BYD SONG PLUS EV</div>
-                <div>Номер клинент: +998999999999</div>
+                <div>Магазин: {{ data?.source?.name }}</div>
+                <div>Клинент: {{ data?.destination?.name }}</div>
+                <div>Номер клинент: +{{ data?.destination?.phone }}</div>
               </div>
             </div>
           </th>
@@ -37,31 +35,20 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Add rows here -->
-        <tr>
-          <td>1</td>
-          <td>Капот передняя</td>
-          <td>BYD SONG PLUS EV</td>
-          <td>1</td>
+        <tr v-for="(item, index) in data?.items" :key="index">
+          <td>{{ index + 1 }}</td>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.product.manufacturer }}</td>
+          <td>{{ item.quantity }}</td>
           <td>шт</td>
-          <td>750</td>
-          <td>750</td>
+          <td>{{ item.salePrice }}</td>
+          <td>{{ item.salePrice * item.quantity }}</td>
         </tr>
-        <tr>
-          <td>2</td>
-          <td>Фара передняя LH</td>
-          <td>BYD SONG PLUS EV</td>
-          <td>1</td>
-          <td>шт</td>
-          <td>650</td>
-          <td>650</td>
-        </tr>
-        <!-- Continue for all rows -->
       </tbody>
       <tfoot>
         <tr>
           <td colspan="6" class="total-label">Итого</td>
-          <td class="total-value">4210</td>
+          <td class="total-value">{{ totalProfitPrice.sale }}</td>
         </tr>
       </tfoot>
     </table>
@@ -70,10 +57,14 @@
 
 <script setup lang="ts">
 import { Printer } from 'lucide-vue-next'
-import { nextTick, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
+import { getSaleOrders } from '@/modules/Order/controller'
+const route = useRoute()
 const printableArea = ref(null)
 
+const data = ref(null)
 const printTable = async () => {
   await nextTick()
   if (printableArea.value) {
@@ -82,11 +73,25 @@ const printTable = async () => {
     document.body.innerHTML = printContents
     window.print()
     document.body.innerHTML = originalContents
-    location.reload() // To restore original page state
+    location.replace('/create-order')
   } else {
     alert('error')
   }
 }
+const totalProfitPrice = computed(() => {
+  if (!data.value?.items) return { sale: 0 }
+  return {
+    sale: data.value.items.reduce(
+      (total, el) => total + el.salePrice * el.quantity,
+      0,
+    ),
+  }
+})
+onMounted(async () => {
+  const res = await getSaleOrders()
+  data.value = res.find((el) => el?.id == route.query?.id)
+  await printTable()
+})
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
   <div v-else>
     <div>
       <div class="p-3 bg-white shadow rounded-lg">
-        <h3 class="text-[24px] font-bold capitalize">Перенос товара</h3>
+        <h3 class="text-[24px] font-bold">Перенос товара</h3>
         <div class="grid grid-cols-1 mt-4 md:grid-cols-4 gap-3">
           <el-select
             size="large"

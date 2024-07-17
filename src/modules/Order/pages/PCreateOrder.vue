@@ -208,8 +208,20 @@
               </div>
             </template>
           </Vue3EasyDataTable>
-
           <div class="flex items-center justify-end my-3">
+            <RouterLink
+              :to="{
+                name: 'PPdf',
+                query: {
+                  id: currentOrder?.id,
+                },
+              }"
+              class="py-2"
+            >
+              <el-button type="primary" class="w-[100px] me-2">
+                <Printer :size="15" class="me-2" /> Печать</el-button
+              >
+            </RouterLink>
             <el-button
               @click="saveUpdateProducts"
               type="primary"
@@ -400,7 +412,7 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { QrCode } from 'lucide-vue-next'
+import { Printer, QrCode } from 'lucide-vue-next'
 import { computed, onMounted, reactive, Ref, ref, watch } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
