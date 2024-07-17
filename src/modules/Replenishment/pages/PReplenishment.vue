@@ -1,5 +1,5 @@
 <template>
-  <div v-if="products">
+  <div v-if="tempOrders">
     <div class="grid grid-cols-1 gap-3 bg-white p-3 shadow rounded-lg mb-3">
       <div class="flex items-center justify-between">
         <h3 class="text-[24px] font-bold">Пополнение склада</h3>
@@ -50,7 +50,16 @@
           />
         </el-select>
       </div>
-
+      <el-dialog
+        v-model="scanDialog"
+        title="Сканер бар кода"
+        :align-center="width < 768"
+        :width="width > 768 ? 500 : 300"
+      >
+        <div>
+          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        </div>
+      </el-dialog>
       <el-dialog
         :fullscreen="fullscreen"
         align-center
@@ -94,6 +103,13 @@
             size="large"
             v-model="searchValue"
           />
+          <el-button
+            size="large"
+            @click="scanDialogOpen"
+            type="primary"
+            class="ms-2 mb-3 !p-2"
+            ><QrCode
+          /></el-button>
           <Vue3EasyDataTable
             buttons-pagination
             :headers="headers"
@@ -217,6 +233,13 @@
             size="large"
             v-model="searchValue"
           />
+          <el-button
+            size="large"
+            @click="scanDialogOpen"
+            type="primary"
+            class="ms-2 mb-3 !p-2"
+            ><QrCode
+          /></el-button>
           <Vue3EasyDataTable
             buttons-pagination
             :headers="headers"
@@ -384,7 +407,9 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { QrCode } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
 import CTableSkeleton from '@/components/CTableSceleton.vue'
@@ -458,6 +483,7 @@ const innerVisibleUpdate = ref(false)
 const quantity = ref(null)
 const costPrice = ref(null)
 const salePrice = ref(null)
+const scanDialog = ref(false)
 const order = reactive({
   sourceId: null,
   destinationId: null,
@@ -471,6 +497,18 @@ const rules = {
 }
 const v$ = useVuelidate(rules, order)
 
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.value.product.partNumber) scanDialog.value = false
+}
+const scanDialogOpen = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+    scanDialog.value = true
+  } catch (err) {
+    alert(err)
+  }
+}
 const openCreateModal = () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
@@ -570,9 +608,9 @@ const saveUpdateProducts = () => {
   dialogUpdate.value = false
 }
 const processReplenishment = async (item: IReplenishment) => {
-  ElMessageBox.confirm('Continue?', 'Warning', {
-    confirmButtonText: 'OK',
-    cancelButtonText: 'Cancel',
+  ElMessageBox.confirm('Продолжить?', 'Внимание!', {
+    confirmButtonText: 'Да',
+    cancelButtonText: 'Нет',
     type: 'warning',
   })
     .then(async () => {

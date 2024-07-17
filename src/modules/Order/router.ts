@@ -10,6 +10,15 @@ const routes: Readonly<RouteRecordRaw[]> = [
       roles: ['Admin', 'Manager', 'Salesman'],
     },
   },
+  {
+    path: '/pdf',
+    name: 'PPdf',
+    component: () => import('@/modules/Order/pages/PPdf.vue'),
+    meta: {
+      layout: 'empty',
+      roles: ['Admin', 'Manager', 'Salesman'],
+    },
+  },
 ]
 
 export default routes

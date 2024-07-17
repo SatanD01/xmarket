@@ -7,7 +7,6 @@
         <div
           class="h-full flex flex-col gap-3 items-center justify-center border-b pb-2 md:pb-0 md:border-r border-dashed"
         >
-          <img class="w-[200px]" src="/logo_black.png" alt="logo" />
           <div>
             <p class="text-center font-bold text-orange-600 border-b-2">
               ENERGY

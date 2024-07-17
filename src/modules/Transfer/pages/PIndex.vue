@@ -1,252 +1,268 @@
 <template>
-  <div>
-    <div class="p-3 bg-white shadow rounded-lg">
-      <h3 class="text-[24px] font-bold capitalize">Перенос товара</h3>
-      <div class="grid grid-cols-1 mt-4 md:grid-cols-4 gap-3">
-        <el-select
+  <CTableSkeleton v-if="!templateOrders.length" />
+
+  <div v-else>
+    <div>
+      <div class="p-3 bg-white shadow rounded-lg">
+        <h3 class="text-[24px] font-bold capitalize">Перенос товара</h3>
+        <div class="grid grid-cols-1 mt-4 md:grid-cols-4 gap-3">
+          <el-select
+            size="large"
+            v-model="order.sourceId"
+            placeholder="Склад"
+            @change="getProductByWarehouse"
+            :class="v$.sourceId.$error ? 'error' : ''"
+          >
+            <el-option
+              v-for="(item, index) in locationsList"
+              v-show="item.type === 'Warehouse'"
+              :value="item?.id"
+              :label="item?.name"
+              :key="index"
+            />
+          </el-select>
+          <el-select
+            size="large"
+            v-model="order.destinationId"
+            :class="v$.destinationId.$error ? 'error' : ''"
+            placeholder="Магазин"
+          >
+            <el-option
+              v-for="(item, index) in locationsList"
+              v-show="item.type === 'Store'"
+              :value="item?.id"
+              :label="item?.name"
+              :key="index"
+            />
+          </el-select>
+          <el-select
+            size="large"
+            v-model="order.paymentType"
+            :class="v$.paymentType.$error ? 'error' : ''"
+            placeholder="Тип оплаты"
+          >
+            <el-option
+              v-for="(item, index) in paymentType"
+              :value="item?.value"
+              :label="item?.label"
+              :key="index"
+            />
+          </el-select>
+          <el-button type="primary" size="large" @click="addTransaction">
+            Создать перенос
+          </el-button>
+        </div>
+      </div>
+      <div class="bg-white p-3 mt-5 rounded-lg shadow">
+        <h3 class="text-[24px] font-bold">Загатовки переноса</h3>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
+          <template v-for="(elem, index) in templateOrders" :key="index">
+            <div
+              class="cursor-pointer relative"
+              v-if="elem?.status === 'Template'"
+            >
+              <div
+                @click="openDialogUpdate(elem)"
+                class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+              >
+                <el-icon size="22" color="white"><FolderOpened /></el-icon>
+                <p class="text-center text-white">
+                  {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
+                </p>
+                <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
+              </div>
+
+              <el-button
+                @click="processTransferOrder(elem?.id)"
+                type="primary"
+                plain
+                class="mt-1 w-full"
+                >Oбработка</el-button
+              >
+              <el-button
+                type="danger"
+                :icon="Delete"
+                size="small"
+                circle
+                @click="deleteOrder(elem.id)"
+                class="absolute top-[-2px] right-[-2px]"
+              />
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="bg-white p-3 mt-5 rounded-lg shadow">
+        <h3 class="text-[24px] font-bold">Завершенные переносы</h3>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
+          <template v-for="(elem, index) in templateOrders" :key="index">
+            <div class="cursor-pointer" v-if="elem?.status === 'Completed'">
+              <div
+                @click="openDialogUpdate(elem, true)"
+                class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+              >
+                <el-icon size="22" color="white"><FolderOpened /></el-icon>
+                <p class="text-center text-white">
+                  {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
+                </p>
+                <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
+      <div class="flex flex-col justify-center">
+        <el-input
+          placeholder="Поиск"
+          class="mb-3 md:!w-[300px]"
           size="large"
-          v-model="order.sourceId"
-          placeholder="Склад"
-          @change="getProductByWarehouse"
-          :class="v$.sourceId.$error ? 'error' : ''"
+          v-model="searchValue"
+        />
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
+          class="mt-4 h-[300px] overflow-y-scroll"
+          :headers="tempHeaders"
+          :items="products"
+          show-index
+          :search-field="[
+            'product.id',
+            'product.name',
+            'quantity',
+            'salePrice',
+          ]"
+          :search-value="searchValue"
         >
-          <el-option
-            v-for="(item, index) in locationsList"
-            v-show="item.type === 'Warehouse'"
-            :value="item?.id"
-            :label="item?.name"
-            :key="index"
-          />
-        </el-select>
-        <el-select
+          <template #item-input="item">
+            <el-input
+              v-if="order.items[item.index - 1]"
+              class="!w-[150px]"
+              type="number"
+              v-model="order.items[item.index - 1].quantity"
+              :max="item.quantity"
+              placeholder="Количество"
+              @input="onInputChange(item.index - 1, item.quantity)"
+            />
+          </template>
+        </Vue3EasyDataTable>
+        <el-button
+          type="primary"
           size="large"
-          v-model="order.destinationId"
-          :class="v$.destinationId.$error ? 'error' : ''"
-          placeholder="Магазин"
+          @click="confirmTransaction"
+          class="mt-5"
         >
-          <el-option
-            v-for="(item, index) in locationsList"
-            v-show="item.type === 'Store'"
-            :value="item?.id"
-            :label="item?.name"
-            :key="index"
-          />
-        </el-select>
-        <el-select
-          size="large"
-          v-model="order.paymentType"
-          :class="v$.paymentType.$error ? 'error' : ''"
-          placeholder="Тип оплаты"
-        >
-          <el-option
-            v-for="(item, index) in paymentType"
-            :value="item?.value"
-            :label="item?.label"
-            :key="index"
-          />
-        </el-select>
-        <el-button type="primary" size="large" @click="addTransaction">
-          Создать перенос
+          Сохранить
         </el-button>
       </div>
-    </div>
-    <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Загатовки переноса</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <template v-for="(elem, index) in templateOrders" :key="index">
-          <div
-            class="cursor-pointer relative"
-            v-if="elem?.status === 'Template'"
-          >
-            <Trash
-              @click="deleteOrder(elem.id)"
-              :size="16"
-              class="text-white absolute top-2 right-2 transition-200 hover:text-red-500"
+    </el-dialog>
+    <el-dialog
+      :fullscreen="fullscreen"
+      align-center
+      v-model="dialogUpdate"
+      width="80%"
+    >
+      <Vue3EasyDataTable
+        hover:shadow-xl
+        transition
+        duration-200
+        ease-in-out
+        class="mt-4 h-[35%] overflow-y-scroll"
+        :headers="tempUpdateHeaders"
+        :items="currentOrder?.items"
+      >
+        <template #item-opera="item">
+          <div class="flex items-center gap-2">
+            <el-icon
+              @click="deleteItem(item?.id, item?.orderId)"
+              class="cursor-pointer"
+              size="large"
+              ><Delete
+            /></el-icon>
+          </div>
+        </template>
+        <template #item-input="item">
+          <el-input
+            v-if="order.items[item.index - 1]"
+            class="!w-[150px]"
+            type="number"
+            v-model="order.items[item.index - 1].quantity"
+            :max="item.quantity"
+            placeholder="Введите количество"
+            @input="onInputChange(item.index - 1, item.quantity)"
+          />
+        </template>
+      </Vue3EasyDataTable>
+      <div class="mt-5">
+        <el-input
+          placeholder="Поиск"
+          class="mb-3 md:!w-[300px]"
+          size="large"
+          v-model="searchValue"
+        />
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          ease-in-out
+          class="mt-4 h-[300px] overflow-y-scroll"
+          :headers="tempHeadersWithButton"
+          :items="products"
+          show-index
+          :search-field="[
+            'product.id',
+            'product.name',
+            'quantity',
+            'salePrice',
+          ]"
+          :search-value="searchValue"
+        >
+          <template #item-input="item">
+            <el-input
+              v-if="order.items[item.index - 1]"
+              class="!w-[150px]"
+              type="number"
+              v-model="order.items[item.index - 1].quantity"
+              :max="item.quantity"
+              placeholder="Количество"
+              @input="onInputChange(item.index - 1, item.quantity)"
             />
-            <div
-              @click="openDialogUpdate(elem)"
-              class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
-            >
-              <el-icon size="22" color="white"><FolderOpened /></el-icon>
-              <p class="text-center text-white">
-                {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-              </p>
-              <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
-            </div>
-
+          </template>
+          <template #item-button="item">
             <el-button
-              @click="processTransferOrder(elem?.id)"
               type="primary"
               plain
-              class="mt-1 w-full"
-              >Oбработка</el-button
+              class="!h-7"
+              @click="
+                updateTransferOrder(item.index - 1, item?.product?.id, item)
+              "
             >
-          </div>
-        </template>
+              Добавить
+            </el-button>
+          </template>
+        </Vue3EasyDataTable>
       </div>
-    </div>
-    <div class="bg-white p-3 mt-5 rounded-lg shadow">
-      <h3 class="text-[24px] font-bold">Завершенные переносы</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <template v-for="(elem, index) in templateOrders" :key="index">
-          <div class="cursor-pointer" v-if="elem?.status === 'Completed'">
-            <div
-              @click="openDialogUpdate(elem, true)"
-              class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
-            >
-              <el-icon size="22" color="white"><FolderOpened /></el-icon>
-              <p class="text-center text-white">
-                {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-              </p>
-              <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
+    </el-dialog>
+    <el-dialog
+      :fullscreen="fullscreen"
+      align-center
+      v-model="viewDialog"
+      width="80%"
+    >
+      <Vue3EasyDataTable
+        hover:shadow-xl
+        transition
+        duration-200
+        ease-in-out
+        class="mt-4 h-[35%] overflow-y-scroll"
+        :headers="tempUpdateHeaders"
+        :items="currentOrder?.items"
+      >
+      </Vue3EasyDataTable>
+    </el-dialog>
   </div>
-  <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
-    <div class="flex flex-col justify-center">
-      <el-input
-        placeholder="Поиск"
-        class="mb-3 md:!w-[300px]"
-        size="large"
-        v-model="searchValue"
-      />
-      <Vue3EasyDataTable
-        hover:shadow-xl
-        transition
-        duration-200
-        ease-in-out
-        class="mt-4 h-[300px] overflow-y-scroll"
-        :headers="tempHeaders"
-        :items="products"
-        show-index
-        :search-field="['product.id', 'product.name', 'quantity', 'salePrice']"
-        :search-value="searchValue"
-      >
-        <template #item-input="item">
-          <el-input
-            v-if="order.items[item.index - 1]"
-            class="!w-[150px]"
-            type="number"
-            v-model="order.items[item.index - 1].quantity"
-            :max="item.quantity"
-            placeholder="Количество"
-            @input="onInputChange(item.index - 1, item.quantity)"
-          />
-        </template>
-      </Vue3EasyDataTable>
-      <el-button
-        type="primary"
-        size="large"
-        @click="confirmTransaction"
-        class="mt-5"
-      >
-        Сохранить
-      </el-button>
-    </div>
-  </el-dialog>
-  <el-dialog
-    :fullscreen="fullscreen"
-    align-center
-    v-model="dialogUpdate"
-    width="80%"
-  >
-    <Vue3EasyDataTable
-      hover:shadow-xl
-      transition
-      duration-200
-      ease-in-out
-      class="mt-4 h-[35%] overflow-y-scroll"
-      :headers="tempUpdateHeaders"
-      :items="currentOrder?.items"
-    >
-      <template #item-opera="item">
-        <div class="flex items-center gap-2">
-          <el-icon
-            @click="deleteItem(item?.id, item?.orderId)"
-            class="cursor-pointer"
-            size="large"
-            ><Delete
-          /></el-icon>
-        </div>
-      </template>
-      <template #item-input="item">
-        <el-input
-          v-if="order.items[item.index - 1]"
-          class="!w-[150px]"
-          type="number"
-          v-model="order.items[item.index - 1].quantity"
-          :max="item.quantity"
-          placeholder="Введите количество"
-          @input="onInputChange(item.index - 1, item.quantity)"
-        />
-      </template>
-    </Vue3EasyDataTable>
-    <div class="mt-5">
-      <el-input
-        placeholder="Поиск"
-        class="mb-3 md:!w-[300px]"
-        size="large"
-        v-model="searchValue"
-      />
-      <Vue3EasyDataTable
-        hover:shadow-xl
-        transition
-        duration-200
-        ease-in-out
-        class="mt-4 h-[300px] overflow-y-scroll"
-        :headers="tempHeadersWithButton"
-        :items="products"
-        show-index
-        :search-field="['product.id', 'product.name', 'quantity', 'salePrice']"
-        :search-value="searchValue"
-      >
-        <template #item-input="item">
-          <el-input
-            v-if="order.items[item.index - 1]"
-            class="!w-[150px]"
-            type="number"
-            v-model="order.items[item.index - 1].quantity"
-            :max="item.quantity"
-            placeholder="Количество"
-            @input="onInputChange(item.index - 1, item.quantity)"
-          />
-        </template>
-        <template #item-button="item">
-          <el-button
-            type="primary"
-            plain
-            class="!h-7"
-            @click="
-              updateTransferOrder(item.index - 1, item?.product?.id, item)
-            "
-          >
-            Добавить
-          </el-button>
-        </template>
-      </Vue3EasyDataTable>
-    </div>
-    <pre> {{ currentOrder?.items }} </pre>
-  </el-dialog>
-  <el-dialog
-    :fullscreen="fullscreen"
-    align-center
-    v-model="viewDialog"
-    width="80%"
-  >
-    <Vue3EasyDataTable
-      hover:shadow-xl
-      transition
-      duration-200
-      ease-in-out
-      class="mt-4 h-[35%] overflow-y-scroll"
-      :headers="tempUpdateHeaders"
-      :items="currentOrder?.items"
-    >
-    </Vue3EasyDataTable>
-  </el-dialog>
 </template>
 <script setup lang="ts">
 import { Delete, FolderOpened } from '@element-plus/icons-vue'
@@ -258,6 +274,7 @@ import { Trash } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
+import CTableSkeleton from '@/components/CTableSceleton.vue'
 import { useApi } from '@/composables/useApi.ts'
 import { paymentType } from '@/data'
 import { getOffices } from '@/modules/Offices/controller'

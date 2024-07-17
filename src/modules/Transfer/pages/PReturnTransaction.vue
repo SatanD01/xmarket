@@ -1,16 +1,33 @@
 <template>
   <div>
     <div class="p-3 bg-white shadow rounded-lg mb-5">
-      <h3 class="text-[24px] font-bold capitalize">Return Transaction</h3>
+      <h3 class="text-[24px] font-bold capitalize">Возврат товара</h3>
     </div>
     <CTableSceleton v-if="loading" />
     <div v-else class="bg-white p-3 rounded-lg shadow">
+      <el-dialog
+        v-model="scanDialog"
+        title="Сканер бар кода"
+        :align-center="width < 768"
+        :width="width > 768 ? 500 : 300"
+      >
+        <div>
+          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        </div>
+      </el-dialog>
       <el-input
         placeholder="Поиск"
         class="mb-3 md:!w-[300px]"
         size="large"
         v-model="searchValue"
       />
+      <el-button
+        size="large"
+        @click="scanDialogOpen"
+        type="primary"
+        class="ms-2 mb-3 !p-2"
+        ><QrCode
+      /></el-button>
       <Vue3EasyDataTable
         buttons-pagination
         :headers="headers"
@@ -78,7 +95,7 @@
               type="danger"
               plain
             >
-              return
+              Возврат
             </el-button>
           </div>
         </template>
@@ -109,12 +126,12 @@
         <el-input
           v-model="order.quantity"
           type="number"
-          placeholder="Enter quantity"
+          placeholder="Количество"
         />
         <pre> {{ currentOrder }} </pre>
       </div>
       <el-button type="primary" @click="returnTransaction">
-        Return transaction
+        Сделать возврат
       </el-button>
     </el-dialog>
   </div>
@@ -122,7 +139,9 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
+import { QrCode } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
 import CTableSceleton from '@/components/CTableSceleton.vue'
@@ -142,6 +161,8 @@ const products: Ref<IProduct[] | undefined> = ref([])
 const searchValue = ref('')
 const customers = ref([])
 const locations = ref([])
+const scanDialog = ref(false)
+
 const order = reactive({
   sourceId: null,
   destinationId: null,
@@ -163,7 +184,7 @@ const headers: Header[] = [
   { text: 'Баркод', value: 'partNumber', sortable: true },
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
-  { text: 'Operations', value: 'opera' },
+  { text: 'Управление', value: 'opera' },
 ]
 const copyImage = async (base64String) => {
   try {
@@ -191,6 +212,19 @@ const copyImage = async (base64String) => {
   } catch (err) {
     console.error(err)
     ElMessage.error('Не удалось скопировать изображение')
+  }
+}
+
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.value.product.partNumber) scanDialog.value = false
+}
+const scanDialogOpen = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+    scanDialog.value = true
+  } catch (err) {
+    alert(err)
   }
 }
 

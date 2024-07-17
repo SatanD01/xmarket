@@ -32,7 +32,7 @@
         @click="getReports(datePicker)"
         size="large"
         type="primary"
-        class="md:w-auto col-span-12 w-full"
+        class="md:col-span-2 col-span-12 w-full"
         >Поиск</el-button
       >
     </div>
