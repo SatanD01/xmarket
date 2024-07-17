@@ -3,8 +3,27 @@ export interface IReplenishment {
   type: string
   sourceType: string
   sourceId: number
+  source: {
+    id: 4
+    type: string
+    name: string
+    description: string
+    phone: string
+    createdAt: string | Date
+    updatedAt: null | Date
+  }
   destinationType: string
   destinationId: number
+  destination: {
+    id: number
+    name: string
+    description: string
+    address: string
+    addressUrl: string
+    type: string
+    createdAt: string | Date
+    updatedAt: null | Date
+  }
   userId: number
   status: 'Template' | 'Completed'
   paymentType: string

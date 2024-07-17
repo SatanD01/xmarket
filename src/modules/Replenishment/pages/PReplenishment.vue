@@ -83,6 +83,7 @@
             @click="saveCreateProducts"
             type="primary"
             class="w-[100px]"
+            :loading="store.loading"
             >Сохранить</el-button
           >
         </div>
@@ -290,7 +291,10 @@
             </div>
 
             <template #footer>
-              <el-button type="primary" @click="addProduct('update')"
+              <el-button
+                type="primary"
+                :loading="store.loading"
+                @click="addProduct('update')"
                 >Добавить</el-button
               >
             </template>
@@ -325,9 +329,12 @@
         >
           <div
             @click="openDialogUpdate(elem)"
-            class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            class="shadow text-[14px] leading-4 p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
-            <el-icon size="22" color="white"><FolderOpened /></el-icon>
+            <el-icon size="26" color="white"><FolderOpened /></el-icon>
+            <p class="text-white">
+              {{ elem.source.name }} - {{ elem.destination.name }}
+            </p>
             <p class="text-center text-white">
               {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
@@ -337,6 +344,7 @@
           <el-button
             @click="processReplenishment(elem)"
             type="primary"
+            :loading="store.loading"
             plain
             class="mt-1 w-full"
             >Oбработка</el-button
@@ -362,9 +370,12 @@
         >
           <div
             @click="viewOrders(elem)"
-            class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            class="shadow text-[14px] leading-5 p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
           >
             <el-icon size="22" color="white"><FolderOpened /></el-icon>
+            <p class="text-white">
+              {{ elem.source.name }} - {{ elem.destination.name }}
+            </p>
             <p class="text-center text-white">
               {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
             </p>
@@ -402,14 +413,16 @@ import {
   processReplenishmentOrder,
 } from '@/modules/Replenishment/controller'
 import { IReplenishment } from '@/modules/Replenishment/types.ts'
-import { getCustomers } from '@/modules/UserController/controller'
+import { getSuppliers } from '@/modules/UserController/controller'
 import {
   ISuppliers,
   ITemplateProducts,
 } from '@/modules/UserController/types.ts'
+import { useMainStore } from '@/store'
 
 const fullscreen = ref(false)
 const { width } = useWindowSize()
+const store = useMainStore()
 const suppliersList: Ref<ISuppliers[] | undefined> = ref()
 const locationsList: Ref<IOffice[] | undefined> = ref()
 const products: Ref<IProduct[] | undefined> = ref()
@@ -499,6 +512,7 @@ const innerDialogUpdate = (item: IProduct) => {
 }
 const addProduct = async (status: string) => {
   if (quantity.value && costPrice.value && salePrice.value) {
+    store.loading = true
     if (status === 'update') {
       await addOrderItem({
         productId: product.value.id,
@@ -520,6 +534,7 @@ const addProduct = async (status: string) => {
     })
     innerVisibleCreate.value = false
     innerVisibleUpdate.value = false
+    store.loading = false
   }
 }
 const removeItemCreate = (item) => {
@@ -547,6 +562,7 @@ const deleteTempOrder = async (item: IReplenishment) => {
 }
 
 const saveCreateProducts = async () => {
+  store.loading = true
   order.items = templateProducts.value.map((el) => {
     return {
       productId: el.productId,
@@ -565,6 +581,7 @@ const saveCreateProducts = async () => {
     if (el.status === 'Completed') return el
   })
   dialogCreate.value = false
+  store.loading = false
 }
 const saveUpdateProducts = () => {
   dialogUpdate.value = false
@@ -576,6 +593,7 @@ const processReplenishment = async (item: IReplenishment) => {
     type: 'warning',
   })
     .then(async () => {
+      store.loading = true
       ElMessage({
         type: 'success',
         message: 'Process completed',
@@ -595,6 +613,9 @@ const processReplenishment = async (item: IReplenishment) => {
         message: 'Process canceled',
       })
     })
+    .finally(() => {
+      store.loading = false
+    })
 }
 const viewOrders = (item: IReplenishment) => {
   dialogView.value = true
@@ -602,7 +623,7 @@ const viewOrders = (item: IReplenishment) => {
 }
 
 onMounted(async () => {
-  suppliersList.value = await getCustomers()
+  suppliersList.value = await getSuppliers()
   locationsList.value = await getOffices()
   products.value = await getProducts()
   allReplenishments.value = await getReplenishmentOrders()
