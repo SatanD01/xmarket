@@ -627,7 +627,7 @@ const viewOrders = (item: IReplenishment) => {
   templateProducts.value = item.items
 }
 watch(
-  () => order.destinationId,
+  () => order.sourceId,
   async () => {
     allReplenishments.value = await getSaleOrders()
     tempOrders.value = allReplenishments.value.filter((el) => {
