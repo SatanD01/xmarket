@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="bg-white p-3 mt-5 rounded-lg shadow">
-        <h3 class="text-[24px] font-bold">Загатовки переноса</h3>
+        <h3 class="text-[24px] font-bold">Заготовки переноса</h3>
         <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
           <template v-for="(elem, index) in templateOrders" :key="index">
             <div

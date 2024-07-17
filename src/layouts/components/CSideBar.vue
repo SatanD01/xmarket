@@ -87,7 +87,7 @@
                 to="/return-transaction"
               >
                 <ArchiveRestore />
-                <span class="ms-2 font-semibold"> Возварт товара </span>
+                <span class="ms-2 font-semibold"> Возврат товара </span>
               </router-link>
             </li>
             <li
@@ -126,7 +126,7 @@
               >
                 <Blinds />
                 <span class="ms-2 font-semibold">
-                  Список Магазинов и складов
+                  Список магазинов и складов
                 </span>
               </router-link>
             </li>

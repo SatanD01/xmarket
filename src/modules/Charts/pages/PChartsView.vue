@@ -153,7 +153,7 @@ const headers: Header[] = [
   { text: 'Количество', value: 'quantitySold', sortable: true },
   { text: 'Цена чистая', value: 'totalCostPrice', sortable: true },
   { text: 'Цена продажи', value: 'totalSalePrice', sortable: true },
-  { text: 'Прибль', value: 'totalProfit', sortable: true },
+  { text: 'Прибыль', value: 'totalProfit', sortable: true },
 ]
 const items: Item[] = computed(() => {
   return reports.value?.items.map((item) => {
