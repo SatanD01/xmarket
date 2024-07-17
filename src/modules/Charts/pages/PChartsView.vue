@@ -4,32 +4,59 @@
     v-if="reports"
   >
     <h3 class="text-[24px] font-bold mb-3">Отчетность</h3>
+    <div class="grid gap-3 grid-cols-12">
+      <el-select
+        v-model="reportsExportType"
+        size="large"
+        class="col-span-12 md:col-span-2"
+      >
+        <el-option
+          v-for="(item, index) in exportTypes"
+          :label="item.label"
+          :value="item.value"
+          :key="index"
+        />
+      </el-select>
+      <el-date-picker
+        v-model="datePicker"
+        type="date"
+        class="col-span-12 md:col-span-2 !w-full"
+        placeholder="Выберите дату"
+        format="DD/MM/YYYY"
+        :clearable="false"
+        :editable="false"
+        value-format="YYYY-MM-DD"
+        size="large"
+      />
+      <el-button
+        @click="getReports(datePicker)"
+        size="large"
+        type="primary"
+        class="md:w-auto col-span-12 w-full"
+        >Поиск</el-button
+      >
+    </div>
     <div class="flex flex-wrap gap-3">
       <el-input
         placeholder="Поиск"
-        class="mb-3 w-full md:!w-[300px]"
+        class="mb-3 !w-[80%] md:!w-[300px]"
         size="large"
         v-model="searchValue"
       />
-      <el-button size="large" @click="dailyReport" class="!ms-0" type="primary"
-        >Дневной отчет</el-button
-      >
-      <el-button size="large" @click="weeklyReport" class="!ms-0" type="primary"
-        >Недельный отчет</el-button
-      >
       <el-button
         size="large"
-        @click="monthlyReport"
-        class="!ms-0"
+        @click="scanDialogOpen"
         type="primary"
-        >Месячный отчет</el-button
-      >
+        class="!ms-0 mb-3 !p-2"
+        ><QrCode
+      /></el-button>
     </div>
     <Vue3EasyDataTable
+      id="my-spreadsheet"
       buttons-pagination
       :headers="headers"
       class="overflow-y-auto"
-      :items="items"
+      :items="allItems"
       :search-field="[
         'id',
         'name',
@@ -46,7 +73,7 @@
       :search-value="searchValue"
     >
       <template #item-image="item">
-        <div class="py-3">
+        <div class="py-3" v-if="item.id">
           <el-image
             style="width: 80px; height: 60px"
             :src="`data:image/jpeg;base64,${item.image}`"
@@ -60,18 +87,31 @@
         </div>
       </template>
     </Vue3EasyDataTable>
-    <el-button type="primary" class="w-full !ms-0"
+    <el-button type="primary" class="w-full !ms-0" @click="exportToCSV"
       ><ClipboardMinus />
       <span class="ms-2 text-wrap !leading-4"
-        >Экспортровать дневную прибль</span
+        >Экспортровать отчет</span
       ></el-button
     >
+    <el-dialog
+      v-model="scanDialog"
+      title="Сканер бар кода"
+      :align-center="width < 768"
+      :width="width > 768 ? 500 : 300"
+    >
+      <div>
+        <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
-import { ClipboardMinus } from 'lucide-vue-next'
-import { computed, onMounted, ref } from 'vue'
+import { ClipboardMinus, QrCode } from 'lucide-vue-next'
+import { MaskInput } from 'maska'
+import { computed, nextTick, onMounted, ref } from 'vue'
+import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
+import { toast } from 'vue3-toastify'
 
 import {
   getDailyReport,
@@ -81,6 +121,22 @@ import {
 
 const reports = ref(null)
 const searchValue = ref('')
+const datePicker = ref('')
+const reportsExportType = ref('daily')
+const exportTypes = ref([
+  {
+    label: 'Дневной',
+    value: 'daily',
+  },
+  {
+    label: 'Недельный',
+    value: 'weekly',
+  },
+  {
+    label: 'Месячный',
+    value: 'monthly',
+  },
+])
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },
@@ -100,7 +156,7 @@ const headers: Header[] = [
   { text: 'Прибль', value: 'totalProfit', sortable: true },
 ]
 const items: Item[] = computed(() => {
-  return reports.value.items.map((item) => {
+  return reports.value?.items.map((item) => {
     return {
       id: item.product.id,
       image: item.product.image,
@@ -121,25 +177,129 @@ const items: Item[] = computed(() => {
     }
   })
 })
+const scanDialog = ref(false)
+const totalProfitPrice = computed(() => {
+  return {
+    pure: items.value?.reduce((total, el) => total + el?.totalCostPrice, 0),
+    sale: items.value?.reduce((total, el) => total + el?.totalSalePrice, 0),
+    profit: items.value?.reduce((total, el) => total + el?.totalProfit, 0),
+  }
+})
 
-const totalProfitPrice = computed(() =>
-  items.value?.reduce((total, el) => total + el?.totalProfit, 0),
-)
-
-const dailyReport = async () => {
-  reports.value = await getDailyReport()
+const customRow = {
+  id: '',
+  image: '',
+  name: '',
+  description: '',
+  manufacturer: '',
+  origin: '',
+  carModel: '',
+  carYear: '',
+  group: '',
+  partNumber: '',
+  manualCode: '',
+  weight: '',
+  quantitySold: 'Общая сумма:',
+  totalSalePrice: totalProfitPrice.value.sale,
+  totalCostPrice: totalProfitPrice.value.pure,
+  totalProfit: totalProfitPrice.value.profit,
 }
 
-const weeklyReport = async () => {
-  reports.value = await getWeeklyReport()
-}
-const monthlyReport = async () => {
-  reports.value = await getMonthlyReport()
-}
+const allItems = computed(() => [
+  ...items.value,
+  {
+    ...customRow,
+    totalSalePrice: totalProfitPrice.value.sale,
+    totalCostPrice: totalProfitPrice.value.pure,
+    totalProfit: totalProfitPrice.value.profit,
+  },
+])
 
+const getReports = async (time) => {
+  if (datePicker.value) {
+    if (reportsExportType.value === 'daily') {
+      reports.value = await getDailyReport(time)
+    }
+    if (reportsExportType.value === 'weekly') {
+      reports.value = await getWeeklyReport(time)
+    }
+    if (reportsExportType.value === 'monthly') {
+      reports.value = await getMonthlyReport(time)
+    }
+  } else {
+    toast.error('Выберите дату')
+  }
+}
+const getStartOfMonth = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Месяцы начинаются с 0
+
+  return `${year}-${month}-01`
+}
+const onDecode = (result: any) => {
+  searchValue.value = result
+  if (product.product.partNumber) scanDialog.value = false
+}
+const scanDialogOpen = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true })
+    scanDialog.value = true
+  } catch (err) {
+    alert(err)
+  }
+}
+const exportToCSV = () => {
+  const exportHeaders = headers
+    .filter((header) => header.value !== 'image')
+    .map((header) => header.text)
+  const csvData = allItems.value.map((item) => {
+    return [
+      item.id,
+      item.name,
+      item.description,
+      item.manufacturer,
+      item.origin,
+      item.carModel,
+      item.carYear,
+      item.group,
+      item.partNumber,
+      item.manualCode,
+      item.weight,
+      item.quantitySold,
+      item.totalCostPrice,
+      item.totalSalePrice,
+      item.totalProfit,
+    ]
+  })
+
+  const csvContent =
+    'data:text/csv;charset=utf-8,' +
+    exportHeaders.join(';') +
+    '\n' +
+    csvData.map((row) => row.join(';')).join('\n')
+
+  const encodedUri = encodeURI(csvContent)
+  const link = document.createElement('a')
+  link.setAttribute('href', encodedUri)
+  link.setAttribute('download', 'Отчетность.csv')
+  document.body.appendChild(link)
+  link.click()
+}
 onMounted(async () => {
-  reports.value = await getDailyReport()
-  console.log(reports.value.items)
+  const currentDate = getStartOfMonth()
+  reports.value = await getMonthlyReport(currentDate)
+  await nextTick(() => {
+    const inputs = document.querySelectorAll('.el-date-editor .el-input__inner')
+    for (const key of inputs) {
+      if (key) {
+        key?.setAttribute('data-maska', '##/##/####')
+        new MaskInput(key, {
+          mask: (value) => '##/##/####',
+        })
+      }
+    }
+  })
 })
 </script>
 <style scoped></style>
