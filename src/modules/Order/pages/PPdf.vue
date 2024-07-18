@@ -73,8 +73,10 @@ const printTable = async () => {
     document.body.innerHTML = printContents
     window.print()
     document.body.innerHTML = originalContents
-    location.replace('/create-order')
   }
+  setTimeout(() => {
+    router.push('/create-order')
+  }, 500)
 }
 const totalProfitPrice = computed(() => {
   if (!data.value?.items) return { sale: 0 }
@@ -89,6 +91,9 @@ onMounted(async () => {
   const res = await getSaleOrders()
   data.value = res.find((el) => el?.id == route.query?.id)
   await printTable()
+  window.onafterprint = () => {
+    router.push('/create-order')
+  }
 })
 </script>
 
@@ -167,7 +172,7 @@ tfoot .total-value {
     background-color: white;
   }
   header {
-    display: none;
+    display: none !important;
   }
   .printable-area,
   .printable-area * {
@@ -191,6 +196,9 @@ tfoot .total-value {
 @media print and (max-width: 600px) {
   #printableArea {
     zoom: 0.75;
+  }
+  header {
+    display: none !important;
   }
 }
 </style>
