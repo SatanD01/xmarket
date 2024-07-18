@@ -253,7 +253,7 @@ const copyImage = async (base64String) => {
 
 const onDecode = (result: any) => {
   searchValue.value = result
-  if (product.value.product.partNumber) scanDialog.value = false
+  scanDialog.value = false
 }
 const scanDialogOpen = async () => {
   try {

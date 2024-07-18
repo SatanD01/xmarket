@@ -171,11 +171,17 @@
                   class="!w-[150px]"
                   placeholder="Количество"
                   v-model="quantity"
+                  :max="product?.quantity"
+                  type="number"
                 />
+                <p>Max: {{ product?.quantity }}</p>
               </div>
 
               <template #footer>
-                <el-button type="primary" @click="addProduct('create')"
+                <el-button
+                  :disabled="quantity > product.quantity"
+                  type="primary"
+                  @click="addProduct('create')"
                   >Создать</el-button
                 >
               </template>
@@ -517,7 +523,7 @@ const quantity = ref(null)
 const loader = ref(false)
 const onDecode = (result: any) => {
   searchValue.value = result
-  if (product.value.product.partNumber) scanDialog.value = false
+  scanDialog.value = false
 }
 const scanDialogOpen = async () => {
   try {
