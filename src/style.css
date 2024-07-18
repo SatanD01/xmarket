@@ -48,6 +48,9 @@ body {
 }
 
 @media print {
+  body {
+    background: white;
+  }
   header {
     display: none !important;
   }
