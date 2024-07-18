@@ -103,7 +103,10 @@
     </div>
     <el-dialog v-model="dialog">
       <div class="py-6 grid grid-cols-2 gap-6">
-        <el-select v-model="order.destinationId">
+        <el-select
+          v-model="order.destinationId"
+          :class="{ error: v$.destinationId.$error }"
+        >
           <el-option
             v-for="(item, index) in locations"
             :key="index"
@@ -113,7 +116,10 @@
             {{ item.name }}
           </el-option>
         </el-select>
-        <el-select v-model="order.sourceId">
+        <el-select
+          v-model="order.sourceId"
+          :class="{ error: v$.sourceId.$error }"
+        >
           <el-option
             v-for="(item, index) in customers"
             :key="index"
@@ -127,16 +133,36 @@
           v-model="order.quantity"
           type="number"
           placeholder="Количество"
+          :class="{ error: v$.quantity.$error }"
         />
-        <pre> {{ currentOrder }} </pre>
+        <el-input
+          v-model="order.costPrice"
+          type="number"
+          placeholder="Cost Price"
+          :class="{ error: v$.costPrice.$error }"
+        />
+        <el-input
+          v-model="order.salePrice"
+          type="number"
+          placeholder="Sale Price"
+          :class="{ error: v$.salePrice.$error }"
+        />
       </div>
-      <el-button type="primary" @click="returnTransaction">
-        Сделать возврат
-      </el-button>
+      <div class="flex justify-end">
+        <el-button
+          type="primary"
+          @click="returnTransaction"
+          :loading="submitLoading"
+        >
+          Сделать возврат
+        </el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
 <script setup lang="ts">
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { QrCode } from 'lucide-vue-next'
@@ -162,13 +188,23 @@ const searchValue = ref('')
 const customers = ref([])
 const locations = ref([])
 const scanDialog = ref(false)
+const submitLoading = ref(false)
 
 const order = reactive({
   sourceId: null,
   destinationId: null,
   quantity: '',
+  costPrice: '',
+  salePrice: '',
 })
-
+const rules = {
+  sourceId: { required },
+  destinationId: { required },
+  quantity: { required },
+  costPrice: { required },
+  salePrice: { required },
+}
+const v$ = useVuelidate(rules, order)
 const loading = ref(false)
 const currentOrder = ref(null)
 const headers: Header[] = [
@@ -235,18 +271,27 @@ const downloadImage = (img) => {
   link.click()
 }
 const returnTransaction = async () => {
+  v$.value.$touch()
+  if (v$.value.$invalid) return
+  submitLoading.value = true
   try {
     await useApi().$post('Inventory/AddSaleReturnTransaction', {
       productId: currentOrder.value?.id,
       quantity: order?.quantity,
-      // costPrice: data?.costPrice,
-      // salePrice: data?.salePrice,
+      costPrice: order?.costPrice,
+      salePrice: order?.salePrice,
       sourceId: order.sourceId,
       destinationId: order.destinationId,
     })
-    // console.log(res.data)
+    dialog.value = false
+    for (let key in order) {
+      order[key] = ''
+    }
+    v$.value.$reset()
   } catch (err) {
     console.log(err)
+  } finally {
+    submitLoading.value = false
   }
 }
 
