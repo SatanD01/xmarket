@@ -73,14 +73,14 @@ const printTable = async () => {
     if (width < 768) {
       setTimeout(() => {
         window.print()
-      }, 4500)
+      }, 1500)
     } else {
       window.print()
     }
   }
   setTimeout(() => {
     router.push({ name: 'PCreateOrder' })
-  }, 500)
+  }, 2500)
 }
 const totalProfitPrice = computed(() => {
   if (!data.value?.items) return { sale: 0 }
