@@ -171,11 +171,16 @@
                   class="!w-[150px]"
                   placeholder="Количество"
                   v-model="quantity"
+                  :max="product?.quantity"
                 />
+                <p>Max: {{ product?.quantity }}</p>
               </div>
 
               <template #footer>
-                <el-button type="primary" @click="addProduct('create')"
+                <el-button
+                  :disabled="quantity > product.quantity"
+                  type="primary"
+                  @click="addProduct('create')"
                   >Создать</el-button
                 >
               </template>
