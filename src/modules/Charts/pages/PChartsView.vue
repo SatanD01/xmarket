@@ -95,12 +95,17 @@
     >
     <el-dialog
       v-model="scanDialog"
+      @closed="stopVideo"
       title="Сканер бар кода"
       :align-center="width < 768"
       :width="width > 768 ? 500 : 300"
     >
       <div>
-        <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        <StreamBarcodeReader
+          v-if="scanDialog"
+          @decode="onDecode"
+          @load="onLoaded"
+        />
       </div>
     </el-dialog>
   </div>
@@ -137,6 +142,13 @@ const exportTypes = ref([
     value: 'monthly',
   },
 ])
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
+  }
+}
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
   { text: 'Фото', value: 'image' },

@@ -52,12 +52,17 @@
       </div>
       <el-dialog
         v-model="scanDialog"
+        @closed="stopVideo"
         title="Сканер бар кода"
         :align-center="width < 768"
         :width="width > 768 ? 500 : 300"
       >
         <div>
-          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+          <StreamBarcodeReader
+            v-if="scanDialog"
+            @decode="onDecode"
+            @load="onLoaded"
+          />
         </div>
       </el-dialog>
       <el-dialog
@@ -513,6 +518,13 @@ const v$ = useVuelidate(rules, order)
 const onDecode = (result: any) => {
   searchValue.value = result
   scanDialog.value = false
+}
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
+  }
 }
 const scanDialogOpen = async () => {
   try {

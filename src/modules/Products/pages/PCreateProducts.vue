@@ -114,9 +114,14 @@
       title="Сканер бар кода"
       width="500"
       :fullscreen="width < 768"
+      @closed="stopVideo"
     >
       <div>
-        <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+        <StreamBarcodeReader
+          v-if="scanDialog"
+          @decode="onDecode"
+          @load="onLoaded"
+        />
       </div>
     </el-dialog>
   </div>
@@ -153,6 +158,13 @@ const product = reactive<IProduct>({
   weight: '',
   imageString: '',
 })
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
+  }
+}
 const rules = {
   name: { required },
   origin: { required },

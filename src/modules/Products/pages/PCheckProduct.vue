@@ -110,9 +110,14 @@
         title="Сканер бар кода"
         :align-center="width < 768"
         :width="width > 768 ? 500 : 300"
+        @closed="stopVideo"
       >
         <div>
-          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+          <StreamBarcodeReader
+            v-if="scanDialog"
+            @decode="onDecode"
+            @load="onLoaded"
+          />
         </div>
       </el-dialog>
     </div>
@@ -140,7 +145,13 @@ const searchValue = ref('')
 const officesList = ref([])
 const office = ref()
 const products: Ref<IProduct[] | undefined> = ref()
-
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
+  }
+}
 const getAvailableProduct = async () => {
   products.value = await getAvailableProducts(office.value)
 }

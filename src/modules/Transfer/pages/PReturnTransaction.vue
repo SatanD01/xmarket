@@ -9,10 +9,15 @@
         v-model="scanDialog"
         title="Сканер бар кода"
         :align-center="width < 768"
+        @closed="stopVideo"
         :width="width > 768 ? 500 : 300"
       >
         <div>
-          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+          <StreamBarcodeReader
+            v-if="scanDialog"
+            @decode="onDecode"
+            @load="onLoaded"
+          />
         </div>
       </el-dialog>
       <el-input
@@ -104,11 +109,12 @@
     <el-dialog v-model="dialog">
       <div class="py-6 grid grid-cols-2 gap-6">
         <el-select
-          v-model="order.destinationId"
-          :class="{ error: v$.destinationId.$error }"
+          v-model="order.sourceId"
+          placeholder="Клиент"
+          :class="{ error: v$.sourceId.$error }"
         >
           <el-option
-            v-for="(item, index) in locations"
+            v-for="(item, index) in customers"
             :key="index"
             :value="item.id"
             :label="item.name"
@@ -117,11 +123,13 @@
           </el-option>
         </el-select>
         <el-select
-          v-model="order.sourceId"
-          :class="{ error: v$.sourceId.$error }"
+          v-model="order.destinationId"
+          placeholder="Магазин"
+          :class="{ error: v$.destinationId.$error }"
         >
           <el-option
-            v-for="(item, index) in customers"
+            v-for="(item, index) in locations"
+            v-show="item.type == 'Store'"
             :key="index"
             :value="item.id"
             :label="item.name"
@@ -138,13 +146,13 @@
         <el-input
           v-model="order.costPrice"
           type="number"
-          placeholder="Cost Price"
+          placeholder="Чистая цена"
           :class="{ error: v$.costPrice.$error }"
         />
         <el-input
           v-model="order.salePrice"
           type="number"
-          placeholder="Sale Price"
+          placeholder="Цена продажи"
           :class="{ error: v$.salePrice.$error }"
         />
       </div>
@@ -197,6 +205,13 @@ const order = reactive({
   costPrice: '',
   salePrice: '',
 })
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
+  }
+}
 const rules = {
   sourceId: { required },
   destinationId: { required },

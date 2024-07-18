@@ -53,12 +53,17 @@
       <div v-if="products">
         <el-dialog
           v-model="scanDialog"
+          @closed="stopVideo"
           title="Сканер бар кода"
           :align-center="width < 768"
           :width="width > 768 ? 500 : 300"
         >
           <div>
-            <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+            <StreamBarcodeReader
+              v-if="scanDialog"
+              @decode="onDecode"
+              @load="onLoaded"
+            />
           </div>
         </el-dialog>
         <el-dialog
@@ -467,6 +472,13 @@ const tempHeaders: Header[] = [
   { text: 'Цена', value: 'salePrice' },
   { text: 'Управление', value: 'opera' },
 ]
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
+  }
+}
 const tempHeadersView: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
