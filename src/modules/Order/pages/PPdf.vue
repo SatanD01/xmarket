@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -65,10 +66,17 @@ const route = useRoute()
 const printableArea = ref(null)
 const router = useRouter()
 const data = ref(null)
+const { width } = useWindowSize()
 const printTable = async () => {
   await nextTick()
   if (printableArea.value) {
-    window.print()
+    if (width < 768) {
+      setTimeout(() => {
+        window.print()
+      }, 4500)
+    } else {
+      window.print()
+    }
   }
   setTimeout(() => {
     router.push({ name: 'PCreateOrder' })
