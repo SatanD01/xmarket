@@ -182,7 +182,7 @@ const downloadImage = (img) => {
 
 const onDecode = (result: any) => {
   searchValue.value = result
-  if (product.product.partNumber) scanDialog.value = false
+  scanDialog.value = false
 }
 const onLoaded = (error: any) => {
   console.log(error)

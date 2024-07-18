@@ -239,7 +239,7 @@ const getStartOfMonth = () => {
 }
 const onDecode = (result: any) => {
   searchValue.value = result
-  if (product.product.partNumber) scanDialog.value = false
+  scanDialog.value = false
 }
 const scanDialogOpen = async () => {
   try {

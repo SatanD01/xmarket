@@ -194,7 +194,7 @@ const createProductBtn = async () => {
 
 const onDecode = (result: any) => {
   product.partNumber = result
-  if (product.partNumber) scanDialog.value = false
+  scanDialog.value = false
 }
 const onLoaded = (error: any) => {
   console.log(error)

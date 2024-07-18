@@ -318,7 +318,7 @@ const rules = {
 }
 const onDecode = (result: any) => {
   searchValue.value = result
-  if (product.partNumber) scanDialog.value = false
+  scanDialog.value = false
 }
 const onLoaded = (error: any) => {
   console.log(error)
@@ -331,6 +331,14 @@ const scanDialogOpen = async () => {
     alert(err)
   }
 }
+
+const stopStream = () => {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach((track) => track.stop())
+    mediaStream = null
+  }
+}
+
 const v$ = useVuelidate(rules, state)
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
