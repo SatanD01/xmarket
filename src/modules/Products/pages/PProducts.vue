@@ -215,13 +215,18 @@
         >
       </el-dialog>
       <el-dialog
+        @closed="stopVideo"
         v-model="scanDialog"
         title="Сканер бар кода"
         :align-center="width < 768"
         :width="width > 768 ? 500 : 300"
       >
         <div>
-          <StreamBarcodeReader @decode="onDecode" @load="onLoaded" />
+          <StreamBarcodeReader
+            v-if="scanDialog"
+            @decode="onDecode"
+            @load="onLoaded"
+          />
         </div>
       </el-dialog>
     </div>
@@ -332,10 +337,11 @@ const scanDialogOpen = async () => {
   }
 }
 
-const stopStream = () => {
-  if (mediaStream) {
-    mediaStream.getTracks().forEach((track) => track.stop())
-    mediaStream = null
+function stopVideo() {
+  if (window.localStream) {
+    window.localStream.getTracks().forEach((track) => {
+      track.stop()
+    })
   }
 }
 
