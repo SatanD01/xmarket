@@ -67,6 +67,9 @@
               >
                 <el-icon size="22" color="white"><FolderOpened /></el-icon>
                 <p class="text-center text-white">
+                  {{ elem?.source?.name }} - {{ elem?.destination?.name }}
+                </p>
+                <p class="text-center text-white">
                   {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
                 </p>
                 <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
@@ -76,6 +79,7 @@
                 @click="processTransferOrder(elem?.id)"
                 type="primary"
                 plain
+                :loading="processLoading"
                 class="mt-1 w-full"
                 >Oбработка</el-button
               >
@@ -101,6 +105,9 @@
                 class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
               >
                 <el-icon size="22" color="white"><FolderOpened /></el-icon>
+                <p class="text-center text-white">
+                  {{ elem?.source?.name }} - {{ elem?.destination?.name }}
+                </p>
                 <p class="text-center text-white">
                   {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
                 </p>
@@ -153,6 +160,7 @@
           size="large"
           @click="confirmTransaction"
           class="mt-5"
+          :loading="createLoading"
         >
           Сохранить
         </el-button>
@@ -299,6 +307,8 @@ const viewDialog = ref(false)
 const searchValue = ref('')
 const dialogUpdate = ref(false)
 const currentOrder = ref(null)
+const processLoading = ref(false)
+const createLoading = ref(false)
 const tempHeaders: Header[] = [
   { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
@@ -342,6 +352,7 @@ const addTransaction = async () => {
 }
 const confirmTransaction = async () => {
   try {
+    createLoading.value = true
     order.items = order.items.filter((el) => el.quantity)
     const res = await useApi().$post('Inventory/AddTransferOrder', order)
     await getTransferOrders()
@@ -349,6 +360,8 @@ const confirmTransaction = async () => {
     console.log(res)
   } catch (err) {
     console.log(err)
+  } finally {
+    createLoading.value = false
   }
 }
 const getProductByWarehouse = async () => {
@@ -373,7 +386,6 @@ const openDialogUpdate = (item, view?: boolean) => {
     dialogUpdate.value = true
   }
   currentOrder.value = item
-  console.log(item, 'item')
   order.sourceId = item.sourceId
   getProductByWarehouse()
 }
@@ -386,13 +398,17 @@ const getTransferOrders = async () => {
   }
 }
 const processTransferOrder = async (id: number) => {
+  processLoading.value = true
   try {
     await useApi().$post('Inventory/ProcessTransferOrder', {
       id: id,
     })
     await getTransferOrders()
+    await getProductByWarehouse()
   } catch (err) {
     console.log(err)
+  } finally {
+    processLoading.value = false
   }
 }
 const deleteItem = async (id: number, orderId: number) => {
