@@ -68,14 +68,10 @@ const data = ref(null)
 const printTable = async () => {
   await nextTick()
   if (printableArea.value) {
-    const printContents = printableArea.value.innerHTML
-    const originalContents = document.body.innerHTML
-    document.body.innerHTML = printContents
     window.print()
-    document.body.innerHTML = originalContents
   }
   setTimeout(() => {
-    router.push('/create-order')
+    router.push({ name: 'PCreateOrder' })
   }, 500)
 }
 const totalProfitPrice = computed(() => {
@@ -91,9 +87,9 @@ onMounted(async () => {
   const res = await getSaleOrders()
   data.value = res.find((el) => el?.id == route.query?.id)
   await printTable()
-  window.onafterprint = () => {
-    router.push('/create-order')
-  }
+  // window.onafterprint = () => {
+  //   router.push('/create-order')
+  // }
 })
 </script>
 
@@ -164,41 +160,5 @@ tfoot .total-label {
 tfoot .total-value {
   text-align: center;
   background-color: #f2f2f2;
-}
-
-@media print {
-  body {
-    visibility: hidden;
-    background-color: white;
-  }
-  header {
-    display: none !important;
-  }
-  .printable-area,
-  .printable-area * {
-    visibility: visible;
-  }
-  .printable-area {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-  }
-  .header-contacts,
-  .header-model {
-    font-size: 14px;
-  }
-}
-
-@media print and (max-width: 600px) {
-  #printableArea {
-    zoom: 0.75;
-  }
-  header {
-    display: none !important;
-  }
 }
 </style>

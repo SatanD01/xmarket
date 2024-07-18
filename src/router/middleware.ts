@@ -10,10 +10,10 @@ export async function checkRouteIsExist(to) {
   if (['404', '403', '500'].includes((to.name || '').toString())) {
     return true
   }
-  if (user.value && to.name === 'Login') return { name: 'Dashboard' }
   if (!token && to.name !== 'Login') return { name: 'Login' }
   if (token && !user.value) {
     await store.fetchUser()
   }
+  if (user.value && to.name === 'Login') return { name: 'Dashboard' }
   return true
 }
