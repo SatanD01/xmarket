@@ -2,6 +2,7 @@
   <div
     v-if="data"
     ref="printableArea"
+    id="printableArea"
     class="bg-white p-3 shadow rounded-lg printable-area"
   >
     <table class="auto-parts-table">
@@ -56,14 +57,13 @@
 </template>
 
 <script setup lang="ts">
-import { Printer } from 'lucide-vue-next'
 import { computed, nextTick, onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { getSaleOrders } from '@/modules/Order/controller'
 const route = useRoute()
 const printableArea = ref(null)
-
+const router = useRouter()
 const data = ref(null)
 const printTable = async () => {
   await nextTick()
@@ -74,8 +74,6 @@ const printTable = async () => {
     window.print()
     document.body.innerHTML = originalContents
     location.replace('/create-order')
-  } else {
-    alert('error')
   }
 }
 const totalProfitPrice = computed(() => {
@@ -168,6 +166,9 @@ tfoot .total-value {
     visibility: hidden;
     background-color: white;
   }
+  header {
+    display: none;
+  }
   .printable-area,
   .printable-area * {
     visibility: visible;
@@ -184,6 +185,12 @@ tfoot .total-value {
   .header-contacts,
   .header-model {
     font-size: 14px;
+  }
+}
+
+@media print and (max-width: 600px) {
+  #printableArea {
+    zoom: 0.75;
   }
 }
 </style>
