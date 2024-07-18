@@ -172,6 +172,7 @@
                   placeholder="Количество"
                   v-model="quantity"
                   :max="product?.quantity"
+                  type="number"
                 />
                 <p>Max: {{ product?.quantity }}</p>
               </div>
