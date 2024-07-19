@@ -357,7 +357,6 @@ const confirmTransaction = async () => {
     const res = await useApi().$post('Inventory/AddTransferOrder', order)
     await getTransferOrders()
     selectDialog.value = false
-    console.log(res)
   } catch (err) {
     console.log(err)
   } finally {

@@ -84,7 +84,6 @@ const createOffice = async () => {
   await useApi()
     .$post('locations/addLocation', officeData)
     .then((res) => {
-      console.log(res)
       router.push({ name: 'Offices' })
       toast.success('Успешно добавлен.')
     })

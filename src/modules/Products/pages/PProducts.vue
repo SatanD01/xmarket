@@ -420,7 +420,6 @@ const deleteBtn = (id: number) => {
 }
 const onFileChange = (e) => {
   const file = e.target.files[0]
-  console.log(e.target.files[0])
 
   new Compressor(file, {
     quality: 0.6,
@@ -441,7 +440,6 @@ const onFileChange = (e) => {
 
 onMounted(async () => {
   products.value = await getProducts()
-  console.log(products.value)
 })
 </script>
 

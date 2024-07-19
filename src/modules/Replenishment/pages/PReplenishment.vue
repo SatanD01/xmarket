@@ -544,7 +544,6 @@ const openDialogUpdate = (item) => {
   dialogUpdate.value = true
   templateProducts.value = item.items
   currentOrder.value = item
-  console.log(item)
 }
 const innerDialogCreate = (item: IProduct) => {
   innerVisibleCreate.value = true

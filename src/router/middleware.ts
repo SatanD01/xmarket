@@ -14,6 +14,9 @@ export async function checkRouteIsExist(to) {
   if (token && !user.value) {
     await store.fetchUser()
   }
+
+  if (!to.meta?.roles?.includes(user.value?.role)) return { name: 'Dashboard' }
+
   if (user.value && to.name === 'Login') return { name: 'Dashboard' }
   return true
 }

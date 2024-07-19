@@ -173,7 +173,6 @@ const rules = {
 const file = ref('')
 const onFileChange = (e) => {
   file.value = e.target.files[0]
-  console.log(e.target.files[0])
 
   new Compressor(file.value, {
     quality: 0.6,
@@ -198,7 +197,6 @@ const createProductBtn = async () => {
     product.imageString = product.imageString.split(',')[1]
     const res = await createProduct(product)
     await router.push({ name: 'Products' })
-    console.log(res)
   } catch (error) {
     console.log(error)
   }

@@ -163,7 +163,6 @@ const updateOffice = async () => {
     .$post('/locations/updateLocation', officeData)
     .then((res) => {
       dialogVisible.value = false
-      console.log(res)
     })
     .catch((err) => {
       console.log(err)

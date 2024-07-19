@@ -340,6 +340,19 @@
             :headers="tempHeadersView"
             :items="templateProducts"
           />
+          <RouterLink
+            :to="{
+              name: 'PPdf',
+              query: {
+                id: currentOrder?.id,
+              },
+            }"
+            class="py-2 float-end"
+          >
+            <el-button type="primary" class="w-[100px] mt-3">
+              <Printer :size="15" class="me-2" /> Печать</el-button
+            >
+          </RouterLink>
         </el-dialog>
       </div>
     </div>
@@ -563,7 +576,6 @@ const openCreateModal = async () => {
   if (v$.value.$invalid) return
   templateProducts.value = []
   loader.value = true
-  console.log(order)
   products.value = await getAllProducts(order.sourceId)
   dialogCreate.value = true
   loader.value = false
@@ -572,9 +584,7 @@ const openDialogUpdate = async (item) => {
   dialogUpdate.value = true
   templateProducts.value = item.items
   currentOrder.value = item
-  console.log(item)
   products.value = await getAllProducts(item.sourceId)
-  console.log(item)
 }
 const innerDialogCreate = (item: IProduct) => {
   innerVisibleCreate.value = true
@@ -691,9 +701,10 @@ const processReplenishment = async (item: IReplenishment) => {
       store.loading = false
     })
 }
-const viewOrders = (item: IReplenishment) => {
+const viewOrders = (item) => {
   dialogView.value = true
   templateProducts.value = item.items
+  currentOrder.value = item
 }
 watch(
   () => order.sourceId,

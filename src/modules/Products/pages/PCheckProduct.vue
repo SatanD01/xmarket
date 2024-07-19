@@ -231,7 +231,6 @@ onMounted(async () => {
   officesList.value = await getOffices()
   office.value = officesList.value.find((el) => el.type === 'Store')?.id
   products.value = await getAvailableProducts(office.value)
-  console.log(products.value)
 })
 </script>
 
