@@ -325,35 +325,6 @@
             </el-dialog>
           </div>
         </el-dialog>
-        <el-dialog
-          :fullscreen="fullscreen"
-          align-center
-          v-model="dialogView"
-          width="80%"
-        >
-          <Vue3EasyDataTable
-            hover:shadow-xl
-            transition
-            duration-200
-            ease-in-out
-            class="mt-4 h-[35%] overflow-y-scroll"
-            :headers="tempHeadersView"
-            :items="templateProducts"
-          />
-          <RouterLink
-            :to="{
-              name: 'PPdf',
-              query: {
-                id: currentOrder?.id,
-              },
-            }"
-            class="py-2 float-end"
-          >
-            <el-button type="primary" class="w-[100px] mt-3">
-              <Printer :size="15" class="me-2" /> Печать</el-button
-            >
-          </RouterLink>
-        </el-dialog>
       </div>
     </div>
 
@@ -425,6 +396,35 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :fullscreen="fullscreen"
+      align-center
+      v-model="dialogView"
+      width="80%"
+    >
+      <Vue3EasyDataTable
+        hover:shadow-xl
+        transition
+        duration-200
+        ease-in-out
+        class="mt-4 h-[35%] overflow-y-scroll"
+        :headers="tempHeadersView"
+        :items="templateProducts"
+      />
+      <RouterLink
+        :to="{
+          name: 'PPdf',
+          query: {
+            id: currentOrder?.id,
+          },
+        }"
+        class="py-2 float-end"
+      >
+        <el-button type="primary" class="w-[100px] mt-3">
+          <Printer :size="15" class="me-2" /> Печать</el-button
+        >
+      </RouterLink>
+    </el-dialog>
   </div>
   <!--  <CTableSkeleton v-else />-->
 </template>
