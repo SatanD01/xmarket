@@ -347,7 +347,7 @@
       </el-dialog>
     </div>
 
-    <div class="bg-white p-3 mt-5 rounded-lg shadow">
+    <div v-if="tempOrders.length" class="bg-white p-3 mt-5 rounded-lg shadow">
       <h3 class="text-[24px] font-bold">Заготовки заказов</h3>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div
@@ -388,7 +388,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-white p-3 mt-5 rounded-lg shadow">
+    <div v-if="completedOrders" class="bg-white p-3 mt-5 rounded-lg shadow">
       <h3 class="text-[24px] font-bold">Завершенные заказы</h3>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
         <div

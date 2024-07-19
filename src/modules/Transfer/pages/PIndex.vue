@@ -53,7 +53,10 @@
           </el-button>
         </div>
       </div>
-      <div class="bg-white p-3 mt-5 rounded-lg shadow">
+      <div
+        v-if="templateOrders.some((el) => el.status === 'Template')"
+        class="bg-white p-3 mt-5 rounded-lg shadow"
+      >
         <h3 class="text-[24px] font-bold">Заготовки переноса</h3>
         <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
           <template v-for="(elem, index) in templateOrders" :key="index">
@@ -95,7 +98,10 @@
           </template>
         </div>
       </div>
-      <div class="bg-white p-3 mt-5 rounded-lg shadow">
+      <div
+        v-if="templateOrders.length"
+        class="bg-white p-3 mt-5 rounded-lg shadow"
+      >
         <h3 class="text-[24px] font-bold">Завершенные переносы</h3>
         <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
           <template v-for="(elem, index) in templateOrders" :key="index">
@@ -150,6 +156,7 @@
               type="number"
               v-model="order.items[item.index - 1].quantity"
               :max="item.quantity"
+              :min="1"
               placeholder="Количество"
               @input="onInputChange(item.index - 1, item.quantity)"
             />
@@ -198,6 +205,7 @@
             type="number"
             v-model="order.items[item.index - 1].quantity"
             :max="item.quantity"
+            :min="0"
             placeholder="Введите количество"
             @input="onInputChange(item.index - 1, item.quantity)"
           />
@@ -234,6 +242,7 @@
               type="number"
               v-model="order.items[item.index - 1].quantity"
               :max="item.quantity"
+              :min="0"
               placeholder="Количество"
               @input="onInputChange(item.index - 1, item.quantity)"
             />
@@ -342,7 +351,7 @@ const rules = {
 const v$ = useVuelidate(rules, order)
 const onInputChange = (index: number, count: number) => {
   if (order.items[index].quantity > count) {
-    order.items[index].quantity = count
+    order.items[index].quantity = Number(count)
   }
 }
 const addTransaction = async () => {
@@ -353,7 +362,7 @@ const addTransaction = async () => {
 const confirmTransaction = async () => {
   try {
     createLoading.value = true
-    order.items = order.items.filter((el) => el.quantity)
+    order.items = order.items.filter((el) => Number(el.quantity))
     const res = await useApi().$post('Inventory/AddTransferOrder', order)
     await getTransferOrders()
     selectDialog.value = false
@@ -432,7 +441,7 @@ const updateTransferOrder = async (index: number, id: number, product) => {
     ...product,
     id: res.data?.id,
     orderId: res.data?.orderId,
-    quantity: order.items[index].quantity,
+    quantity: Number(order.items[index].quantity),
   })
 }
 

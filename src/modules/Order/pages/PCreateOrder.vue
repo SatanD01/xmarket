@@ -177,6 +177,7 @@
                   placeholder="Количество"
                   v-model="quantity"
                   :max="product?.quantity"
+                  :min="0"
                   type="number"
                 />
                 <p>Max: {{ product?.quantity }}</p>
@@ -327,75 +328,74 @@
         </el-dialog>
       </div>
     </div>
-
-    <div
-      v-show="order.destinationId && templateProducts"
-      class="bg-white p-3 mt-5 rounded-lg shadow"
-    >
-      <h3 class="text-[24px] font-bold">Заготовки заказов</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <div
-          v-for="(elem, index) in tempOrders"
-          :key="index"
-          class="cursor-pointer relative"
-        >
+    <div v-if="tempOrders && completedOrders">
+      <div v-if="tempOrders.length" class="bg-white p-3 mt-5 rounded-lg shadow">
+        <h3 class="text-[24px] font-bold">Заготовки заказов</h3>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
           <div
-            @click="openDialogUpdate(elem)"
-            class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            v-for="(elem, index) in tempOrders"
+            :key="index"
+            class="cursor-pointer relative"
           >
-            <el-icon size="22" color="white"><FolderOpened /></el-icon>
-            <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-            </p>
-            <p class="text-white">ID: {{ elem.id }}</p>
-          </div>
+            <div
+              @click="openDialogUpdate(elem)"
+              class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            >
+              <el-icon size="22" color="white"><FolderOpened /></el-icon>
+              <p class="text-center text-white">
+                {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
+              </p>
+              <p class="text-white">ID: {{ elem.id }}</p>
+            </div>
 
-          <el-button
-            @click="processReplenishment(elem)"
-            type="primary"
-            plain
-            class="mt-1 w-full"
-            :loading="store.loading"
-            >Oбработка</el-button
-          >
-          <el-button
-            type="danger"
-            :icon="Delete"
-            size="small"
-            circle
-            @click="deleteTempOrder(elem)"
-            class="absolute top-[-2px] right-[-2px]"
-          />
+            <el-button
+              @click="processReplenishment(elem)"
+              type="primary"
+              plain
+              class="mt-1 w-full"
+              :loading="store.loading"
+              >Oбработка</el-button
+            >
+            <el-button
+              type="danger"
+              :icon="Delete"
+              size="small"
+              circle
+              @click="deleteTempOrder(elem)"
+              class="absolute top-[-2px] right-[-2px]"
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      v-show="order.destinationId && templateProducts"
-      class="bg-white p-3 mt-5 rounded-lg shadow"
-    >
-      <h3 class="text-[24px] font-bold">Завершенные заказы</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <div
-          v-for="(elem, index) in completedOrders"
-          :key="index"
-          class="cursor-pointer"
-        >
+      <div
+        v-if="completedOrders.length"
+        class="bg-white p-3 mt-5 rounded-lg shadow"
+      >
+        <h3 class="text-[24px] font-bold">Завершенные заказы</h3>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
           <div
-            @click="viewOrders(elem)"
-            class="shadow text-[14px] leading-5 p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            v-for="(elem, index) in completedOrders"
+            :key="index"
+            class="cursor-pointer"
           >
-            <el-icon size="22" color="white"><FolderOpened /></el-icon>
-            <p class="text-white">
-              {{ elem.source.name }} - {{ elem.destination.name }}
-            </p>
-            <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-            </p>
-            <p class="text-white">ID: {{ elem.id }}</p>
+            <div
+              @click="viewOrders(elem)"
+              class="shadow text-[14px] leading-5 p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+            >
+              <el-icon size="22" color="white"><FolderOpened /></el-icon>
+              <p class="text-white">
+                {{ elem.source.name }} - {{ elem.destination.name }}
+              </p>
+              <p class="text-center text-white">
+                {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
+              </p>
+              <p class="text-white">ID: {{ elem.id }}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <CTableSceleton v-else />
     <el-dialog
       :fullscreen="fullscreen"
       align-center
@@ -441,6 +441,7 @@ import { computed, onMounted, reactive, Ref, ref, watch } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
 
+import CTableSceleton from '@/components/CTableSceleton.vue'
 import { paymentType } from '@/data'
 import { getOffices } from '@/modules/Offices/controller'
 import { IOffice } from '@/modules/Offices/types.ts'
@@ -708,17 +709,16 @@ const viewOrders = (item) => {
 }
 watch(
   () => order.sourceId,
-  async () => {
-    allReplenishments.value = await getSaleOrders()
-    tempOrders.value = allReplenishments.value.filter((el) => {
-      if (el.status === 'Template') return el
-    })
-    completedOrders.value = allReplenishments.value.filter((el) => {
-      if (el.status === 'Completed') return el
-    })
-  },
+  async () => {},
 )
 onMounted(async () => {
+  allReplenishments.value = await getSaleOrders()
+  tempOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Template') return el
+  })
+  completedOrders.value = allReplenishments.value.filter((el) => {
+    if (el.status === 'Completed') return el
+  })
   suppliersList.value = await getCustomers()
   locationsList.value = await getOffices()
   if (order.sourceId) {
