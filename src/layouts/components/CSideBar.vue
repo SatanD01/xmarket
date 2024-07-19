@@ -30,7 +30,13 @@
         <hr />
         <div class="menu-wrap flex flex-col justify-between">
           <ul class="menu grow">
-            <li>
+            <li
+              v-if="
+                [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                  authStore.user?.role,
+                )
+              "
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in mb-4 flex gap-3 items-center"
@@ -40,7 +46,13 @@
                 <span class="ms-2 font-semibold"> Список товаров </span>
               </router-link>
             </li>
-            <li>
+            <li
+              v-if="
+                [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                  authStore.user?.role,
+                )
+              "
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
@@ -50,7 +62,9 @@
                 <span class="ms-2 font-semibold"> Доступные товары </span>
               </router-link>
             </li>
-            <li>
+            <li
+              v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-2 flex gap-3 items-center"
@@ -60,7 +74,9 @@
                 <span class="ms-2 font-semibold"> Пополнение склада </span>
               </router-link>
             </li>
-            <li>
+            <li
+              v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
@@ -70,7 +86,13 @@
                 <span class="ms-2 font-semibold"> Перенос товара </span>
               </router-link>
             </li>
-            <li>
+            <li
+              v-if="
+                [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                  authStore.user?.role,
+                )
+              "
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
@@ -80,7 +102,13 @@
                 <span class="ms-2 font-semibold"> Создать заказ </span>
               </router-link>
             </li>
-            <li>
+            <li
+              v-if="
+                [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                  authStore.user?.role,
+                )
+              "
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
@@ -102,7 +130,13 @@
                 <span class="ms-2 font-semibold"> Поставщики </span>
               </router-link>
             </li>
-            <li>
+            <li
+              v-if="
+                [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                  authStore.user?.role,
+                )
+              "
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
@@ -118,7 +152,13 @@
            <span class="ms-2 font-semibold"> Создать офис </span>
 
         </el-menu-item>-->
-            <li>
+            <li
+              v-if="
+                [Roles.ADMIN, Roles.MANAGER, Roles.SALESMAN].includes(
+                  authStore.user?.role,
+                )
+              "
+            >
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"
@@ -140,7 +180,7 @@
                 <span class="ms-2 font-semibold"> Пользователи </span>
               </router-link>
             </li>
-            <li>
+            <li v-if="[Roles.ADMIN].includes(authStore.user?.role)">
               <router-link
                 exact-active-class="active-route"
                 class="hover:bg-[#409eff30] rounded-lg p-3 ease-in my-4 flex gap-3 items-center"

@@ -7,7 +7,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
     component: () => import('@/modules/Charts/pages/PChartsView.vue'),
     meta: {
       layout: 'empty',
-      roles: ['Admin', 'Manager', 'Salesman'],
+      roles: ['Admin'],
     },
   },
 ]

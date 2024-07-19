@@ -16,7 +16,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
     component: () => import('@/modules/Offices/pages/PCreateOffice.vue'),
     meta: {
       layout: 'empty',
-      roles: ['Admin', 'Manager', 'Salesman'],
+      roles: ['Admin', 'Manager'],
     },
   },
 ]

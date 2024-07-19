@@ -29,7 +29,12 @@
         Тип: {{ office.type === 'Warehouse' ? 'Склад' : 'Магазин' }}
       </p>
       <div class="grid grid-cols-1 gap-3 mt-2">
-        <el-button class="w-full" type="primary" plain @click="editBtn"
+        <el-button
+          v-if="[Roles.ADMIN, Roles.MANAGER].includes(authStore.user?.role)"
+          class="w-full"
+          type="primary"
+          plain
+          @click="editBtn"
           ><Pencil :offset-size="1" />
           <span class="ms-2">Изменить</span></el-button
         >
@@ -107,7 +112,9 @@ import { Pencil } from 'lucide-vue-next'
 import { onMounted, reactive, ref } from 'vue'
 
 import { useApi } from '@/composables/useApi.ts'
+import { useAuthStore } from '@/modules/Auth/store.ts'
 import { IOffice } from '@/modules/Offices/types.ts'
+import { Roles } from '@/types'
 
 interface Props {
   office: IOffice
@@ -116,6 +123,7 @@ const props = defineProps<Props>()
 const dialogVisible = ref(false)
 const fullscreen = ref(false)
 const { width } = useWindowSize()
+const authStore = useAuthStore()
 const officeData = reactive<IOffice>({
   address: '',
   addressUrl: '',
