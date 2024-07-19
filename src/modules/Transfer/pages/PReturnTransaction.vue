@@ -106,8 +106,9 @@
         </template>
       </Vue3EasyDataTable>
     </div>
-    <el-dialog v-model="dialog">
-      <div class="py-6 grid grid-cols-2 gap-6">
+
+    <el-dialog title="Возврат товара" :fullscreen="fullscreen" v-model="dialog">
+      <div class="py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <el-select
           v-model="order.sourceId"
           placeholder="Клиент"
@@ -155,8 +156,6 @@
           placeholder="Цена продажи"
           :class="{ error: v$.salePrice.$error }"
         />
-      </div>
-      <div class="flex justify-end">
         <el-button
           type="primary"
           @click="returnTransaction"
