@@ -26,6 +26,7 @@
         <el-select
           size="large"
           v-model="order.destinationId"
+          filterable
           :class="v$.destinationId.$error ? 'error' : ''"
           placeholder="Клиент"
         >
@@ -34,7 +35,10 @@
             :value="item?.id"
             :label="item?.name"
             :key="index"
-          />
+          >
+            <span>{{ item.name }}</span>
+            <span class="float-end">{{ item.phone }}</span>
+          </el-option>
         </el-select>
         <el-select
           size="large"
@@ -168,7 +172,7 @@
             <el-dialog
               v-model="innerVisibleCreate"
               width="500"
-              title="Добаить товар"
+              title="Добавить товар"
               append-to-body
             >
               <div class="flex items-center gap-2">
