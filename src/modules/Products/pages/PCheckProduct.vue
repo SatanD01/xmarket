@@ -1,5 +1,5 @@
 <template>
-  <div v-if="products">
+  <div>
     <div>
       <div
         class="bg-white gap-3 shadow rounded-lg mb-3 p-3 flex items-center justify-between"
@@ -22,7 +22,7 @@
           </el-select>
         </div>
       </div>
-      <div class="bg-white p-3 rounded-lg shadow">
+      <div v-if="products" class="bg-white p-3 rounded-lg shadow">
         <div class="flex items-center gap-3">
           <el-input
             placeholder="Поиск"
@@ -105,6 +105,7 @@
           </template>
         </Vue3EasyDataTable>
       </div>
+      <CTableSceleton v-else />
       <el-dialog
         v-model="scanDialog"
         title="Сканер бар кода"
@@ -122,7 +123,6 @@
       </el-dialog>
     </div>
   </div>
-  <CTableSceleton v-else />
 </template>
 
 <script lang="ts" setup>
