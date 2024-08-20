@@ -4,50 +4,39 @@
     v-if="reports"
   >
     <h3 class="text-[24px] font-bold mb-3">Отчетность</h3>
-    <div class="grid gap-3 grid-cols-12">
-      <el-select
-        v-model="reportsExportType"
+    <div class="grid grid-cols-12 gap-3">
+      <el-input
+        placeholder="Поиск"
+        class="col-span-12 md:col-span-4"
         size="large"
-        class="col-span-12 md:col-span-2"
-      >
-        <el-option
-          v-for="(item, index) in exportTypes"
-          :label="item.label"
-          :value="item.value"
-          :key="index"
-        />
-      </el-select>
+        v-model="searchValue"
+      />
       <el-date-picker
         v-model="datePicker"
-        type="date"
-        class="col-span-12 md:col-span-2 !w-full"
+        type="daterange"
+        class="col-span-12 md:col-span-4 !w-full"
         placeholder="Выберите дату"
         format="DD/MM/YYYY"
         :clearable="false"
         :editable="false"
         value-format="YYYY-MM-DD"
+        range-separator="До"
+        start-placeholder="Начало"
+        end-placeholder="Конец"
         size="large"
       />
       <el-button
-        @click="getReports(datePicker)"
+        @click="getReports(datePicker[0], datePicker[1])"
         size="large"
         type="primary"
-        class="md:col-span-2 col-span-12 w-full"
+        class="col-span-6 md:col-span-2"
         >Поиск</el-button
       >
-    </div>
-    <div class="flex flex-wrap gap-3">
-      <el-input
-        placeholder="Поиск"
-        class="mb-3 !w-[80%] md:!w-[300px]"
-        size="large"
-        v-model="searchValue"
-      />
       <el-button
         size="large"
         @click="scanDialogOpen"
         type="primary"
-        class="!ms-0 mb-3 !p-2"
+        class="!ms-0 !p-2 col-span-6 md:col-span-2"
         ><QrCode
       /></el-button>
     </div>
@@ -109,8 +98,12 @@
       </div>
     </el-dialog>
   </div>
+  <div v-else>
+    <CTableSceleton />
+  </div>
 </template>
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
 import { ClipboardMinus, QrCode } from 'lucide-vue-next'
 import { MaskInput } from 'maska'
 import { computed, nextTick, onMounted, ref } from 'vue'
@@ -118,30 +111,13 @@ import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header, Item } from 'vue3-easy-data-table'
 import { toast } from 'vue3-toastify'
 
-import {
-  getDailyReport,
-  getMonthlyReport,
-  getWeeklyReport,
-} from '@/modules/Charts/controller'
+import CTableSceleton from '@/components/CTableSceleton.vue'
+import { getSalesReports } from '@/modules/Charts/controller'
 
 const reports = ref(null)
 const searchValue = ref('')
 const datePicker = ref('')
-const reportsExportType = ref('daily')
-const exportTypes = ref([
-  {
-    label: 'Дневной',
-    value: 'daily',
-  },
-  {
-    label: 'Недельный',
-    value: 'weekly',
-  },
-  {
-    label: 'Месячный',
-    value: 'monthly',
-  },
-])
+const { width } = useWindowSize()
 function stopVideo() {
   if (window.localStream) {
     window.localStream.getTracks().forEach((track) => {
@@ -226,28 +202,33 @@ const allItems = computed(() => [
     totalProfit: totalProfitPrice.value.profit,
   },
 ])
-
-const getReports = async (time) => {
+const onLoaded = (error: any) => {
+  console.log(error)
+}
+const getReports = async (start, end) => {
   if (datePicker.value) {
-    if (reportsExportType.value === 'daily') {
-      reports.value = await getDailyReport(time)
-    }
-    if (reportsExportType.value === 'weekly') {
-      reports.value = await getWeeklyReport(time)
-    }
-    if (reportsExportType.value === 'monthly') {
-      reports.value = await getMonthlyReport(time)
-    }
+    reports.value = await getSalesReports(start, end)
   } else {
     toast.error('Выберите дату')
   }
 }
-const getStartOfMonth = () => {
-  const date = new Date()
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0') // Месяцы начинаются с 0
+const getDateRange = () => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
 
-  return `${year}-${month}-01`
+  const startDate = `${year}-${month}-01`
+
+  const nextWeek = new Date(today)
+  nextWeek.setDate(today.getDate() + 7)
+  const nextYear = nextWeek.getFullYear()
+  const nextMonth = String(nextWeek.getMonth() + 1).padStart(2, '0')
+  const endDate = `${nextYear}-${nextMonth}-01`
+
+  return {
+    startDate,
+    endDate,
+  }
 }
 const onDecode = (result: any) => {
   searchValue.value = result
@@ -299,8 +280,11 @@ const exportToCSV = () => {
   link.click()
 }
 onMounted(async () => {
-  const currentDate = getStartOfMonth()
-  reports.value = await getMonthlyReport(currentDate)
+  const currentDate = getDateRange()
+  reports.value = await getSalesReports(
+    currentDate.startDate,
+    currentDate.endDate,
+  )
   await nextTick(() => {
     const inputs = document.querySelectorAll('.el-date-editor .el-input__inner')
     for (const key of inputs) {
