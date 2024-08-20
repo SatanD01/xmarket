@@ -1,3 +1,5 @@
+import { toast } from 'vue3-toastify'
+
 import { useApi } from '@/composables/useApi.ts'
 import { IProduct } from '@/modules/Products/types.ts'
 
@@ -22,6 +24,9 @@ export const getAllProducts = (id: string) => {
         resolve(res.data)
       })
       .catch((err) => {
+        toast.error(
+          'Выберите другой магазин или клиента. Возможно в магазине нету товаров',
+        )
         reject(err)
       })
   })

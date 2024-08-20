@@ -146,6 +146,7 @@
             'product.name',
             'quantity',
             'salePrice',
+            'minSalePrice',
           ]"
           :search-value="searchValue"
         >
@@ -232,6 +233,7 @@
             'product.name',
             'quantity',
             'salePrice',
+            'minSalePrice',
           ]"
           :search-value="searchValue"
         >
@@ -323,6 +325,7 @@ const tempHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Количество', value: 'input' },
+  { text: 'Мин. цена продажи', value: 'minSalePrice' },
   { text: 'Цена продажи', value: 'salePrice' },
   // { text: 'Operations', value: 'opera' },
 ]
@@ -331,6 +334,7 @@ const tempHeadersWithButton: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Количество', value: 'input' },
+  { text: 'Мин. цена продажи', value: 'minSalePrice' },
   { text: 'Цена продажи', value: 'salePrice' },
   { text: 'Управление', value: 'button' },
 ]
@@ -339,6 +343,7 @@ const tempUpdateHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   // { text: 'Enter quantity', value: 'input' },
+  { text: 'Мин. цена продажи', value: 'minSalePrice' },
   { text: 'Цена продажи', value: 'salePrice' },
   { text: 'Управление', value: 'opera' },
 ]
@@ -380,6 +385,7 @@ const getProductByWarehouse = async () => {
         productId: el.product?.id,
         quantity: null,
         costPrice: el.costPrice,
+        minSalePrice: el.minSalePrice,
         salePrice: el.salePrice,
       }
     })

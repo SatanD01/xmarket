@@ -175,16 +175,26 @@
               title="Добавить товар"
               append-to-body
             >
-              <div class="flex items-center gap-2">
-                <el-input
-                  class="!w-[150px]"
-                  placeholder="Количество"
-                  v-model="quantity"
-                  :max="product?.quantity"
-                  :min="0"
-                  type="number"
-                />
-                <p>Max: {{ product?.quantity }}</p>
+              <div class="grid md:grid-cols-2 grid-cols-1 gap-3">
+                <div>
+                  <p>Макс: {{ product?.quantity }}</p>
+                  <el-input
+                    placeholder="Количество"
+                    v-model="quantity"
+                    :max="product?.quantity"
+                    :min="0"
+                    type="number"
+                  />
+                </div>
+                <div>
+                  <p>Мин. цена продажи: {{ product?.minSalePrice }}</p>
+                  <el-input
+                    placeholder="Цена продажи"
+                    v-model="salePrice"
+                    :min="0"
+                    type="number"
+                  />
+                </div>
               </div>
 
               <template #footer>
@@ -314,16 +324,33 @@
               title="Добавить товар"
               append-to-body
             >
-              <div class="flex items-center gap-2">
-                <el-input
-                  class="!w-[150px]"
-                  placeholder="Количество"
-                  v-model="quantity"
-                />
+              <div class="grid md:grid-cols-2 grid-cols-1 gap-3">
+                <div>
+                  <p>Макс: {{ product?.quantity }}</p>
+                  <el-input
+                    placeholder="Количество"
+                    v-model="quantity"
+                    :max="product?.quantity"
+                    :min="0"
+                    type="number"
+                  />
+                </div>
+                <div>
+                  <p>Мин. цена продажи: {{ product?.minSalePrice }}</p>
+                  <el-input
+                    placeholder="Цена продажи"
+                    v-model="salePrice"
+                    :min="0"
+                    type="number"
+                  />
+                </div>
               </div>
 
               <template #footer>
-                <el-button type="primary" @click="addProduct('update')"
+                <el-button
+                  type="primary"
+                  :disabled="quantity > product.quantity"
+                  @click="addProduct('update')"
                   >Сохранить</el-button
                 >
               </template>
@@ -487,6 +514,7 @@ const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
+  { text: 'Мин. цена продажи', value: 'minSalePrice' },
   { text: 'Цена', value: 'salePrice' },
   { text: 'Управление', value: 'opera' },
 ]
@@ -501,6 +529,7 @@ const tempHeadersView: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
+  { text: 'мин. цена продажи', value: 'minSalePrice' },
   { text: 'Цена', value: 'salePrice' },
 ]
 const headers: Header[] = [
@@ -517,6 +546,7 @@ const headers: Header[] = [
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
   { text: 'Количество', value: 'quantity', sortable: true },
+  { text: 'Мин. цена продажи', value: 'minSalePrice', sortable: true },
   { text: 'Цена', value: 'salePrice', sortable: true },
   { text: 'Управление', value: 'opera' },
 ]
@@ -537,6 +567,7 @@ const items: Item[] = computed(() => {
       weight: item.product.weight,
       quantity: item.quantity,
       salePrice: item.salePrice,
+      minSalePrice: item.minSalePrice,
       costPrice: item.costPrice,
     }
   })
@@ -548,6 +579,7 @@ const searchValue = ref('')
 const innerVisibleCreate = ref(false)
 const innerVisibleUpdate = ref(false)
 const quantity = ref(null)
+const salePrice = ref(null)
 // const costPrice = ref(null)
 // const salePrice = ref(null)
 const loader = ref(false)
@@ -594,22 +626,25 @@ const openDialogUpdate = async (item) => {
 const innerDialogCreate = (item: IProduct) => {
   innerVisibleCreate.value = true
   quantity.value = null
+  salePrice.value = null
   product.value = item
 }
 const innerDialogUpdate = (item: IProduct) => {
   innerVisibleUpdate.value = true
   quantity.value = null
+  salePrice.value = null
   product.value = item
 }
 const addProduct = async (status: string) => {
-  if (quantity.value) {
+  if (quantity.value && salePrice.value) {
     if (status === 'update') {
       await addOrderItem({
         productId: product.value.id,
         orderId: currentOrder.value.id,
-        quantity: quantity.value,
+        quantity: Number(quantity.value),
         costPrice: product.value.costPrice,
-        salePrice: product.value.salePrice,
+        minSalePrice: product.value.minSalePrice,
+        salePrice: Number(salePrice.value),
       })
     }
     templateProducts.value.push({
@@ -618,9 +653,10 @@ const addProduct = async (status: string) => {
         name: product.value.name,
       },
       image: product.value.image,
-      quantity: quantity.value,
+      quantity: Number(quantity.value),
       costPrice: product.value.costPrice,
-      salePrice: product.value.salePrice,
+      minSalePrice: product.value.minSalePrice,
+      salePrice: Number(salePrice.value),
     })
     innerVisibleCreate.value = false
     innerVisibleUpdate.value = false
@@ -657,6 +693,7 @@ const saveCreateProducts = async () => {
       productId: el.productId,
       quantity: el.quantity,
       costPrice: el.costPrice,
+      minSalePrice: el.minSalePrice,
       salePrice: el.salePrice,
     }
   })
