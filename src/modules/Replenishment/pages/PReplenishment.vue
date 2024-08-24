@@ -331,68 +331,77 @@
 
     <div v-if="tempOrders.length" class="bg-white p-3 mt-5 rounded-lg shadow">
       <h3 class="text-[24px] font-bold">Заготовки заказов</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <div
-          v-for="(elem, index) in tempOrders"
-          :key="index"
-          class="cursor-pointer relative"
-        >
-          <div
-            @click="openDialogUpdate(elem)"
-            class="shadow text-[14px] leading-4 p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
-          >
-            <el-icon size="26" color="white"><FolderOpened /></el-icon>
-            <p class="text-white">
-              {{ elem.source.name }} - {{ elem.destination.name }}
-            </p>
-            <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-            </p>
-            <p class="text-white">ID: {{ elem.id }}</p>
-          </div>
-
+      <Vue3EasyDataTable
+        hover:shadow-xl
+        transition
+        duration-200
+        buttons-pagination
+        ease-in-out
+        class="mt-4 h-[35%] overflow-y-scroll"
+        :headers="tempCardHeadersView"
+        :items="tempOrders"
+      >
+        <template #item-createdAt="{ item }">
+          {{ dayjs(item).format('DD.MM.YYYY') }}
+        </template>
+        <template #item-button="item">
           <el-button
-            @click="processReplenishment(elem)"
-            type="primary"
-            :loading="store.loading"
-            plain
-            class="mt-1 w-full"
-            >Oбработка</el-button
-          >
-          <el-button
-            type="danger"
-            :icon="Delete"
+            @click="openDialogUpdate(item)"
             size="small"
-            circle
-            @click="deleteTempOrder(elem)"
-            class="absolute top-[-2px] right-[-2px]"
-          />
-        </div>
-      </div>
+            class="!p-2"
+            type="primary"
+            plain
+          >
+            <ShoppingCart class="w-[15px] h-[15px]" />
+          </el-button>
+          <el-button
+            @click="processReplenishment(item)"
+            size="small"
+            class="!p-2"
+            type="success"
+            plain
+          >
+            <Check class="w-[15px] h-[15px]" />
+          </el-button>
+          <el-button
+            @click="deleteTempOrder(item)"
+            size="small"
+            class="!p-2"
+            type="danger"
+            plain
+          >
+            <Trash2 class="w-[15px] h-[15px]" />
+          </el-button>
+        </template>
+      </Vue3EasyDataTable>
     </div>
     <div v-if="completedOrders" class="bg-white p-3 mt-5 rounded-lg shadow">
       <h3 class="text-[24px] font-bold">Завершенные заказы</h3>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-        <div
-          v-for="(elem, index) in completedOrders"
-          :key="index"
-          class="cursor-pointer"
-        >
-          <div
-            @click="viewOrders(elem)"
-            class="shadow text-[14px] leading-5 p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
+      <Vue3EasyDataTable
+        hover:shadow-xl
+        transition
+        buttons-pagination
+        duration-200
+        ease-in-out
+        class="mt-4 h-[35%] overflow-y-scroll"
+        :headers="compHeadersView"
+        :items="completedOrders"
+      >
+        <template #item-createdAt="{ item }">
+          {{ dayjs(item).format('DD.MM.YYYY') }}
+        </template>
+        <template #item-button="item">
+          <el-button
+            @click="viewOrders(item)"
+            size="small"
+            class="!p-2"
+            type="primary"
+            plain
           >
-            <el-icon size="22" color="white"><FolderOpened /></el-icon>
-            <p class="text-white">
-              {{ elem.source.name }} - {{ elem.destination.name }}
-            </p>
-            <p class="text-center text-white">
-              {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-            </p>
-            <p class="text-white">ID: {{ elem.id }}</p>
-          </div>
-        </div>
-      </div>
+            <ShoppingCart class="w-[15px] h-[15px]" />
+          </el-button>
+        </template>
+      </Vue3EasyDataTable>
     </div>
   </div>
   <CTableSkeleton v-else />
@@ -405,7 +414,7 @@ import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { QrCode } from 'lucide-vue-next'
+import { Check, QrCode, ShoppingCart, Trash2 } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import { StreamBarcodeReader } from 'vue-barcode-reader'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
@@ -458,6 +467,21 @@ const tempHeadersView: Header[] = [
   { text: 'Количество', value: 'quantity' },
   { text: 'Чистая цена', value: 'costPrice' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
+]
+const compHeadersView: Header[] = [
+  { text: 'Id', value: 'id', sortable: true },
+  { text: 'Поставщик', value: 'source.name', sortable: true },
+  { text: 'Локация', value: 'destination.name' },
+  { text: 'Создан', value: 'createdAt' },
+  { text: 'Просмотр', value: 'button' },
+]
+
+const tempCardHeadersView: Header[] = [
+  { text: 'Id', value: 'id', sortable: true },
+  { text: 'Поставщик', value: 'source.name', sortable: true },
+  { text: 'Локация', value: 'destination.name' },
+  { text: 'Создан', value: 'createdAt' },
+  { text: 'Управление', value: 'button' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
@@ -545,12 +569,7 @@ const innerDialogUpdate = (item: IProduct) => {
   product.value = item
 }
 const addProduct = async (status: string) => {
-  if (
-    quantity.value &&
-    costPrice.value &&
-    minSalePrice.value &&
-    salePrice.value
-  ) {
+  if (quantity.value && costPrice.value && minSalePrice.value) {
     store.loading = true
     if (status === 'update') {
       await addOrderItem({
@@ -638,7 +657,7 @@ const processReplenishment = async (item: IReplenishment) => {
       store.loading = true
       ElMessage({
         type: 'success',
-        message: 'Process completed',
+        message: 'Завершен',
       })
       await processReplenishmentOrder(item.id)
       allReplenishments.value = await getReplenishmentOrders()
@@ -652,7 +671,7 @@ const processReplenishment = async (item: IReplenishment) => {
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: 'Process canceled',
+        message: 'Отменен',
       })
     })
     .finally(() => {

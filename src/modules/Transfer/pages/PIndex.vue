@@ -59,70 +59,80 @@
         class="bg-white p-3 mt-5 rounded-lg shadow"
       >
         <h3 class="text-[24px] font-bold">Заготовки переноса</h3>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-          <template v-for="(elem, index) in templateOrders" :key="index">
-            <div
-              class="cursor-pointer relative"
-              v-if="elem?.status === 'Template'"
-            >
-              <div
-                @click="openDialogUpdate(elem)"
-                class="shadow p-3 bg-[#409eef] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
-              >
-                <el-icon size="22" color="white"><FolderOpened /></el-icon>
-                <p class="text-center text-white">
-                  {{ elem?.source?.name }} - {{ elem?.destination?.name }}
-                </p>
-                <p class="text-center text-white">
-                  {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-                </p>
-                <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
-              </div>
-
-              <el-button
-                @click="processTransferOrder(elem?.id)"
-                type="primary"
-                plain
-                :loading="processLoading"
-                class="mt-1 w-full"
-                >Oбработка</el-button
-              >
-              <el-button
-                type="danger"
-                :icon="Delete"
-                size="small"
-                circle
-                @click="deleteOrder(elem.id)"
-                class="absolute top-[-2px] right-[-2px]"
-              />
-            </div>
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          buttons-pagination
+          ease-in-out
+          class="mt-4 h-[35%] overflow-y-scroll"
+          :headers="tempCardHeadersView"
+          :items="templateOrdersFiltered"
+        >
+          <template #item-createdAt="{ item }">
+            {{ dayjs(item).format('DD.MM.YYYY') }}
           </template>
-        </div>
+          <template #item-button="item">
+            <el-button
+              @click="openDialogUpdate(item)"
+              size="small"
+              class="!p-2"
+              type="primary"
+              plain
+            >
+              <ShoppingCart class="w-[15px] h-[15px]" />
+            </el-button>
+            <el-button
+              @click="processTransferOrder(item.id)"
+              size="small"
+              class="!p-2"
+              type="success"
+              plain
+            >
+              <Check class="w-[15px] h-[15px]" />
+            </el-button>
+            <el-button
+              @click="deleteOrder(item.id)"
+              size="small"
+              class="!p-2"
+              type="danger"
+              plain
+            >
+              <Trash2 class="w-[15px] h-[15px]" />
+            </el-button>
+          </template>
+        </Vue3EasyDataTable>
       </div>
       <div
         v-if="templateOrders.length"
         class="bg-white p-3 mt-5 rounded-lg shadow"
       >
         <h3 class="text-[24px] font-bold">Завершенные переносы</h3>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mt-4">
-          <template v-for="(elem, index) in templateOrders" :key="index">
-            <div class="cursor-pointer" v-if="elem?.status === 'Completed'">
-              <div
-                @click="openDialogUpdate(elem, true)"
-                class="shadow p-3 bg-[#2EB959] rounded-lg w-full flex flex-col gap-1 justify-center items-center hover:shadow-xl transition duration-200 ease-in-out"
-              >
-                <el-icon size="22" color="white"><FolderOpened /></el-icon>
-                <p class="text-center text-white">
-                  {{ elem?.source?.name }} - {{ elem?.destination?.name }}
-                </p>
-                <p class="text-center text-white">
-                  {{ dayjs(elem.createdAt).format('DD.MM.YYYY HH:mm') }}
-                </p>
-                <p class="text-white"><span>ID:</span> {{ elem?.id }}</p>
-              </div>
-            </div>
+        <Vue3EasyDataTable
+          hover:shadow-xl
+          transition
+          duration-200
+          buttons-pagination
+          ease-in-out
+          class="mt-4 h-[35%] overflow-y-scroll"
+          :headers="compHeadersView"
+          :items="completedOrdersFiltered"
+        >
+          <template #item-createdAt="{ item }">
+            {{ dayjs(item).format('DD.MM.YYYY') }}
           </template>
-        </div>
+          <template #item-button="item">
+            <el-button
+              @click="openDialogUpdate(item, true)"
+              size="small"
+              class="!p-2"
+              type="primary"
+              plain
+            >
+              <ShoppingCart class="w-[15px] h-[15px]" />
+            </el-button>
+          </template>
+        </Vue3EasyDataTable>
       </div>
     </div>
     <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
@@ -285,13 +295,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { Delete, FolderOpened } from '@element-plus/icons-vue'
+import { Delete } from '@element-plus/icons-vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
-import { Trash } from 'lucide-vue-next'
-import { onMounted, reactive, Ref, ref } from 'vue'
+import { Check, ShoppingCart, Trash2 } from 'lucide-vue-next'
+import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
 
 import CTableSkeleton from '@/components/CTableSceleton.vue'
@@ -337,6 +347,21 @@ const tempHeadersWithButton: Header[] = [
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
   { text: 'Управление', value: 'button' },
 ]
+const compHeadersView: Header[] = [
+  { text: 'Id', value: 'id', sortable: true },
+  { text: 'Поставщик', value: 'source.name', sortable: true },
+  { text: 'Локация', value: 'destination.name' },
+  { text: 'Создан', value: 'createdAt' },
+  { text: 'Просмотр', value: 'button' },
+]
+
+const tempCardHeadersView: Header[] = [
+  { text: 'Id', value: 'id', sortable: true },
+  { text: 'Поставщик', value: 'source.name', sortable: true },
+  { text: 'Локация', value: 'destination.name' },
+  { text: 'Создан', value: 'createdAt' },
+  { text: 'Управление', value: 'button' },
+]
 const tempUpdateHeaders: Header[] = [
   { text: 'Id', value: 'product.id', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
@@ -350,6 +375,14 @@ const rules = {
   destinationId: { required },
   paymentType: { required },
 }
+
+const templateOrdersFiltered = computed(() => {
+  return templateOrders.value.filter((el) => el.status === 'Template')
+})
+
+const completedOrdersFiltered = computed(() => {
+  return templateOrders.value.filter((el) => el.status === 'Completed')
+})
 
 const v$ = useVuelidate(rules, order)
 const onInputChange = (index: number, count: number) => {
