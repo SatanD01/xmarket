@@ -48,6 +48,15 @@
           >
             <Pencil class="w-[15px] h-[15px]" />
           </el-button>
+          <el-button
+            @click="openOrders(data)"
+            size="small"
+            class="!p-2"
+            type="primary"
+            plain
+          >
+            <ShoppingCart class="w-[15px] h-[15px]" />
+          </el-button>
         </template>
       </Vue3EasyDataTable>
     </div>
@@ -101,6 +110,39 @@
         <el-button type="primary" @click="createCustomer">Создать</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      v-model="orders"
+      width="70%"
+      title="Заказы клиента"
+      :fullscreen="width < 768"
+    >
+      <Vue3EasyDataTable
+        buttons-pagination
+        class="w-full"
+        :headers="orderHeaders"
+        :items="customerOrdersList"
+        :search-field="[
+          'product.id',
+          'product.name',
+          'product.description',
+          'product.manufacturer',
+          'product.origin',
+          'product.carModel',
+          'product.carYear',
+          'product.group',
+          'product.partNumber',
+          'product.manualCode',
+          'product.weight',
+          'product.quantity',
+          'product.salePrice',
+        ]"
+        :search-value="searchValue"
+      >
+        <template #item-createdAt="item">
+          <span>{{ dayjs(item.createdAt).format('DD.MM.YYYY') }}</span>
+        </template>
+      </Vue3EasyDataTable>
+    </el-dialog>
   </div>
   <CTableSceleton v-else />
 </template>
@@ -109,15 +151,17 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
-import { Pencil } from 'lucide-vue-next'
+import { Pencil, ShoppingCart } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
+import { toast } from 'vue3-toastify'
 
 import CTableSceleton from '@/components/CTableSceleton.vue'
 import {
   createCustomers,
   getCustomers,
+  ordersCustomers,
   updateCustomers,
 } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
@@ -126,8 +170,11 @@ let customer: Ref<ISuppliers | undefined> = ref()
 const { width } = useWindowSize()
 const searchValue = ref('')
 const dialog = ref(false)
+const orders = ref(false)
 const createDialog = ref(false)
 const customerName = ref('')
+const customerOrders = ref([])
+const customerOrdersList = ref([])
 const state = reactive<ISuppliers>({
   id: 0,
   name: '',
@@ -155,6 +202,16 @@ const openDialog = (data) => {
   state.phone = data.phone
   dialog.value = true
 }
+
+const openOrders = async (data) => {
+  customerOrders.value = await ordersCustomers(data.id)
+  if (customerOrders.value.length !== 0) {
+    customerOrdersList.value = customerOrders.value[0].items
+    orders.value = true
+  } else {
+    toast.error('Заказы не найдены')
+  }
+}
 const headers: Header[] = [
   { text: 'Id', value: 'id' },
   { text: 'Имя клиента', value: 'name', sortable: true },
@@ -165,6 +222,21 @@ const headers: Header[] = [
   { text: 'Управление', value: 'buttons' },
 ]
 
+const orderHeaders: Header[] = [
+  { text: 'Id', value: 'product.id' },
+  { text: 'Товар', value: 'product.name', sortable: true },
+  { text: 'Описание', value: 'product.description', sortable: true },
+  { text: 'Поставщик', value: 'product.manufacturer', sortable: true },
+  { text: 'Тип', value: 'product.origin', sortable: true },
+  { text: 'Модель машины', value: 'product.carModel', sortable: true },
+  { text: 'Категория', value: 'product.group' },
+  { text: 'Баркод', value: 'product.partNumber' },
+  { text: 'Код', value: 'product.manualCode' },
+  { text: 'Вес', value: 'product.weight' },
+  { text: 'Количество', value: 'quantity' },
+  { text: 'Цена', value: 'salePrice' },
+  { text: 'Создан', value: 'createdAt' },
+]
 const updateCustomer = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return

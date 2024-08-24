@@ -1,58 +1,59 @@
 <template>
+  <div class="p-3 bg-white shadow rounded-lg">
+    <h3 class="text-[24px] font-bold">Перенос товара</h3>
+    <div class="grid grid-cols-1 mt-4 md:grid-cols-4 gap-3">
+      <el-select
+        size="large"
+        v-model="order.sourceId"
+        placeholder="Склад"
+        @change="getProductByWarehouse"
+        :class="v$.sourceId.$error ? 'error' : ''"
+      >
+        <el-option
+          v-for="(item, index) in locationsList"
+          v-show="item.type === 'Warehouse'"
+          :value="item?.id"
+          :label="item?.name"
+          :key="index"
+        />
+      </el-select>
+      <el-select
+        size="large"
+        v-model="order.destinationId"
+        :class="v$.destinationId.$error ? 'error' : ''"
+        placeholder="Магазин"
+      >
+        <el-option
+          v-for="(item, index) in locationsList"
+          v-show="item.type === 'Store'"
+          :value="item?.id"
+          :label="item?.name"
+          :key="index"
+        />
+      </el-select>
+      <el-select
+        size="large"
+        v-model="order.paymentType"
+        :class="v$.paymentType.$error ? 'error' : ''"
+        placeholder="Тип оплаты"
+      >
+        <el-option
+          v-for="(item, index) in paymentType"
+          :value="item?.value"
+          :label="item?.label"
+          :key="index"
+        />
+      </el-select>
+      <el-button type="primary" size="large" @click="addTransaction">
+        Создать перенос
+      </el-button>
+    </div>
+  </div>
+
   <CTableSkeleton v-if="!templateOrders.length" />
 
   <div v-else>
     <div>
-      <div class="p-3 bg-white shadow rounded-lg">
-        <h3 class="text-[24px] font-bold">Перенос товара</h3>
-        <div class="grid grid-cols-1 mt-4 md:grid-cols-4 gap-3">
-          <el-select
-            size="large"
-            v-model="order.sourceId"
-            placeholder="Склад"
-            @change="getProductByWarehouse"
-            :class="v$.sourceId.$error ? 'error' : ''"
-          >
-            <el-option
-              v-for="(item, index) in locationsList"
-              v-show="item.type === 'Warehouse'"
-              :value="item?.id"
-              :label="item?.name"
-              :key="index"
-            />
-          </el-select>
-          <el-select
-            size="large"
-            v-model="order.destinationId"
-            :class="v$.destinationId.$error ? 'error' : ''"
-            placeholder="Магазин"
-          >
-            <el-option
-              v-for="(item, index) in locationsList"
-              v-show="item.type === 'Store'"
-              :value="item?.id"
-              :label="item?.name"
-              :key="index"
-            />
-          </el-select>
-          <el-select
-            size="large"
-            v-model="order.paymentType"
-            :class="v$.paymentType.$error ? 'error' : ''"
-            placeholder="Тип оплаты"
-          >
-            <el-option
-              v-for="(item, index) in paymentType"
-              :value="item?.value"
-              :label="item?.label"
-              :key="index"
-            />
-          </el-select>
-          <el-button type="primary" size="large" @click="addTransaction">
-            Создать перенос
-          </el-button>
-        </div>
-      </div>
       <div
         v-if="templateOrders.some((el) => el.status === 'Template')"
         class="bg-white p-3 mt-5 rounded-lg shadow"
@@ -326,7 +327,6 @@ const tempHeaders: Header[] = [
   { text: 'Количество', value: 'quantity' },
   { text: 'Количество', value: 'input' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена продажи', value: 'salePrice' },
   // { text: 'Operations', value: 'opera' },
 ]
 const tempHeadersWithButton: Header[] = [
@@ -335,7 +335,6 @@ const tempHeadersWithButton: Header[] = [
   { text: 'Количество', value: 'quantity' },
   { text: 'Количество', value: 'input' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена продажи', value: 'salePrice' },
   { text: 'Управление', value: 'button' },
 ]
 const tempUpdateHeaders: Header[] = [
@@ -344,7 +343,6 @@ const tempUpdateHeaders: Header[] = [
   { text: 'Количество', value: 'quantity' },
   // { text: 'Enter quantity', value: 'input' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена продажи', value: 'salePrice' },
   { text: 'Управление', value: 'opera' },
 ]
 const rules = {

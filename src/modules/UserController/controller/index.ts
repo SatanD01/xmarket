@@ -1,3 +1,5 @@
+import { toast } from 'vue3-toastify'
+
 import { useApi } from '@/composables/useApi.ts'
 import { ISuppliers } from '@/modules/UserController/types.ts'
 
@@ -57,6 +59,32 @@ export const updateCustomers = (state: ISuppliers) => {
   return new Promise((resolve, reject) => {
     useApi()
       .$post('/Partners/UpdateCustomer', state)
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const ordersCustomers = (state) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('/Inventory/GetSaleOrdersByPartnerId', { id: state })
+      .then((res) => {
+        resolve(res.data)
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+export const ordersSuppliers = (state) => {
+  return new Promise((resolve, reject) => {
+    useApi()
+      .$post('/Inventory/GetReplenishmentOrdersByPartnerId', { id: state })
       .then((res) => {
         resolve(res.data)
       })

@@ -112,6 +112,7 @@
         <el-select
           v-model="order.sourceId"
           placeholder="Клиент"
+          filterable
           :class="{ error: v$.sourceId.$error }"
         >
           <el-option
@@ -120,12 +121,14 @@
             :value="item.id"
             :label="item.name"
           >
-            {{ item.name }}
+            <span>{{ item.name }}</span>
+            <span class="float-end">{{ item.phone }}</span>
           </el-option>
         </el-select>
         <el-select
           v-model="order.destinationId"
           placeholder="Магазин"
+          filterable
           :class="{ error: v$.destinationId.$error }"
         >
           <el-option
@@ -155,6 +158,12 @@
           type="number"
           placeholder="Цена продажи"
           :class="{ error: v$.salePrice.$error }"
+        />
+        <el-input
+          v-model="order.minSalePrice"
+          type="number"
+          placeholder="Мин. цена продажи"
+          :class="{ error: v$.minSalePrice.$error }"
         />
         <el-button
           type="primary"
@@ -203,6 +212,7 @@ const order = reactive({
   quantity: '',
   costPrice: '',
   salePrice: '',
+  minSalePrice: '',
 })
 function stopVideo() {
   if (window.localStream) {
@@ -217,6 +227,7 @@ const rules = {
   quantity: { required },
   costPrice: { required },
   salePrice: { required },
+  minSalePrice: { required },
 }
 const v$ = useVuelidate(rules, order)
 const loading = ref(false)
@@ -294,6 +305,7 @@ const returnTransaction = async () => {
       quantity: order?.quantity,
       costPrice: order?.costPrice,
       salePrice: order?.salePrice,
+      minSalePrice: order?.minSalePrice,
       sourceId: order.sourceId,
       destinationId: order.destinationId,
     })

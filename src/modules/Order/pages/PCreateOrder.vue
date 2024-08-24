@@ -515,7 +515,6 @@ const tempHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена', value: 'salePrice' },
   { text: 'Управление', value: 'opera' },
 ]
 function stopVideo() {
@@ -529,8 +528,7 @@ const tempHeadersView: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
-  { text: 'мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена', value: 'salePrice' },
+  { text: 'Мин. цена продажи', value: 'minSalePrice' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
@@ -547,7 +545,6 @@ const headers: Header[] = [
   { text: 'Вес', value: 'weight', sortable: true },
   { text: 'Количество', value: 'quantity', sortable: true },
   { text: 'Мин. цена продажи', value: 'minSalePrice', sortable: true },
-  { text: 'Цена', value: 'salePrice', sortable: true },
   { text: 'Управление', value: 'opera' },
 ]
 const items: Item[] = computed(() => {

@@ -177,7 +177,6 @@
                 placeholder="Мин. цена продажи"
                 v-model="minSalePrice"
               />
-              <el-input placeholder="Цена продажи" v-model="salePrice" />
             </div>
 
             <template #footer>
@@ -299,7 +298,6 @@
                 placeholder="Мин. цена продажи"
                 v-model="minSalePrice"
               />
-              <el-input placeholder="Мин. цена продажи" v-model="salePrice" />
             </div>
 
             <template #footer>
@@ -452,7 +450,6 @@ const tempHeaders: Header[] = [
   { text: 'Количество', value: 'quantity' },
   { text: 'Чистая цена', value: 'costPrice' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена продажи', value: 'salePrice' },
   { text: 'Управление', value: 'opera' },
 ]
 const tempHeadersView: Header[] = [
@@ -461,7 +458,6 @@ const tempHeadersView: Header[] = [
   { text: 'Количество', value: 'quantity' },
   { text: 'Чистая цена', value: 'costPrice' },
   { text: 'Мин. цена продажи', value: 'minSalePrice' },
-  { text: 'Цена продажи', value: 'salePrice' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
@@ -487,7 +483,7 @@ const innerVisibleUpdate = ref(false)
 const quantity = ref(null)
 const costPrice = ref(null)
 const minSalePrice = ref(null)
-const salePrice = ref(null)
+const salePrice = ref(0)
 const scanDialog = ref(false)
 const order = reactive({
   sourceId: null,
@@ -537,7 +533,7 @@ const innerDialogCreate = (item: IProduct) => {
   quantity.value = null
   costPrice.value = null
   minSalePrice.value = null
-  salePrice.value = null
+  salePrice.value = 0
   product.value = item
 }
 const innerDialogUpdate = (item: IProduct) => {
@@ -545,7 +541,7 @@ const innerDialogUpdate = (item: IProduct) => {
   quantity.value = null
   costPrice.value = null
   minSalePrice.value = null
-  salePrice.value = null
+  salePrice.value = 0
   product.value = item
 }
 const addProduct = async (status: string) => {

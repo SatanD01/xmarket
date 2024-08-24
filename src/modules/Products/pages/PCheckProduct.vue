@@ -222,7 +222,6 @@ const headers: Header[] = [
   { text: 'Вес', value: 'product.weight', sortable: true },
   { text: 'Количество', value: 'quantity', sortable: true },
   { text: 'Мин. цена продажи', value: 'minSalePrice', sortable: true },
-  { text: 'Цена', value: 'salePrice', sortable: true },
 ]
 
 const items = computed((): Item[] | undefined => {

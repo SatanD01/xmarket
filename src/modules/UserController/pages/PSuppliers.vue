@@ -47,6 +47,15 @@
           >
             <Pencil class="w-[15px] h-[15px]" />
           </el-button>
+          <el-button
+            @click="openOrders(data)"
+            size="small"
+            class="!p-2"
+            type="primary"
+            plain
+          >
+            <ShoppingCart class="w-[15px] h-[15px]" />
+          </el-button>
         </template>
       </Vue3EasyDataTable>
     </div>
@@ -100,6 +109,39 @@
         <el-button type="primary" @click="createSupplier">Создать</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      v-model="orders"
+      width="70%"
+      title="Заказы клиента"
+      :fullscreen="width < 768"
+    >
+      <Vue3EasyDataTable
+        buttons-pagination
+        class="w-full"
+        :headers="orderHeaders"
+        :items="supplierOrdersList"
+        :search-field="[
+          'product.id',
+          'product.name',
+          'product.description',
+          'product.manufacturer',
+          'product.origin',
+          'product.carModel',
+          'product.carYear',
+          'product.group',
+          'product.partNumber',
+          'product.manualCode',
+          'product.weight',
+          'product.quantity',
+          'product.salePrice',
+        ]"
+        :search-value="searchValue"
+      >
+        <template #item-createdAt="item">
+          <span>{{ dayjs(item.createdAt).format('DD.MM.YYYY') }}</span>
+        </template>
+      </Vue3EasyDataTable>
+    </el-dialog>
   </div>
   <CTableSceleton v-else />
 </template>
@@ -108,15 +150,17 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useWindowSize } from '@vueuse/core'
 import dayjs from 'dayjs'
-import { Pencil } from 'lucide-vue-next'
+import { Pencil, ShoppingCart } from 'lucide-vue-next'
 import { onMounted, reactive, Ref, ref } from 'vue'
 import type { Header } from 'vue3-easy-data-table'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
+import { toast } from 'vue3-toastify'
 
 import CTableSceleton from '@/components/CTableSceleton.vue'
 import {
   createSuppliers,
   getSuppliers,
+  ordersSuppliers,
   updateSuppliers,
 } from '@/modules/UserController/controller'
 import { ISuppliers } from '@/modules/UserController/types'
@@ -124,6 +168,9 @@ import { ISuppliers } from '@/modules/UserController/types'
 let suppliers: Ref<ISuppliers[] | undefined> = ref()
 const { width } = useWindowSize()
 const searchValue = ref('')
+const orders = ref(false)
+const supplierOrders = ref([])
+const supplierOrdersList = ref([])
 const dialog = ref(false)
 const createDialog = ref(false)
 const supplierName = ref('')
@@ -138,7 +185,15 @@ const createState = reactive<ISuppliers>({
   description: '',
   phone: '',
 })
-
+const openOrders = async (data) => {
+  supplierOrders.value = await ordersSuppliers(data.id)
+  if (supplierOrders.value.length !== 0) {
+    supplierOrdersList.value = supplierOrders.value[0].items
+    orders.value = true
+  } else {
+    toast.error('Заказы не найдены')
+  }
+}
 const rules = {
   name: { required },
   description: { required },
@@ -163,7 +218,21 @@ const headers: Header[] = [
   { text: 'Изменен', value: 'updatedAt', sortable: true },
   { text: 'Управление', value: 'buttons' },
 ]
-
+const orderHeaders: Header[] = [
+  { text: 'Id', value: 'product.id' },
+  { text: 'Товар', value: 'product.name', sortable: true },
+  { text: 'Описание', value: 'product.description', sortable: true },
+  { text: 'Поставщик', value: 'product.manufacturer', sortable: true },
+  { text: 'Тип', value: 'product.origin', sortable: true },
+  { text: 'Модель машины', value: 'product.carModel', sortable: true },
+  { text: 'Категория', value: 'product.group' },
+  { text: 'Баркод', value: 'product.partNumber' },
+  { text: 'Код', value: 'product.manualCode' },
+  { text: 'Вес', value: 'product.weight' },
+  { text: 'Количество', value: 'quantity' },
+  { text: 'Цена', value: 'salePrice' },
+  { text: 'Создан', value: 'createdAt' },
+]
 const updateSupplier = async () => {
   v$.value.$touch()
   if (v$.value.$invalid) return
