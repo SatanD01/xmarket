@@ -553,7 +553,7 @@ const tempHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Цена продажи', value: 'salePrice' },
-  { text: 'Общая цена', value: 'summ' },
+  { text: 'Общая сумма', value: 'summ' },
   { text: 'Управление', value: 'opera' },
 ]
 const compHeadersView: Header[] = [
@@ -583,7 +583,7 @@ const tempHeadersView: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Цена продажди', value: 'salePrice' },
-  { text: 'Общая цена', value: 'summ' },
+  { text: 'Общая сумма', value: 'summ' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
