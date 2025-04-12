@@ -187,9 +187,20 @@
                   />
                 </div>
                 <div>
-                  <p>Мин. цена продажи: {{ product?.minSalePrice }}</p>
+                  <p>Мин. цена продажи опт.: {{ product?.minSalePrice }}</p>
                   <el-input
-                    placeholder="Цена продажи"
+                    placeholder="Цена продажи опт."
+                    v-model="salePrice"
+                    :min="0"
+                    type="number"
+                  />
+                </div>
+                <div>
+                  <p>
+                    Мин. цена продажи роз.: {{ product?.minSalePriceRetail }}
+                  </p>
+                  <el-input
+                    placeholder="Цена продажи роз."
                     v-model="salePrice"
                     :min="0"
                     type="number"
@@ -336,9 +347,20 @@
                   />
                 </div>
                 <div>
-                  <p>Мин. цена продажи: {{ product?.minSalePrice }}</p>
+                  <p>Мин. цена продажи опт.: {{ product?.minSalePrice }}</p>
                   <el-input
-                    placeholder="Цена продажи"
+                    placeholder="Цена продажи опт."
+                    v-model="salePrice"
+                    :min="0"
+                    type="number"
+                  />
+                </div>
+                <div>
+                  <p>
+                    Мин. цена продажи роз.: {{ product?.minSalePriceRetail }}
+                  </p>
+                  <el-input
+                    placeholder="Цена продажи роз."
                     v-model="salePrice"
                     :min="0"
                     type="number"
@@ -526,7 +548,8 @@ const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
   { text: 'Управление', value: 'opera' },
 ]
 const compHeadersView: Header[] = [
@@ -555,7 +578,8 @@ const tempHeadersView: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
@@ -571,7 +595,12 @@ const headers: Header[] = [
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
   { text: 'Количество', value: 'quantity', sortable: true },
-  { text: 'Мин. цена продажи', value: 'minSalePrice', sortable: true },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice', sortable: true },
+  {
+    text: 'Мин. цена продажи роз.',
+    value: 'minSalePriceRetail',
+    sortable: true,
+  },
   { text: 'Управление', value: 'opera' },
 ]
 const items: Item[] = computed(() => {
@@ -592,6 +621,7 @@ const items: Item[] = computed(() => {
       quantity: item.quantity,
       salePrice: item.salePrice,
       minSalePrice: item.minSalePrice,
+      minSalePriceRetail: item.minSalePriceRetail,
       costPrice: item.costPrice,
     }
   })
@@ -668,6 +698,7 @@ const addProduct = async (status: string) => {
         quantity: Number(quantity.value),
         costPrice: product.value.costPrice,
         minSalePrice: product.value.minSalePrice,
+        minSalePriceRetail: product.value.minSalePriceRetail,
         salePrice: Number(salePrice.value),
       })
     }
@@ -680,6 +711,7 @@ const addProduct = async (status: string) => {
       quantity: Number(quantity.value),
       costPrice: product.value.costPrice,
       minSalePrice: product.value.minSalePrice,
+      minSalePriceRetail: product.value.minSalePriceRetail,
       salePrice: Number(salePrice.value),
     })
     innerVisibleCreate.value = false
@@ -718,6 +750,7 @@ const saveCreateProducts = async () => {
       quantity: el.quantity,
       costPrice: el.costPrice,
       minSalePrice: el.minSalePrice,
+      minSalePriceRetail: el.minSalePriceRetail,
       salePrice: el.salePrice,
     }
   })
