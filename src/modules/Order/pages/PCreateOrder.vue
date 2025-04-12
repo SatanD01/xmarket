@@ -85,6 +85,9 @@
             :headers="tempHeaders"
             :items="templateProducts"
           >
+            <template #item-summ="item">
+              <p>{{ item.quantity * item.salePrice }}</p>
+            </template>
             <template #item-opera="item">
               <div class="flex items-center gap-2">
                 <el-icon
@@ -175,7 +178,7 @@
               title="Добавить товар"
               append-to-body
             >
-              <div class="grid md:grid-cols-2 grid-cols-1 gap-3">
+              <div class="grid grid-cols-1 gap-3">
                 <div>
                   <p>Макс: {{ product?.quantity }}</p>
                   <el-input
@@ -187,20 +190,14 @@
                   />
                 </div>
                 <div>
-                  <p>Мин. цена продажи опт.: {{ product?.minSalePrice }}</p>
-                  <el-input
-                    placeholder="Цена продажи опт."
-                    v-model="salePrice"
-                    :min="0"
-                    type="number"
-                  />
-                </div>
-                <div>
-                  <p>
+                  <span
+                    >Мин. цена продажи опт.: {{ product?.minSalePrice }} ||
+                  </span>
+                  <span>
                     Мин. цена продажи роз.: {{ product?.minSalePriceRetail }}
-                  </p>
+                  </span>
                   <el-input
-                    placeholder="Цена продажи роз."
+                    placeholder="Цена продажи"
                     v-model="salePrice"
                     :min="0"
                     type="number"
@@ -234,6 +231,9 @@
             :headers="tempHeaders"
             :items="templateProducts"
           >
+            <template #item-summ="item">
+              <p>{{ item.quantity * item.salePrice }}</p>
+            </template>
             <template #item-opera="item">
               <div class="flex items-center gap-2">
                 <el-icon
@@ -548,8 +548,8 @@ const tempHeaders: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
-  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
-  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
+  { text: 'Цена продажи', value: 'salePrice' },
+  { text: 'Общая цена', value: 'summ' },
   { text: 'Управление', value: 'opera' },
 ]
 const compHeadersView: Header[] = [

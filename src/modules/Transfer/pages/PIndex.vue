@@ -335,7 +335,8 @@ const tempHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Количество', value: 'input' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
   // { text: 'Operations', value: 'opera' },
 ]
 const tempHeadersWithButton: Header[] = [
@@ -343,7 +344,8 @@ const tempHeadersWithButton: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Количество', value: 'input' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
   { text: 'Управление', value: 'button' },
 ]
 const compHeadersView: Header[] = [
@@ -366,7 +368,8 @@ const tempUpdateHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   // { text: 'Enter quantity', value: 'input' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
   { text: 'Управление', value: 'opera' },
 ]
 const rules = {

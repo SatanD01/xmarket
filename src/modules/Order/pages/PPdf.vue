@@ -20,7 +20,7 @@
               <div class="header-model col-span-4">
                 <div>Магазин: {{ data?.source?.name }}</div>
                 <div>Клинент: {{ data?.destination?.name }}</div>
-                <div>Номер клинент: +{{ data?.destination?.phone }}</div>
+                <div>Номер клинент: {{ data?.destination?.phone }}</div>
               </div>
             </div>
           </th>
