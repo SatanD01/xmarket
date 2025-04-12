@@ -475,7 +475,11 @@
         class="mt-4 h-[35%] overflow-y-scroll"
         :headers="tempHeadersView"
         :items="templateProducts"
-      />
+      >
+        <template #item-summ="item">
+          <p>{{ item.quantity * item.salePrice }}</p>
+        </template>
+      </Vue3EasyDataTable>
       <RouterLink
         :to="{
           name: 'PPdf',
@@ -578,8 +582,8 @@ const tempHeadersView: Header[] = [
   { text: 'Id', value: 'productId', sortable: true },
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
-  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
-  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
+  { text: 'Цена продажди', value: 'salePrice' },
+  { text: 'Общая цена', value: 'summ' },
 ]
 const headers: Header[] = [
   { text: 'Id', value: 'id', sortable: true },

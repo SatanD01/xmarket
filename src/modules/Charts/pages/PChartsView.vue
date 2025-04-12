@@ -139,8 +139,8 @@ const headers: Header[] = [
   { text: 'Код', value: 'manualCode', sortable: true },
   { text: 'Вес', value: 'weight', sortable: true },
   { text: 'Количество', value: 'quantitySold', sortable: true },
-  { text: 'Цена чистая', value: 'totalCostPrice', sortable: true },
-  { text: 'Цена продажи', value: 'totalSalePrice', sortable: true },
+  { text: 'Сумма чистая', value: 'totalCostPrice', sortable: true },
+  { text: 'Сумма продажи', value: 'totalSalePrice', sortable: true },
   { text: 'Прибыль', value: 'totalProfit', sortable: true },
 ]
 const items: Item[] = computed(() => {
