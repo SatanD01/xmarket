@@ -72,6 +72,7 @@
           'quantity',
           'salePrice',
           'minSalePrice',
+          'minSalePriceRetail',
         ]"
         :search-value="searchValue"
       >
@@ -242,6 +243,7 @@
             'quantity',
             'salePrice',
             'minSalePrice',
+            'minSalePriceRetail',
           ]"
           :search-value="searchValue"
         >
@@ -424,6 +426,7 @@ const getProductByWarehouse = async () => {
         quantity: null,
         costPrice: el.costPrice,
         minSalePrice: el.minSalePrice,
+        minSalePriceRetail: el.minSalePriceRetail,
         salePrice: el.salePrice,
       }
     })
