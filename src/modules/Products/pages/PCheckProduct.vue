@@ -14,7 +14,6 @@
           >
             <el-option
               v-for="(item, index) in officesList"
-              v-show="item.type === 'Store'"
               :label="item.name"
               :value="item.id"
               :key="index"
