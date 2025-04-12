@@ -49,10 +49,57 @@
       </el-button>
     </div>
   </div>
-
-  <CTableSkeleton v-if="!templateOrders.length" />
-
-  <div v-else>
+  <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
+    <div class="flex flex-col justify-center">
+      <el-input
+        placeholder="Поиск"
+        class="mb-3 md:!w-[300px]"
+        size="large"
+        v-model="searchValue"
+      />
+      <Vue3EasyDataTable
+        hover:shadow-xl
+        transition
+        duration-200
+        ease-in-out
+        class="mt-4 h-[300px] overflow-y-scroll"
+        :headers="tempHeaders"
+        :items="products"
+        show-index
+        :search-field="[
+          'product.id',
+          'product.name',
+          'quantity',
+          'salePrice',
+          'minSalePrice',
+        ]"
+        :search-value="searchValue"
+      >
+        <template #item-input="item">
+          <el-input
+            v-if="order.items[item.index - 1]"
+            class="!w-[150px]"
+            type="number"
+            v-model="order.items[item.index - 1].quantity"
+            :max="item.quantity"
+            :min="1"
+            placeholder="Количество"
+            @input="onInputChange(item.index - 1, item.quantity)"
+          />
+        </template>
+      </Vue3EasyDataTable>
+      <el-button
+        type="primary"
+        size="large"
+        @click="confirmTransaction"
+        class="mt-5"
+        :loading="createLoading"
+      >
+        Сохранить
+      </el-button>
+    </div>
+  </el-dialog>
+  <div v-if="templateOrders.length">
     <div>
       <div
         v-if="templateOrders.some((el) => el.status === 'Template')"
@@ -135,56 +182,6 @@
         </Vue3EasyDataTable>
       </div>
     </div>
-    <el-dialog :fullscreen="fullscreen" v-model="selectDialog">
-      <div class="flex flex-col justify-center">
-        <el-input
-          placeholder="Поиск"
-          class="mb-3 md:!w-[300px]"
-          size="large"
-          v-model="searchValue"
-        />
-        <Vue3EasyDataTable
-          hover:shadow-xl
-          transition
-          duration-200
-          ease-in-out
-          class="mt-4 h-[300px] overflow-y-scroll"
-          :headers="tempHeaders"
-          :items="products"
-          show-index
-          :search-field="[
-            'product.id',
-            'product.name',
-            'quantity',
-            'salePrice',
-            'minSalePrice',
-          ]"
-          :search-value="searchValue"
-        >
-          <template #item-input="item">
-            <el-input
-              v-if="order.items[item.index - 1]"
-              class="!w-[150px]"
-              type="number"
-              v-model="order.items[item.index - 1].quantity"
-              :max="item.quantity"
-              :min="1"
-              placeholder="Количество"
-              @input="onInputChange(item.index - 1, item.quantity)"
-            />
-          </template>
-        </Vue3EasyDataTable>
-        <el-button
-          type="primary"
-          size="large"
-          @click="confirmTransaction"
-          class="mt-5"
-          :loading="createLoading"
-        >
-          Сохранить
-        </el-button>
-      </div>
-    </el-dialog>
     <el-dialog
       :fullscreen="fullscreen"
       align-center
@@ -293,6 +290,7 @@
       </Vue3EasyDataTable>
     </el-dialog>
   </div>
+  <CTableSkeleton class="mt-5" v-else />
 </template>
 <script setup lang="ts">
 import { Delete } from '@element-plus/icons-vue'
@@ -303,6 +301,7 @@ import dayjs from 'dayjs'
 import { Check, ShoppingCart, Trash2 } from 'lucide-vue-next'
 import { computed, onMounted, reactive, Ref, ref } from 'vue'
 import Vue3EasyDataTable, { type Header } from 'vue3-easy-data-table'
+import { toast } from 'vue3-toastify'
 
 import CTableSkeleton from '@/components/CTableSceleton.vue'
 import { useApi } from '@/composables/useApi.ts'
@@ -411,6 +410,11 @@ const confirmTransaction = async () => {
 const getProductByWarehouse = async () => {
   try {
     products.value = await getAvailableProducts(order.sourceId)
+    if (!products.value?.length) {
+      toast.warn(
+        'Нет доступных товаров на складе. Добавьте товар в склад или выберите другой склад',
+      )
+    }
     order.items = products.value.map((el) => {
       return {
         productId: el.product?.id,
@@ -438,6 +442,9 @@ const getTransferOrders = async () => {
   try {
     const res = await useApi().$get('/Inventory/GetTransferOrders')
     templateOrders.value = res.data
+    if (!templateOrders.value.length) {
+      toast.warn('Нет перенесенных товаров, таблица не может быть загружена')
+    }
   } catch (err) {
     console.log(err)
   }

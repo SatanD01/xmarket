@@ -174,8 +174,12 @@
               <el-input placeholder="Количество" v-model="quantity" />
               <el-input placeholder="Чистая цена" v-model="costPrice" />
               <el-input
-                placeholder="Мин. цена продажи"
+                placeholder="Мин. цена продажи опт."
                 v-model="minSalePrice"
+              />
+              <el-input
+                placeholder="Мин. цена продажи роз."
+                v-model="minSalePriceRetail"
               />
             </div>
 
@@ -295,8 +299,12 @@
               <el-input placeholder="Количество" v-model="quantity" />
               <el-input placeholder="Чистая цена" v-model="costPrice" />
               <el-input
-                placeholder="Мин. цена продажи"
+                placeholder="Мин. цена продажи опт."
                 v-model="minSalePrice"
+              />
+              <el-input
+                placeholder="Мин. цена продажи роз."
+                v-model="minSalePriceRetail"
               />
             </div>
 
@@ -458,7 +466,8 @@ const tempHeaders: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Чистая цена', value: 'costPrice' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
   { text: 'Управление', value: 'opera' },
 ]
 const tempHeadersView: Header[] = [
@@ -466,7 +475,8 @@ const tempHeadersView: Header[] = [
   { text: 'Название', value: 'product.name', sortable: true },
   { text: 'Количество', value: 'quantity' },
   { text: 'Чистая цена', value: 'costPrice' },
-  { text: 'Мин. цена продажи', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice' },
+  { text: 'Мин. цена продажи роз.', value: 'minSalePriceRetail' },
 ]
 const compHeadersView: Header[] = [
   { text: 'Id', value: 'id', sortable: true },
@@ -507,6 +517,7 @@ const innerVisibleUpdate = ref(false)
 const quantity = ref(null)
 const costPrice = ref(null)
 const minSalePrice = ref(null)
+const minSalePriceRetail = ref(null)
 const salePrice = ref(0)
 const scanDialog = ref(false)
 const order = reactive({
@@ -557,6 +568,7 @@ const innerDialogCreate = (item: IProduct) => {
   quantity.value = null
   costPrice.value = null
   minSalePrice.value = null
+  minSalePriceRetail.value = null
   salePrice.value = 0
   product.value = item
 }
@@ -565,11 +577,17 @@ const innerDialogUpdate = (item: IProduct) => {
   quantity.value = null
   costPrice.value = null
   minSalePrice.value = null
+  minSalePriceRetail.value = null
   salePrice.value = 0
   product.value = item
 }
 const addProduct = async (status: string) => {
-  if (quantity.value && costPrice.value && minSalePrice.value) {
+  if (
+    quantity.value &&
+    costPrice.value &&
+    minSalePrice.value &&
+    minSalePriceRetail.value
+  ) {
     store.loading = true
     if (status === 'update') {
       await addOrderItem({
@@ -578,6 +596,7 @@ const addProduct = async (status: string) => {
         quantity: quantity.value,
         costPrice: costPrice.value,
         minSalePrice: minSalePrice.value,
+        minSalePriceRetail: minSalePriceRetail.value,
         salePrice: salePrice.value,
       })
     }
@@ -590,6 +609,7 @@ const addProduct = async (status: string) => {
       quantity: quantity.value,
       costPrice: costPrice.value,
       minSalePrice: minSalePrice.value,
+      minSalePriceRetail: minSalePriceRetail.value,
       salePrice: salePrice.value,
     })
     innerVisibleCreate.value = false
@@ -629,6 +649,7 @@ const saveCreateProducts = async () => {
       quantity: el.quantity,
       costPrice: el.costPrice,
       minSalePrice: el.minSalePrice,
+      minSalePriceRetail: el.minSalePriceRetail,
       salePrice: el.salePrice,
     }
   })

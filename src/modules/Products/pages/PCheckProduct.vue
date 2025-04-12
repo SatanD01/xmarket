@@ -57,6 +57,7 @@
             'product.quantity',
             'product.salePrice',
             'product.minSalePrice',
+            'product.minSalePriceRetail',
           ]"
           :search-value="searchValue"
         >
@@ -221,7 +222,12 @@ const headers: Header[] = [
   { text: 'Код', value: 'product.manualCode', sortable: true },
   { text: 'Вес', value: 'product.weight', sortable: true },
   { text: 'Количество', value: 'quantity', sortable: true },
-  { text: 'Мин. цена продажи', value: 'minSalePrice', sortable: true },
+  { text: 'Мин. цена продажи опт.', value: 'minSalePrice', sortable: true },
+  {
+    text: 'Мин. цена продажи роз.',
+    value: 'minSalePriceRetail',
+    sortable: true,
+  },
 ]
 
 const items = computed((): Item[] | undefined => {
