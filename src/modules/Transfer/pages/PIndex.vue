@@ -427,7 +427,7 @@ const getProductByWarehouse = async () => {
         costPrice: el.costPrice,
         minSalePrice: el.minSalePrice,
         minSalePriceRetail: el.minSalePriceRetail,
-        salePrice: el.salePrice,
+        salePrice: 0,
       }
     })
   } catch (err) {
