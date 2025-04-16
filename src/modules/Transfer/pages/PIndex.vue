@@ -117,8 +117,8 @@
           :headers="tempCardHeadersView"
           :items="templateOrdersFiltered"
         >
-          <template #item-createdAt="{ item }">
-            {{ dayjs(item).format('DD.MM.YYYY') }}
+          <template #item-createdAt="data">
+            {{ dayjs(data.createdAt).format('DD.MM.YYYY HH:MM') }}
           </template>
           <template #item-button="item">
             <el-button
@@ -166,8 +166,8 @@
           :headers="compHeadersView"
           :items="completedOrdersFiltered"
         >
-          <template #item-createdAt="{ item }">
-            {{ dayjs(item).format('DD.MM.YYYY') }}
+          <template #item-createdAt="data">
+            {{ dayjs(data.createdAt).format('DD.MM.YYYY HH:MM') }}
           </template>
           <template #item-button="item">
             <el-button
